@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>键槽查询 | GB/T 1095-2003</title>
+<meta name="description" content="在线键槽尺寸查询工具，支持 GB/T 1095-2003 标准。输入轴径即可查看键槽尺寸、公差配合及工程剖面图，支持导出PDF。">
+<meta name="keywords" content="键槽查询,键槽尺寸,GB/T 1095,键宽,键高,轴槽深,毂槽深,键配合">
+<link rel="canonical" href="https://gongcha.cc/keyway/">
+<meta property="og:title" content="键槽查询 | GB/T 1095-2003">
+<meta property="og:description" content="在线键槽尺寸查询，输入轴径即出工程剖面图，支持PDF导出。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "键槽查询",
+  "description": "GB/T 1095-2003 键槽尺寸在线查询工具",
+  "url": "https://gongcha.cc/keyway/",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+}
+</script>
+<style>
+body { max-width: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+h1 { display: none; }
+.page-title { font-size: 16px; color: #888; margin-bottom: 12px; }
+.canvas-box { position: relative; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+canvas { display: block; }
+.input-area { position: absolute; top: 16px; left: 16px; display: flex; align-items: center; gap: 8px; background: #f0f4f8; padding: 6px 16px; border-radius: 20px; border: 1.5px solid #d0d5dd; z-index: 10; }
+.input-area:focus-within { border-color: #2563eb; }
+.input-area label { font-size: 14px; color: #666; }
+.input-area input { width: 70px; border: none; background: none; font-size: 18px; font-weight: bold; font-family: "Consolas", monospace; text-align: center; outline: none; color: #1a1a1a; }
+.input-area span { font-size: 13px; color: #888; }
+.top-btns { position: absolute; top: 16px; right: 16px; display: flex; gap: 6px; z-index: 10; }
+.fit-btn { padding: 5px 14px; border: 1.5px solid #ddd; border-radius: 16px; background: #fff; color: #666; font-size: 12px; cursor: pointer; }
+.fit-btn:hover { border-color: #999; }
+.fit-btn.active { border-color: #2563eb; background: #2563eb; color: #fff; }
+.act-btn { padding: 5px 14px; border: 1.5px solid #ddd; border-radius: 16px; background: #fff; color: #666; font-size: 12px; cursor: pointer; }
+.act-btn:hover { border-color: #999; background: #f5f5f5; }
+.std { position: absolute; bottom: 10px; right: 16px; font-size: 11px; color: #ccc; }
+.toast { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 6px 18px; border-radius: 16px; font-size: 12px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10; }
+.toast.show { opacity: 1; }
+.site-header { position: relative; margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+<h1>键槽查询 — GB/T 1095-2003</h1>
+
+<header class="site-header">
+  <a href="/" class="site-name">公差工具站</a>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+  </nav>
+</header>
+
+<div class="breadcrumb" style="margin-top:12px">
+  <a href="/">公差工具站</a><span>›</span><a href="/fit/">公差配合</a><span>›</span>键槽查询
+</div>
+
+<div class="page-title">键槽查询 — 输入轴径，直接看结果</div>
+
+<div class="canvas-box">
+  <canvas id="c"></canvas>
+  <div class="input-area">
+    <label>轴径 d =</label>
+    <input type="number" id="diaInput" value="50" min="6" max="500" step="1">
+    <span>mm</span>
+  </div>
+  <div class="top-btns">
+    <button class="act-btn" id="btnPdf">导出PDF</button>
+    <button class="act-btn" id="btnCopy">复制数据</button>
+    <button class="fit-btn" data-fit="loose">较松 H9/D10</button>
+    <button class="fit-btn active" data-fit="normal">一般 N9/JS9</button>
+    <button class="fit-btn" data-fit="tight">较紧 P9</button>
+  </div>
+  <div class="std">GB/T 1095-2003</div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<div class="site-footer" style="margin-top:16px">
+  <p><a href="/">返回首页</a> · <a href="/fit/">公差配合查询</a> · <a href="/form/">形状公差查询</a></p>
+</div>
+
+<script src="/js/nav.js"></script>
+<script>
+var KEYWAY=[
+  {d1:6,d2:8,b:2,h:2,t1:1.2,t2:1.0,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
+  {d1:8,d2:10,b:3,h:3,t1:1.8,t2:1.4,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
+  {d1:10,d2:12,b:4,h:4,t1:2.5,t2:1.8,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
+  {d1:12,d2:17,b:5,h:5,t1:3.0,t2:2.3,t1tol:0.1,t2tol:0.1,r1:0.16,r2:0.25},
+  {d1:17,d2:22,b:6,h:6,t1:3.5,t2:2.8,t1tol:0.1,t2tol:0.1,r1:0.16,r2:0.25},
+  {d1:22,d2:30,b:8,h:7,t1:4.0,t2:3.3,t1tol:0.2,t2tol:0.2,r1:0.16,r2:0.25},
+  {d1:30,d2:38,b:10,h:8,t1:5.0,t2:3.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:38,d2:44,b:12,h:8,t1:5.0,t2:3.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:44,d2:50,b:14,h:9,t1:5.5,t2:3.8,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:50,d2:58,b:16,h:10,t1:6.0,t2:4.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:58,d2:65,b:18,h:11,t1:7.0,t2:4.4,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:65,d2:75,b:20,h:12,t1:7.5,t2:4.9,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:75,d2:85,b:22,h:14,t1:9.0,t2:5.4,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:85,d2:95,b:25,h:14,t1:9.0,t2:5.4,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:95,d2:110,b:28,h:16,t1:10.0,t2:6.4,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:110,d2:130,b:32,h:18,t1:11.0,t2:7.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:130,d2:150,b:36,h:20,t1:12.0,t2:8.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:150,d2:170,b:40,h:22,t1:13.0,t2:9.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:170,d2:200,b:45,h:25,t1:15.0,t2:10.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:200,d2:230,b:50,h:28,t1:17.0,t2:11.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:230,d2:260,b:56,h:32,t1:20.0,t2:12.4,t1tol:0.3,t2tol:0.3,r1:1.20,r2:1.60},
+  {d1:260,d2:290,b:63,h:32,t1:20.0,t2:12.4,t1tol:0.3,t2tol:0.3,r1:1.20,r2:1.60},
+  {d1:290,d2:330,b:70,h:36,t1:22.0,t2:14.4,t1tol:0.3,t2tol:0.3,r1:1.20,r2:1.60},
+  {d1:330,d2:380,b:80,h:40,t1:25.0,t2:15.4,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50},
+  {d1:380,d2:440,b:90,h:45,t1:28.0,t2:17.4,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50},
+  {d1:440,d2:500,b:100,h:50,t1:31.0,t2:19.5,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50}
+];
+var KEY_TOL={
+  2:{H9:[0,0.025],D10:[0.020,0.060],N9:[-0.004,-0.029],JS9:0.0125,P9:[-0.006,-0.031]},
+  3:{H9:[0,0.025],D10:[0.020,0.060],N9:[-0.004,-0.029],JS9:0.0125,P9:[-0.006,-0.031]},
+  4:{H9:[0,0.030],D10:[0.030,0.078],N9:[0,-0.030],JS9:0.015,P9:[-0.012,-0.042]},
+  5:{H9:[0,0.030],D10:[0.030,0.078],N9:[0,-0.030],JS9:0.015,P9:[-0.012,-0.042]},
+  6:{H9:[0,0.030],D10:[0.030,0.078],N9:[0,-0.030],JS9:0.015,P9:[-0.012,-0.042]},
+  8:{H9:[0,0.036],D10:[0.040,0.098],N9:[0,-0.036],JS9:0.018,P9:[-0.015,-0.051]},
+  10:{H9:[0,0.036],D10:[0.040,0.098],N9:[0,-0.036],JS9:0.018,P9:[-0.015,-0.051]},
+  12:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  14:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  16:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  18:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  20:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  22:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  25:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  28:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  32:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  36:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  40:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  45:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  50:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  56:{H9:[0,0.074],D10:[0.100,0.220],N9:[0,-0.074],JS9:0.037,P9:[-0.032,-0.106]},
+  63:{H9:[0,0.074],D10:[0.100,0.220],N9:[0,-0.074],JS9:0.037,P9:[-0.032,-0.106]},
+  70:{H9:[0,0.074],D10:[0.100,0.220],N9:[0,-0.074],JS9:0.037,P9:[-0.032,-0.106]},
+  80:{H9:[0,0.087],D10:[0.120,0.260],N9:[0,-0.087],JS9:0.0435,P9:[-0.037,-0.124]},
+  90:{H9:[0,0.087],D10:[0.120,0.260],N9:[0,-0.087],JS9:0.0435,P9:[-0.037,-0.124]},
+  100:{H9:[0,0.087],D10:[0.120,0.260],N9:[0,-0.087],JS9:0.0435,P9:[-0.037,-0.124]}
+];
+
+var curFit='normal';
+
+function findKeyway(d){
+  for(var i=0;i<KEYWAY.length;i++){var r=KEYWAY[i];if(d>r.d1&&d<=r.d2) return r;}
+  if(d<=6) return KEYWAY[0]; return null;
+}
+
+var COL='#111';
+var F1=13, F2=9;
+var FONT_F1='bold '+F1+'px "GDT","Times New Roman","仿宋","SimSun",serif';
+var FONT_F2=F2+'px "GDT","Times New Roman","仿宋","SimSun",serif';
+
+function fmtDev(v){
+  if(v===0) return '0';
+  return v.toFixed(3);
+}
+
+function getTolValues(tol){
+  if(Array.isArray(tol)) return {upper: Math.max(tol[0],tol[1]), lower: Math.min(tol[0],tol[1]), symmetric: false};
+  return {upper: tol, lower: -tol, symmetric: true};
+}
+
+function arrow(ctx,x,y,dir,len){
+  var L=len||8, W=L*0.18;
+  ctx.fillStyle=COL; ctx.strokeStyle=COL; ctx.lineWidth=0.4;
+  ctx.beginPath();
+  if(dir==='up'){ctx.moveTo(x,y);ctx.lineTo(x-W,y+L);ctx.lineTo(x+W,y+L);}
+  if(dir==='down'){ctx.moveTo(x,y);ctx.lineTo(x-W,y-L);ctx.lineTo(x+W,y-L);}
+  if(dir==='left'){ctx.moveTo(x,y);ctx.lineTo(x+L,y-W);ctx.lineTo(x+L,y+W);}
+  if(dir==='right'){ctx.moveTo(x,y);ctx.lineTo(x-L,y-W);ctx.lineTo(x-L,y+W);}
+  ctx.closePath();ctx.fill();ctx.stroke();
+}
+
+function centerLine(ctx,x1,y1,x2,y2){
+  ctx.strokeStyle='#cc0000'; ctx.lineWidth=0.7; ctx.setLineDash([18,3,3,3]);
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function hatchWithClip(ctx, drawClipFn, angleDeg, gap){
+  ctx.save();
+  ctx.beginPath();
+  drawClipFn(ctx);
+  ctx.clip('evenodd');
+  ctx.strokeStyle=COL; ctx.lineWidth=0.3;
+  var ext = 600;
+  var g = gap || 14;
+  var angle = (angleDeg||45) * Math.PI / 180;
+  var dx = Math.cos(angle), dy = Math.sin(angle);
+  for(var i=-ext;i<ext;i+=g){
+    var sx = -ext;
+    var sy = i - ext;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(sx + dx*ext*4, sy + dy*ext*4);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawTolText(ctx, cx, cy, size, tolV, align){
+  var mainW, tolStrW = 0;
+  ctx.font=FONT_F1;
+  mainW = ctx.measureText(size).width;
+  var isSym = tolV && tolV.symmetric;
+  var upperStr = '', lowerStr = '';
+  if(tolV){
+    if(isSym){
+      upperStr = '±' + fmtDev(tolV.upper);
+      ctx.font=FONT_F2; tolStrW = ctx.measureText(upperStr).width;
+    } else {
+      upperStr = (tolV.upper>=0?'+':'') + fmtDev(tolV.upper);
+      lowerStr = (tolV.lower>=0?'+':'') + fmtDev(tolV.lower);
+      ctx.font=FONT_F2; tolStrW = Math.max(ctx.measureText(upperStr).width, ctx.measureText(lowerStr).width);
+    }
+  }
+  var totalW = mainW + (tolV ? 3 + tolStrW : 0);
+  var startX;
+  if(align==='center') startX = cx - totalW/2;
+  else if(align==='right') startX = cx - totalW;
+  else startX = cx;
+  ctx.fillStyle=COL; ctx.font=FONT_F1;
+  ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.fillText(size, startX, cy);
+  if(!tolV) return totalW;
+  var tx = startX + mainW + 3;
+  ctx.font=FONT_F2; ctx.textAlign='left';
+  if(isSym){
+    ctx.textBaseline='bottom';
+    ctx.fillText(upperStr, tx, cy - 1);
+  } else {
+    ctx.textBaseline='bottom'; ctx.fillText(upperStr, tx, cy - 2);
+    ctx.textBaseline='top'; ctx.fillText(lowerStr, tx, cy + 2);
+  }
+  return totalW;
+}
+
+function dimDiameter(ctx, cx, cy, rPx, d, side){
+  var angle = side==='left' ? Math.PI * 5/6 : Math.PI / 6;
+  var px = cx + rPx * Math.cos(angle);
+  var py = cy - rPx * Math.sin(angle);
+  var outAngle = Math.atan2(py - cy, px - cx);
+  var outDx = Math.cos(outAngle), outDy = Math.sin(outAngle);
+  var slantLen = 25;
+  var bendX = px + outDx * slantLen;
+  var bendY = py + outDy * slantLen;
+  var hLen = 50;
+  var endX = side==='left' ? bendX - hLen : bendX + hLen;
+  var endY = bendY;
+  ctx.strokeStyle=COL; ctx.lineWidth=0.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(px, py); ctx.lineTo(bendX, bendY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(bendX, bendY); ctx.lineTo(endX, endY);
+  ctx.stroke();
+  var aL=7, aW=aL*0.18;
+  ctx.fillStyle=COL; ctx.strokeStyle=COL; ctx.lineWidth=0.4;
+  var adx=outDx, ady=outDy;
+  var anx=-ady, any=adx;
+  ctx.beginPath();
+  ctx.moveTo(px, py);
+  ctx.lineTo(px + adx*aL + anx*aW, py + ady*aL + any*aW);
+  ctx.lineTo(px + adx*aL - anx*aW, py + ady*aL - any*aW);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.fillStyle=COL; ctx.font=FONT_F1;
+  ctx.textBaseline='bottom'; ctx.textAlign='center';
+  var textX = (bendX + endX) / 2;
+  var textY = Math.min(bendY, endY) - 2;
+  ctx.fillText('⌀' + d, textX, textY);
+}
+
+function dimH_tol(ctx, x1, x2, refY, offset, size, tolV, labelOffset){
+  var y = refY - offset;
+  var mid = (x1+x2)/2;
+  var lOff = labelOffset || 8;
+  ctx.strokeStyle=COL; ctx.lineWidth=0.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x1, refY - 2); ctx.lineTo(x1, y - 8);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, refY - 2); ctx.lineTo(x2, y - 8);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x1, y); ctx.lineTo(x2, y);
+  ctx.stroke();
+  arrow(ctx, x1, y, 'right', 7);
+  arrow(ctx, x2, y, 'left', 7);
+  drawTolText(ctx, mid, y - lOff, ''+size, tolV, 'center');
+}
+
+function dimV_simple(ctx, y1, y2, refX, offset, text, side){
+  var x = side==='right' ? refX + offset : refX - offset;
+  var mid = (y1+y2)/2;
+  ctx.strokeStyle=COL; ctx.lineWidth=0.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(refX + (side==='right'?2:-2), y1); ctx.lineTo(x + (side==='right'?6:-6), y1);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(refX + (side==='right'?2:-2), y2); ctx.lineTo(x + (side==='right'?6:-6), y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y1); ctx.lineTo(x, y2);
+  ctx.stroke();
+  arrow(ctx, x, y1, 'down', 7);
+  arrow(ctx, x, y2, 'up', 7);
+  ctx.fillStyle=COL; ctx.font=FONT_F1;
+  ctx.textAlign = side==='right' ? 'left' : 'right';
+  ctx.textBaseline='middle';
+  var tx = side==='right' ? x+5 : x-5;
+  ctx.fillText(text, tx, mid);
+}
+
+function dimV_tol(ctx, y1, y2, refX, offset, size, tolV, side){
+  var x = side==='right' ? refX + offset : refX - offset;
+  var mid = (y1+y2)/2;
+  ctx.strokeStyle=COL; ctx.lineWidth=0.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(refX + (side==='right'?2:-2), y1); ctx.lineTo(x + (side==='right'?8:-8), y1);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(refX + (side==='right'?2:-2), y2); ctx.lineTo(x + (side==='right'?8:-8), y2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y1); ctx.lineTo(x, y2);
+  ctx.stroke();
+  arrow(ctx, x, y1, 'down', 7);
+  arrow(ctx, x, y2, 'up', 7);
+  var tx = side==='right' ? x+5 : x-5;
+  var al = side==='right' ? 'left' : 'right';
+  ctx.fillStyle=COL; ctx.textAlign = al;
+  ctx.font=FONT_F1; ctx.textBaseline='middle';
+  ctx.fillText(size, tx, mid);
+  if(!tolV) return;
+  var mainW = ctx.measureText(size).width;
+  var tolX = al==='right' ? tx + mainW + 3 : tx - mainW - 3;
+  var tolAl = al==='right' ? 'left' : 'right';
+  ctx.font=FONT_F2; ctx.textAlign = tolAl;
+  if(tolV.symmetric){
+    var symStr = '±'+fmtDev(tolV.upper);
+    ctx.textBaseline='bottom'; ctx.fillText(symStr, tolX, mid - 1);
+  } else {
+    var us = (tolV.upper>=0?'+':'')+fmtDev(tolV.upper);
+    var ls = (tolV.lower>=0?'+':'')+fmtDev(tolV.lower);
+    ctx.textBaseline='bottom'; ctx.fillText(us, tolX, mid - 2);
+    ctx.textBaseline='top'; ctx.fillText(ls, tolX, mid + 2);
+  }
+}
+
+function dimV_tol_through(ctx, y1, y2, x1, x2, textX, size, tolV){
+  var mid = (y1+y2)/2;
+  var extLen = 18 + 149;
+  var dimX = Math.max(x1, x2) + extLen;
+  ctx.strokeStyle=COL; ctx.lineWidth=1.0; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(x1, y1); ctx.lineTo(dimX, y1);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2); ctx.lineTo(dimX, y2);
+  ctx.stroke();
+  ctx.lineWidth=0.5;
+  ctx.beginPath();
+  ctx.moveTo(dimX, y1); ctx.lineTo(dimX, y2);
+  ctx.stroke();
+  arrow(ctx, dimX, y1, 'down', 7);
+  arrow(ctx, dimX, y2, 'up', 7);
+  var tx = textX + 5;
+  ctx.fillStyle=COL; ctx.textAlign = 'left';
+  ctx.font=FONT_F1; ctx.textBaseline='middle';
+  ctx.fillText(size, tx, mid);
+  if(!tolV) return;
+  var mainW = ctx.measureText(size).width;
+  var tolX = tx + mainW + 3;
+  ctx.font=FONT_F2; ctx.textAlign = 'left';
+  if(tolV.symmetric){
+    var symStr = '±'+fmtDev(tolV.upper);
+    ctx.textBaseline='bottom'; ctx.fillText(symStr, tolX, mid - 1);
+  } else {
+    var us = (tolV.upper>=0?'+':'')+fmtDev(tolV.upper);
+    var ls = (tolV.lower>=0?'+':'')+fmtDev(tolV.lower);
+    ctx.textBaseline='bottom'; ctx.fillText(us, tolX, mid - 2);
+    ctx.textBaseline='top'; ctx.fillText(ls, tolX, mid + 2);
+  }
+}
+
+function showToast(msg){
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 1500);
+}
+
+function draw(){
+  var canvas=document.getElementById('c');
+  var dpr=window.devicePixelRatio||1;
+  var BASE_W = 1200, BASE_H = 800;
+  var maxW = window.innerWidth - 32;
+  var maxH = window.innerHeight - 160;
+  var cssScale = Math.min(maxW / BASE_W, maxH / BASE_H);
+  if(cssScale > 1) cssScale = 1;
+  var cssW = Math.round(BASE_W * cssScale);
+  var cssH = Math.round(BASE_H * cssScale);
+  canvas.width = BASE_W * dpr;
+  canvas.height = BASE_H * dpr;
+  canvas.style.width = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  var ctx=canvas.getContext('2d');
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(dpr, dpr);
+  var vw = BASE_W, vh = BASE_H;
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,vw,vh);
+
+  var curD=parseFloat(document.getElementById('diaInput').value);
+  var row=findKeyway(curD);
+  var fitDef={loose:{shaft:'H9',hub:'D10'},normal:{shaft:'N9',hub:'JS9'},tight:{shaft:'P9',hub:'P9'}}[curFit];
+  if(isNaN(curD)||curD<6||curD>500||!row){
+    ctx.fillStyle='#dc2626'; ctx.font='14px "Microsoft YaHei",sans-serif'; ctx.textAlign='center';
+    ctx.fillText('请输入 6~500 范围内的轴径',vw/2,vh/2); return;
+  }
+  var tol=KEY_TOL[row.b];
+  var shaftTol=tol[fitDef.shaft], hubTol=tol[fitDef.hub];
+  var b=row.b, h=row.h, t1=row.t1, t2=row.t2, t1tol=row.t1tol, t2tol=row.t2tol, r1=row.r1, r2=row.r2;
+  var R=curD/2;
+  var sTolV = getTolValues(shaftTol);
+  var hTolV = getTolValues(hubTol);
+
+  var halfW = vw / 2;
+  var DIM_TOP = 50, DIM_BOT = 40, DIM_LEFT = 55, DIM_RIGHT = 120;
+  var sectionGap = 30;
+  var availW = halfW - DIM_LEFT - DIM_RIGHT - sectionGap - 20;
+  var topUI = 52;
+  var availH = vh - topUI - DIM_TOP - DIM_BOT - 40;
+  var maxR_px = Math.min(availW, availH) / 2;
+  maxR_px = Math.min(maxR_px, 180);
+  var sc = maxR_px / R;
+  var minSc = 12;
+  if(sc < minSc) sc = minSc;
+
+  var SHAPE_SCALE = 0.56;
+  var rPx = R * sc * SHAPE_SCALE;
+  var bPx = (b/2) * sc * SHAPE_SCALE;
+  var t1Px = t1 * sc * SHAPE_SCALE;
+  var t2Px = t2 * sc * SHAPE_SCALE;
+
+  var holeR = rPx;
+  var hubRpx = Math.max(holeR + t2Px + 5, rPx * 2.0 - 67);
+
+  var gap = 80;
+  var totalW = rPx * 2 + gap + hubRpx * 2;
+  var startX = Math.max(DIM_LEFT + 10, (vw - totalW) / 2);
+  var sectionCy = topUI + DIM_TOP + Math.max(rPx, hubRpx) + 75;
+
+  var axCx = startX + rPx;
+  var axCy = sectionCy;
+  var hubCx = axCx + rPx + gap + hubRpx;
+  var hubCy = sectionCy;
+
+  var clExt = 6;
+
+  // 左图：轴截面
+  centerLine(ctx, axCx - rPx - clExt, axCy, axCx + rPx + clExt, axCy);
+  centerLine(ctx, axCx, axCy - rPx - clExt, axCx, axCy + rPx + clExt);
+
+  hatchWithClip(ctx, function(c){
+    c.arc(axCx, axCy, rPx, 0, Math.PI*2);
+    c.moveTo(axCx-bPx, axCy-rPx);
+    c.lineTo(axCx+bPx, axCy-rPx);
+    c.lineTo(axCx+bPx, axCy-rPx+t1Px);
+    c.lineTo(axCx-bPx, axCy-rPx+t1Px);
+    c.closePath();
+  }, 45, 14);
+
+  ctx.strokeStyle=COL; ctx.lineWidth=1.8; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.arc(axCx, axCy, rPx, 0, Math.PI*2); ctx.stroke();
+
+  var slotL=axCx-bPx, slotR=axCx+bPx;
+  var slotTop=axCy-rPx, slotBot=slotTop+t1Px;
+  var shaftWallTop = axCy - Math.sqrt(Math.max(0, rPx*rPx - bPx*bPx));
+  ctx.strokeStyle=COL; ctx.lineWidth=1.2;
+  ctx.beginPath();
+  ctx.moveTo(slotL, shaftWallTop); ctx.lineTo(slotL, slotBot);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(slotL,slotBot); ctx.lineTo(slotR,slotBot);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(slotR, shaftWallTop); ctx.lineTo(slotR, slotBot);
+  ctx.stroke();
+
+  // 右图：轮毂截面
+  centerLine(ctx, hubCx - hubRpx - clExt, hubCy, hubCx + hubRpx + clExt, hubCy);
+  centerLine(ctx, hubCx, hubCy - hubRpx - clExt, hubCx, hubCy + hubRpx + clExt);
+
+  var hubSlotL = hubCx - bPx;
+  var hubSlotR = hubCx + bPx;
+  var hubSlotInner = hubCy - holeR;
+  var hubSlotOuter = hubSlotInner - t2Px;
+
+  hatchWithClip(ctx, function(c){
+    c.arc(hubCx, hubCy, hubRpx, 0, Math.PI*2);
+    c.arc(hubCx, hubCy, holeR, 0, Math.PI*2, true);
+    c.moveTo(hubSlotL, hubSlotOuter);
+    c.lineTo(hubSlotR, hubSlotOuter);
+    c.lineTo(hubSlotR, hubSlotInner);
+    c.lineTo(hubSlotL, hubSlotInner);
+    c.closePath();
+  }, -45, 14);
+
+  ctx.strokeStyle=COL; ctx.lineWidth=1.8; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.arc(hubCx, hubCy, hubRpx, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle=COL; ctx.lineWidth=0.8;
+  ctx.beginPath(); ctx.arc(hubCx, hubCy, holeR, 0, Math.PI*2); ctx.stroke();
+
+  ctx.strokeStyle=COL; ctx.lineWidth=1.2; ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(hubSlotL, hubSlotOuter); ctx.lineTo(hubSlotL, hubCy + holeR);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(hubSlotL, hubSlotOuter); ctx.lineTo(hubSlotR, hubSlotOuter);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(hubSlotR, hubSlotOuter); ctx.lineTo(hubSlotR, hubCy + holeR);
+  ctx.stroke();
+
+  // 标注
+  dimH_tol(ctx, slotL, slotR, slotTop, 35, b, sTolV, 11);
+  dimDiameter(ctx, axCx, axCy, rPx, curD, 'left');
+  dimV_simple(ctx, slotTop, slotBot, axCx - rPx, 50, t1+'', 'left');
+  dimV_tol_through(ctx, slotBot, axCy+rPx, slotR, axCx, axCx + rPx + 8,
+    '('+(curD-t1).toFixed(1)+')', {upper:0,lower:-t1tol,symmetric:false});
+
+  ctx.fillStyle=COL; ctx.font=F2+'px "GDT","Times New Roman","SimSun",serif';
+  ctx.textAlign='left'; ctx.textBaseline='top';
+  ctx.fillText('r '+r1+'~'+r2, slotR+10, slotBot+6);
+
+  dimH_tol(ctx, hubSlotL, hubSlotR, hubSlotOuter, 35, b, hTolV, 11);
+  dimDiameter(ctx, hubCx, hubCy, holeR, curD, 'right');
+  dimV_simple(ctx, hubSlotOuter, hubSlotInner, hubCx - hubRpx, 50, t2+'', 'left');
+  dimV_tol_through(ctx, hubSlotInner, hubCy+hubRpx, hubSlotR, hubCx, hubCx + hubRpx + 8,
+    '('+(curD+t2).toFixed(1)+')', {upper:t2tol,lower:0,symmetric:false});
+
+  ctx.fillStyle='#555'; ctx.font='bold 16px "Microsoft YaHei",sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='top';
+  ctx.fillText('轴', axCx, axCy+rPx+32);
+  ctx.fillText('轮毂', hubCx, hubCy+hubRpx+32);
+}
+
+document.getElementById('diaInput').addEventListener('input',draw);
+document.querySelectorAll('.fit-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.fit-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active'); curFit=btn.dataset.fit; draw();
+  });
+});
+window.addEventListener('resize',draw);
+draw();
+
+document.getElementById('btnPdf').addEventListener('click', function(){
+  var canvas = document.getElementById('c');
+  var tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = 2400; tmpCanvas.height = 1600;
+  var tmpCtx = tmpCanvas.getContext('2d');
+  tmpCtx.fillStyle = '#fff';
+  tmpCtx.fillRect(0, 0, 2400, 1600);
+  tmpCtx.drawImage(canvas, 0, 0, 2400, 1600);
+  var imgData = tmpCanvas.toDataURL('image/png', 1.0);
+  var win = window.open('', '_blank');
+  win.document.write('<!DOCTYPE html><html><head><title>键槽剖面图 - GB/T 1095-2003</title>');
+  win.document.write('<style>@media print { @page { size: A4 landscape; margin: 10mm; } body { margin: 0; } img { width: 100%; height: auto; } }</style>');
+  win.document.write('</head><body>');
+  win.document.write('<img src="' + imgData + '" style="width:100%;max-width:277mm;">');
+  win.document.write('</body></html>');
+  win.document.close();
+  setTimeout(function(){ win.print(); }, 300);
+});
+
+document.getElementById('btnCopy').addEventListener('click', function(){
+  var curD = parseFloat(document.getElementById('diaInput').value);
+  var row = findKeyway(curD);
+  if(!row){ showToast('无效轴径'); return; }
+  var fitDef={loose:{shaft:'H9',hub:'D10'},normal:{shaft:'N9',hub:'JS9'},tight:{shaft:'P9',hub:'P9'}}[curFit];
+  var tol = KEY_TOL[row.b];
+  var shaftTol = tol[fitDef.shaft], hubTol = tol[fitDef.hub];
+  var sTolV = getTolValues(shaftTol);
+  var hTolV = getTolValues(hubTol);
+  function fmtTol(tv){
+    if(tv.symmetric) return '±' + fmtDev(tv.upper);
+    return (tv.upper>=0?'+':'')+fmtDev(tv.upper)+' / '+(tv.lower>=0?'+':'')+fmtDev(tv.lower);
+  }
+  var text = 'GB/T 1095-2003 键槽尺寸\n';
+  text += '轴径 d = ' + curD + ' mm\n';
+  text += '键尺寸 b×h = ' + row.b + '×' + row.h + ' mm\n';
+  text += '配合: ' + fitDef.shaft + '/' + fitDef.hub + '\n';
+  text += '---\n';
+  text += '轴键槽:\n';
+  text += '  b = ' + row.b + ' (' + fmtTol(sTolV) + ')\n';
+  text += '  t₁ = ' + row.t1 + ' (+' + row.t1tol + ')\n';
+  text += '  (d-t₁) = ' + (curD-row.t1).toFixed(1) + ' (-' + row.t1tol + ')\n';
+  text += '  r = ' + row.r1 + '~' + row.r2 + '\n';
+  text += '轮毂键槽:\n';
+  text += '  b = ' + row.b + ' (' + fmtTol(hTolV) + ')\n';
+  text += '  t₂ = ' + row.t2 + ' (+' + row.t2tol + ')\n';
+  text += '  (d+t₂) = ' + (curD+row.t2).toFixed(1) + ' (+' + row.t2tol + ')\n';
+  text += '  r = ' + row.r1 + '~' + row.r2;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){ showToast('已复制到剪贴板'); }, function(){ fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+});
+
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); showToast('已复制到剪贴板'); }
+  catch(e){ showToast('复制失败'); }
+  document.body.removeChild(ta);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+{
+  "_source": "GB/T 275-2015 滚动轴承配合",
+  "_verified": "2026-05-21 豆包提供",
+  "innerRing": [
+    {
+      "id": "IR01",
+      "condition": "轻载荷(P≤0.07Cr)，内圈旋转",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["h5", "h6"],
+      "applications": ["电机", "水泵", "风机"],
+      "note": "轻载工况，一般配合即可"
+    },
+    {
+      "id": "IR02",
+      "condition": "正常载荷(0.07Cr<P≤0.15Cr)，内圈旋转",
+      "diameterRange": "≤18",
+      "toleranceClass": ["j5", "js5"],
+      "applications": ["机床主轴", "精密机械"],
+      "note": "小直径，正常载荷"
+    },
+    {
+      "id": "IR03",
+      "condition": "正常载荷(0.07Cr<P≤0.15Cr)，内圈旋转",
+      "diameterRange": "18~100",
+      "toleranceClass": ["k5", "k6"],
+      "applications": ["普通电机", "减速器"],
+      "note": "中等直径，最常见工况"
+    },
+    {
+      "id": "IR04",
+      "condition": "正常载荷(0.07Cr<P≤0.15Cr)，内圈旋转",
+      "diameterRange": "100~200",
+      "toleranceClass": ["m5", "m6"],
+      "applications": ["重型电机", "破碎机"],
+      "note": "大直径，正常载荷"
+    },
+    {
+      "id": "IR05",
+      "condition": "重载荷(P>0.15Cr)，内圈旋转",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["m6", "n6"],
+      "applications": ["轧钢机", "矿山机械"],
+      "note": "重载必须过盈配合"
+    },
+    {
+      "id": "IR06",
+      "condition": "内圈固定，外圈旋转",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["g6", "h6"],
+      "applications": ["滑轮", "惰轮"],
+      "note": "内圈不转，可用间隙配合"
+    }
+  ],
+  "outerRing": [
+    {
+      "id": "OR01",
+      "condition": "轻载荷，外圈固定",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["H7"],
+      "applications": ["电机", "水泵", "风机"],
+      "note": "外圈固定，标准配合"
+    },
+    {
+      "id": "OR02",
+      "condition": "正常载荷，外圈固定",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["J7", "JS7"],
+      "applications": ["机床主轴箱", "减速器"],
+      "note": "正常载荷推荐过渡配合"
+    },
+    {
+      "id": "OR03",
+      "condition": "重载荷，外圈固定",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["K7", "M7"],
+      "applications": ["轧钢机", "破碎机"],
+      "note": "重载需要过盈配合"
+    },
+    {
+      "id": "OR04",
+      "condition": "外圈需要轴向游动",
+      "diameterRange": "所有尺寸",
+      "toleranceClass": ["H7", "G7"],
+      "applications": ["长轴传动系统的游动端"],
+      "note": "游动端需留间隙补偿热膨胀"
+    }
+  ]
+}

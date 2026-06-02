@@ -1,0 +1,136 @@
+{
+  "_source": "GB/T 1801-2009 附录A + 机械设计手册表18-2-20",
+  "_verified": "2026-05-21 豆包 + DeepSeek 交叉验证",
+  "fits": [
+    {
+      "code": "H11/c11",
+      "type": "clearance",
+      "basis": "hole",
+      "clearanceType": "间隙很大",
+      "assembly": "手动装配",
+      "characteristics": "用于高温或粗糙场合，易于装配",
+      "applications": ["发动机排气歧管与排气管", "铰链", "销轴配合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H9/d9",
+      "type": "clearance",
+      "basis": "hole",
+      "clearanceType": "间隙较大",
+      "assembly": "手动装配",
+      "characteristics": "间隙较大，易于装配",
+      "applications": ["农业机械", "纺织机械中的粗糙配合", "螺栓与孔的配合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H8/f7",
+      "type": "clearance",
+      "basis": "hole",
+      "clearanceType": "间隙适中",
+      "assembly": "手动装配",
+      "characteristics": "滑动灵活，间隙适中",
+      "applications": ["普通滑动轴承", "变速箱中滑动齿轮与轴"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/g6",
+      "type": "clearance",
+      "basis": "hole",
+      "clearanceType": "间隙很小",
+      "assembly": "手动装配",
+      "characteristics": "定心精度高，滑动灵活",
+      "applications": ["精密滑动轴承", "导柱导套", "机床主轴与滑动轴承", "需要经常拆卸的精密定位"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H8/h7",
+      "type": "clearance",
+      "basis": "hole",
+      "clearanceType": "最小间隙为零",
+      "assembly": "手动装配",
+      "characteristics": "定心精度较好",
+      "applications": ["不重要的定位配合", "端盖与箱体的配合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/h6",
+      "type": "transition",
+      "basis": "hole",
+      "clearanceType": "最小间隙为零",
+      "assembly": "手动装配",
+      "characteristics": "定心精度好，易于拆卸",
+      "applications": ["齿轮与轴的定位配合", "滚动轴承外圈与座孔", "法兰盘与轴的配合", "定位配合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/js6",
+      "type": "transition",
+      "basis": "hole",
+      "clearanceType": "平均间隙接近零",
+      "assembly": "手动装配（木锤）",
+      "characteristics": "定心精度高，装配方便",
+      "applications": ["齿轮与轴", "带轮与轴", "联轴器与轴", "机床变速箱中齿轮与轴"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/k6",
+      "type": "transition",
+      "basis": "hole",
+      "clearanceType": "过渡配合，有少量过盈",
+      "assembly": "木锤装配",
+      "characteristics": "定心精度高",
+      "applications": ["中等载荷齿轮与轴", "电机轴与联轴器", "中等转速的齿轮与轴"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/m6",
+      "type": "transition",
+      "basis": "hole",
+      "clearanceType": "过渡配合，过盈量较大",
+      "assembly": "铜锤装配",
+      "characteristics": "定心精度好",
+      "applications": ["重载齿轮与轴", "蜗轮与轴", "有冲击载荷的场合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/n6",
+      "type": "transition",
+      "basis": "hole",
+      "clearanceType": "过渡配合，几乎无间隙",
+      "assembly": "压力机装配",
+      "characteristics": "过盈量更大",
+      "applications": ["重型机械中齿轮与轴", "需要传递较大扭矩的场合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/p6",
+      "type": "interference",
+      "basis": "hole",
+      "clearanceType": "过盈配合，过盈量中等",
+      "assembly": "压力机装配",
+      "characteristics": "需要压力机装配",
+      "applications": ["联轴器与轴", "带轮与轴", "不需要经常拆卸的场合"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/r6",
+      "type": "interference",
+      "basis": "hole",
+      "clearanceType": "过盈配合，过盈量较大",
+      "assembly": "压力机或热装",
+      "characteristics": "需要压力机或热装",
+      "applications": ["重型轮毂与轴", "传递大扭矩和冲击载荷"],
+      "source": "GB/T 1801-2009 附录A"
+    },
+    {
+      "code": "H7/s6",
+      "type": "interference",
+      "basis": "hole",
+      "clearanceType": "过盈配合，过盈量大",
+      "assembly": "必须热装",
+      "characteristics": "必须热装，不可拆卸",
+      "applications": ["火车轮箍与轮心", "大型电机转子与轴"],
+      "source": "GB/T 1801-2009 附录A"
+    }
+  ]
+}

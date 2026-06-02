@@ -1,0 +1,47 @@
+{
+  "_source": "mechtool.cn 行业统计数据 + 工控网论坛 + 数控转机网",
+  "_verified": "2026-05-21 豆包 + DeepSeek 交叉验证",
+  "baseline": "IT12",
+  "grades": [
+    { "grade": "IT12", "multiplier": 1.0,  "increase": "基准成本", "description": "普通粗加工" },
+    { "grade": "IT11", "multiplier": 1.2,  "increase": "+20%",    "description": "增加一次半精加工" },
+    { "grade": "IT10", "multiplier": 1.5,  "increase": "+50%",    "description": "提高切削速度，增加刀具损耗" },
+    { "grade": "IT9",  "multiplier": 2.0,  "increase": "+100%",   "description": "增加一次精加工" },
+    { "grade": "IT8",  "multiplier": 2.7,  "increase": "+170%",   "description": "使用高精度刀具，增加检验时间" },
+    { "grade": "IT7",  "multiplier": 4.0,  "increase": "+300%",   "description": "增加磨削工序，加工时间翻倍" },
+    { "grade": "IT6",  "multiplier": 7.0,  "increase": "+600%",   "description": "增加精磨工序，需要恒温环境" },
+    { "grade": "IT5",  "multiplier": 15.0, "increase": "+1400%",  "description": "增加研磨工序，报废率大幅提高" }
+  ],
+  "perGradeIncrease": {
+    "IT12_to_IT11": "20%~30%",
+    "IT11_to_IT10": "30%~40%",
+    "IT10_to_IT9":  "40%~50%",
+    "IT9_to_IT8":   "50%~70%",
+    "IT8_to_IT7":   "70%~100%",
+    "IT7_to_IT6":   "100%~150%",
+    "IT6_to_IT5":   "150%~200%"
+  },
+  "keyInsights": [
+    "IT7是性价比最高的公差等级",
+    "IT7比IT8精度高一倍，但成本只增加约50%",
+    "IT6比IT7精度高一倍，成本却增加一倍以上",
+    "精度每提高一级，成本平均增加30%-50%",
+    "公差越接近设备能力极限，成本呈指数级上升"
+  ],
+  "caseExamples": [
+    {
+      "case": "电机座轴承位",
+      "from": "IT7 (±0.012mm)",
+      "to": "IT6 (±0.008mm)",
+      "costIncrease": "约30%",
+      "source": "数控转机网"
+    },
+    {
+      "case": "电机座轴承位",
+      "from": "IT6 (±0.008mm)",
+      "to": "IT5 (±0.005mm)",
+      "costIncrease": "直接翻倍",
+      "source": "数控转机网"
+    }
+  ]
+}

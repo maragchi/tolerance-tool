@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公差配合查询 | ISO 286 / GB/T 1800</title>
+<meta name="description" content="在线公差配合查询工具，支持 ISO 286 / GB/T 1800 标准。输入基本尺寸和公差代号（H7/g6），即时计算上下偏差、极限尺寸、配合类型。">
+<meta name="keywords" content="公差配合,ISO 286,GB/T 1800,公差查询,配合代号,H7,g6,间隙配合,过盈配合,过渡配合,极限偏差">
+<link rel="canonical" href="https://gongcha.cc/fit/">
+<meta property="og:title" content="公差配合查询 | ISO 286 / GB/T 1800">
+<meta property="og:description" content="在线公差配合查询工具，输入基本尺寸和公差代号，即时计算上下偏差、配合类型。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "公差配合查询",
+  "description": "ISO 286 / GB/T 1800 公差配合在线计算器",
+  "url": "https://gongcha.cc/fit/",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+}
+</script>
+<style>
+h1 { font-size: 24px; margin-bottom: 4px; }
+.subtitle { color: #666; font-size: 14px; margin-bottom: 24px; }
+.subtitle a { color: #2563eb; text-decoration: none; }
+.subtitle a:hover { text-decoration: underline; }
+.input-group input { width: 120px; font-size: 16px; }
+.input-group input.fit-input { width: 100px; text-transform: none; }
+.positive::before { content: "+"; }
+.divider { height: 1px; background: #eee; margin: 16px 0; }
+.fit-result { margin-top: 12px; }
+.fit-result h3 { font-size: 14px; color: #888; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-name">公差工具站</a>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+  </nav>
+</header>
+
+<div class="breadcrumb">
+  <a href="/">公差工具站</a><span>›</span>公差配合查询
+</div>
+
+<h1>公差配合查询</h1>
+<p class="subtitle">ISO 286 / GB/T 1800 | 基本尺寸 1~500mm | IT5~IT13</p>
+
+<div class="card">
+  <h2>单要素查询</h2>
+  <div class="input-row">
+    <div class="input-group">
+      <label>基本尺寸 (mm)</label>
+      <input type="number" id="dim" value="50" min="1" max="500" step="0.1">
+    </div>
+    <div class="input-group">
+      <label>公差代号</label>
+      <input type="text" id="code" value="H7" placeholder="如 H7, g6">
+    </div>
+    <button onclick="querySingle()">查询</button>
+  </div>
+  <p class="hint">孔用大写（H7），轴用小写（g6）</p>
+  <div id="singleResult"></div>
+</div>
+
+<div class="card">
+  <h2>配合查询</h2>
+  <div class="input-row">
+    <div class="input-group">
+      <label>基本尺寸 (mm)</label>
+      <input type="number" id="fitDim" value="50" min="1" max="500" step="0.1">
+    </div>
+    <div class="input-group">
+      <label>配合代号</label>
+      <input type="text" id="fitCode" value="H7/g6" class="fit-input" placeholder="如 H7/g6">
+    </div>
+    <button onclick="queryFit()">查询</button>
+  </div>
+  <p class="hint">格式：孔公差/轴公差，如 H7/g6、H7/k6</p>
+  <div id="fitResult"></div>
+</div>
+
+<div class="site-footer">
+  <p>公差配合查询 | ISO 286 / GB/T 1800</p>
+  <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/form/">形状公差查询</a> · <a href="/keyway/">键槽查询</a></p>
+</div>
+
+<script src="/js/nav.js"></script>
+<script>
+// === IT 标准公差值 (μm) ===
+const IT = {
+  IT5:  [4,5,6,8,9,11,13,15,18,20,23,25,27],
+  IT6:  [6,8,9,11,13,16,19,22,25,29,32,36,40],
+  IT7:  [10,12,15,18,21,25,30,35,40,46,52,57,63],
+  IT8:  [14,18,22,27,33,39,46,54,63,72,81,89,97],
+  IT9:  [25,30,36,43,52,62,74,87,100,115,130,140,155],
+  IT10: [40,48,58,70,84,100,120,140,160,185,210,230,250],
+  IT11: [60,75,90,110,130,160,190,220,250,290,320,360,400],
+  IT12: [100,120,150,180,210,250,300,350,400,460,520,570,630],
+  IT13: [140,180,220,270,330,390,460,540,630,720,810,890,970]
+};
+
+const COARSE = [
+  [0,3],[3,6],[6,10],[10,18],[18,30],[30,50],[50,80],[80,120],[120,180],[180,250],[250,315],[315,400],[400,500]
+];
+
+const FINE = [
+  [0,3],[3,6],[6,10],[10,14],[14,18],[18,24],[24,30],[30,40],[40,50],
+  [50,65],[65,80],[80,100],[100,120],[120,140],[140,160],[160,180],
+  [180,200],[200,225],[225,250],[250,280],[280,315],[315,355],[355,400],[400,450],[450,500]
+];
+
+const SHAFT_DEV = {
+  d: { type:'upper', v:[-20,-30,-40,-50,-50,-65,-65,-80,-80,-100,-100,-120,-120,-145,-145,-145,-170,-170,-170,-190,-190,-210,-210,-230,-230] },
+  e: { type:'upper', v:[-14,-20,-25,-32,-32,-40,-40,-50,-50,-60,-60,-72,-72,-85,-85,-85,-100,-100,-100,-110,-110,-125,-125,-135,-135] },
+  f: { type:'upper', v:[-6,-10,-13,-16,-16,-20,-20,-25,-25,-30,-30,-36,-36,-43,-43,-43,-50,-50,-50,-56,-56,-62,-62,-68,-68] },
+  g: { type:'upper', v:[-2,-4,-5,-6,-6,-7,-7,-9,-9,-10,-10,-12,-12,-14,-14,-14,-15,-15,-15,-17,-17,-18,-18,-20,-20] },
+  h: { type:'upper', v:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] },
+  k: { type:'lower', v:[0,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,5,5] },
+  m: { type:'lower', v:[2,4,6,7,7,8,8,9,9,11,11,13,13,15,15,15,17,17,17,20,20,21,21,23,23] },
+  n: { type:'lower', v:[4,8,10,12,12,15,15,17,17,20,20,23,23,27,27,27,31,31,31,34,34,37,37,40,40] },
+  p: { type:'lower', v:[6,12,15,18,18,22,22,26,26,32,32,37,37,43,43,43,50,50,50,56,56,62,62,68,68] },
+  r: { type:'lower', v:[10,15,19,23,23,28,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132] },
+  s: { type:'lower', v:[14,19,23,28,28,35,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,250] },
+  u: { type:'lower', v:[18,23,28,33,33,41,41,48,48,60,66,80,90,106,118,132,155,170,190,218,240,268,296,330,370] }
+};
+
+function findCoarseIndex(dim) {
+  for (let i = 0; i < COARSE.length; i++) {
+    if (dim > COARSE[i][0] && dim <= COARSE[i][1]) return i;
+  }
+  return -1;
+}
+
+function findFineIndex(dim) {
+  for (let i = 0; i < FINE.length; i++) {
+    if (dim > FINE[i][0] && dim <= FINE[i][1]) return i;
+  }
+  return -1;
+}
+
+function getIT(dim, grade) {
+  const idx = findCoarseIndex(dim);
+  if (idx < 0) return null;
+  const key = 'IT' + grade;
+  if (!IT[key]) return null;
+  return IT[key][idx];
+}
+
+function getShaftDeviation(dim, letter, grade) {
+  const idx = findFineIndex(dim);
+  if (idx < 0) return null;
+  const d = SHAFT_DEV[letter];
+  if (!d) return null;
+  // ISO 286: k 在 IT8 及以上时 ei=0
+  if (letter === 'k' && grade >= 8) {
+    return { type: d.type, value: 0 };
+  }
+  return { type: d.type, value: d.v[idx] };
+}
+
+function calcTolerance(dim, code) {
+  const match = code.trim().match(/^([a-zA-Z]+)(\d+)$/);
+  if (!match) return { error: '公差代号格式错误，如 H7、g6' };
+
+  const letter = match[1];
+  const grade = parseInt(match[2]);
+  const isHole = letter === letter.toUpperCase();
+
+  if (grade < 5 || grade > 13) return { error: 'IT等级范围: 5~13' };
+  if (dim < 1 || dim > 500) return { error: '基本尺寸范围: 1~500mm' };
+
+  const normalLetter = letter.toLowerCase();
+  const itVal = getIT(dim, grade);
+
+  if (itVal === null) return { error: '找不到该尺寸的IT值' };
+
+  if (normalLetter === 'js') {
+    const half = itVal / 2;
+    const upper = +half.toFixed(1);
+    const lower = +(-half).toFixed(1);
+    return { upper, lower, it: itVal, isHole, letter, grade };
+  }
+
+  if (normalLetter === 'h') {
+    if (isHole) {
+      return { upper: itVal, lower: 0, it: itVal, isHole, letter, grade };
+    } else {
+      return { upper: 0, lower: -itVal, it: itVal, isHole, letter, grade };
+    }
+  }
+
+  const dev = getShaftDeviation(dim, normalLetter, grade);
+  if (!dev) return { error: '不支持的偏差代号: ' + letter + '（支持: d,e,f,g,h,js,k,m,n,p,r,s,u）' };
+
+  let upper, lower;
+  if (isHole) {
+    if (dev.type === 'upper') {
+      lower = -dev.value;
+      upper = lower + itVal;
+    } else {
+      upper = -dev.value;
+      lower = upper - itVal;
+    }
+  } else {
+    if (dev.type === 'upper') {
+      upper = dev.value;
+      lower = dev.value - itVal;
+    } else {
+      lower = dev.value;
+      upper = dev.value + itVal;
+    }
+  }
+
+  upper = +upper.toFixed(1);
+  lower = +lower.toFixed(1);
+
+  return { upper, lower, it: itVal, isHole, letter, grade };
+}
+
+function calcFit(dim, holeCode, shaftCode) {
+  const hole = calcTolerance(dim, holeCode);
+  const shaft = calcTolerance(dim, shaftCode);
+
+  if (hole.error) return { error: '孔公差错误: ' + hole.error };
+  if (shaft.error) return { error: '轴公差错误: ' + shaft.error };
+
+  const maxClearance = hole.upper - shaft.lower;
+  const minClearance = hole.lower - shaft.upper;
+
+  let fitType, fitTypeCN;
+  if (minClearance >= 0 && maxClearance >= 0) {
+    fitType = 'clearance';
+    fitTypeCN = '间隙配合';
+  } else if (minClearance <= 0 && maxClearance <= 0) {
+    fitType = 'interference';
+    fitTypeCN = '过盈配合';
+  } else {
+    fitType = 'transition';
+    fitTypeCN = '过渡配合';
+  }
+
+  return { hole, shaft, maxClearance, minClearance, fitType, fitTypeCN };
+}
+
+function formatDev(val) {
+  if (val === 0) return '0';
+  const sign = val > 0 ? '+' : '';
+  return sign + (val / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+}
+
+function formatMM(um) {
+  return (um / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+}
+
+function querySingle() {
+  const dim = parseFloat(document.getElementById('dim').value);
+  const code = document.getElementById('code').value.trim();
+  const result = calcTolerance(dim, code);
+  const container = document.getElementById('singleResult');
+
+  if (result.error) {
+    container.innerHTML = '<p class="error">' + result.error + '</p>';
+    return;
+  }
+
+  const type = result.isHole ? '孔' : '轴';
+  const maxLimit = (dim * 1000 + result.upper) / 1000;
+  const minLimit = (dim * 1000 + result.lower) / 1000;
+
+  container.innerHTML = `
+    <table class="result-table">
+      <tr><th>类型</th><td>${type} (${code})</td></tr>
+      <tr><th>上偏差</th><td class="value">${formatDev(result.upper)} mm</td></tr>
+      <tr><th>下偏差</th><td class="value">${formatDev(result.lower)} mm</td></tr>
+      <tr><th>公差值</th><td class="value">${formatMM(result.it)} mm</td></tr>
+      <tr><th>最大极限尺寸</th><td class="value">${maxLimit.toFixed(4)} mm</td></tr>
+      <tr><th>最小极限尺寸</th><td class="value">${minLimit.toFixed(4)} mm</td></tr>
+    </table>
+  `;
+}
+
+function queryFit() {
+  const dim = parseFloat(document.getElementById('fitDim').value);
+  const code = document.getElementById('fitCode').value.trim();
+  const parts = code.split('/');
+  const container = document.getElementById('fitResult');
+
+  if (parts.length !== 2) {
+    container.innerHTML = '<p class="error">请输入配合代号，如 H7/g6</p>';
+    return;
+  }
+
+  const result = calcFit(dim, parts[0], parts[1]);
+
+  if (result.error) {
+    container.innerHTML = '<p class="error">' + result.error + '</p>';
+    return;
+  }
+
+  const tagClass = 'tag-' + result.fitType;
+  const holeMax = (dim * 1000 + result.hole.upper) / 1000;
+  const holeMin = (dim * 1000 + result.hole.lower) / 1000;
+  const shaftMax = (dim * 1000 + result.shaft.upper) / 1000;
+  const shaftMin = (dim * 1000 + result.shaft.lower) / 1000;
+
+  container.innerHTML = `
+    <div style="margin-top:12px">
+      <span class="tag ${tagClass}">${result.fitTypeCN}</span>
+    </div>
+    <table class="result-table">
+      <tr><th>孔 ${parts[0]}</th><td>上偏差 ${formatDev(result.hole.upper)} / 下偏差 ${formatDev(result.hole.lower)}</td><td class="value">${holeMin.toFixed(4)} ~ ${holeMax.toFixed(4)}</td></tr>
+      <tr><th>轴 ${parts[1]}</th><td>上偏差 ${formatDev(result.shaft.upper)} / 下偏差 ${formatDev(result.shaft.lower)}</td><td class="value">${shaftMin.toFixed(4)} ~ ${shaftMax.toFixed(4)}</td></tr>
+      <tr><th>最大间隙/过盈</th><td colspan="2" class="value">${formatMM(result.maxClearance)} mm</td></tr>
+      <tr><th>最小间隙/过盈</th><td colspan="2" class="value">${formatMM(result.minClearance)} mm</td></tr>
+    </table>
+  `;
+}
+</script>
+</body>
+</html>

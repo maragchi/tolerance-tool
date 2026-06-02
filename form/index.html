@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>直线度/平面度公差查询 | GB/T 1184</title>
+<meta name="description" content="在线查询直线度和平面度公差值，支持 GB/T 1184-1996 标准，输入长度和等级即可获取公差值、加工方法和测量方法推荐。">
+<meta name="keywords" content="直线度公差,平面度公差,GB/T 1184,形状公差,形位公差,公差查询,未注公差">
+<link rel="canonical" href="https://gongcha.cc/form/">
+<meta property="og:title" content="直线度/平面度公差查询 | GB/T 1184">
+<meta property="og:description" content="在线查询直线度和平面度公差值，输入长度和等级即可获取公差值、加工方法和测量方法推荐。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "形状公差查询",
+  "description": "GB/T 1184-1996 直线度和平面度公差在线查询工具",
+  "url": "https://gongcha.cc/form/",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+}
+</script>
+<style>
+h1 { font-size: 22px; margin-bottom: 2px; }
+.subtitle { color: #666; font-size: 13px; margin-bottom: 20px; }
+.subtitle a { color: #2563eb; text-decoration: none; }
+.subtitle a:hover { text-decoration: underline; }
+.tabs { display: flex; border-bottom: 2px solid #e5e7eb; margin-bottom: 16px; }
+.tab { padding: 10px 24px; font-size: 15px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: #888; transition: all .2s; user-select: none; }
+.tab:hover { color: #333; }
+.tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+.input-group input, .input-group select { width: 140px; }
+.input-group select { width: 180px; }
+.mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+.mode-btn { padding: 4px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; cursor: pointer; background: #fff; color: #666; }
+.mode-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+.result-highlight { display: flex; align-items: baseline; gap: 8px; margin: 16px 0; padding: 16px; background: linear-gradient(135deg,#eff6ff,#f0f9ff); border-radius: 8px; border-left: 4px solid #2563eb; }
+.result-value { font-size: 32px; font-weight: 700; color: #1a1a1a; font-family: Consolas, monospace; }
+.result-unit { font-size: 14px; color: #666; }
+.result-label { font-size: 13px; color: #888; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.info-item { padding: 12px; background: #f9fafb; border-radius: 6px; }
+.info-item .info-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+.info-item .info-value { font-size: 14px; color: #1a1a1a; font-weight: 500; }
+.verify-badge { background: #d1fae5; border: 1px solid #34d399; border-radius: 6px; padding: 8px 12px; margin-bottom: 12px; font-size: 12px; color: #065f46; }
+@media(max-width:500px){ .info-grid{grid-template-columns:1fr} }
+@media(max-width:600px){
+  h1{font-size:18px}
+  .tabs{gap:0}
+  .tab{padding:8px 16px;font-size:14px}
+  .input-row{flex-direction:column;align-items:stretch}
+  .input-group input,.input-group select{width:100%}
+  button{width:100%}
+  .result-value{font-size:24px}
+  .info-grid{grid-template-columns:1fr}
+  table.data-table{font-size:11px}
+  table.data-table th,table.data-table td{padding:4px 4px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-name">公差工具站</a>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+  </nav>
+</header>
+
+<div class="breadcrumb">
+  <a href="/">公差工具站</a><span>›</span>形状公差查询
+</div>
+
+<h1>直线度 / 平面度公差查询</h1>
+<p class="subtitle">GB/T 1184-1996 | 长度 0~10000mm | 公差等级 1~12 级 | v2 | <a href="/fit/">公差配合查询 →</a></p>
+<div class="verify-badge">✓ 公差值数据已与 GB/T 1184-1996 标准原文核对一致（豆包+DeepSeek 双AI交叉验证）</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="straightness">直线度 ⏤</div>
+  <div class="tab" data-tab="flatness">平面度 ⏥</div>
+</div>
+
+<div class="card">
+  <h2>公差值查询</h2>
+  <div class="mode-toggle">
+    <button class="mode-btn active" data-mode="grade">按等级查询</button>
+    <button class="mode-btn" data-mode="scenario">按应用场景查询</button>
+  </div>
+  <div id="gradeMode">
+    <div class="input-row">
+      <div class="input-group">
+        <label>主参数长度 L (mm)</label>
+        <input type="number" id="lengthInput" value="100" min="0" max="10000" step="1">
+      </div>
+      <div class="input-group">
+        <label>公差等级</label>
+        <select id="gradeSelect">
+          <option value="">请选择</option>
+        </select>
+      </div>
+      <button onclick="queryByGrade()">查询</button>
+    </div>
+    <p class="hint">主参数为被测要素的长度尺寸</p>
+  </div>
+  <div id="scenarioMode" class="hidden">
+    <div class="input-row">
+      <div class="input-group">
+        <label>主参数长度 L (mm)</label>
+        <input type="number" id="lengthInput2" value="100" min="0" max="10000" step="1">
+      </div>
+      <div class="input-group">
+        <label>应用场景</label>
+        <select id="scenarioSelect">
+          <option value="">请选择</option>
+        </select>
+      </div>
+      <button onclick="queryByScenario()">查询</button>
+    </div>
+  </div>
+  <div id="resultArea"></div>
+</div>
+
+<div class="card">
+  <h2>未注公差值（一般公差）</h2>
+  <p class="hint" style="margin-bottom:8px">ISO 2768-2 / GB/T 1184 未注形状公差，适用于图样上未单独标注公差的要素</p>
+  <div id="generalTolArea"></div>
+</div>
+
+<div class="site-footer">
+  <p>形状公差查询工具 v2 | GB/T 1184-1996 | 数据已与标准原文核对</p>
+  <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/fit/">公差配合查询</a> · <a href="/keyway/">键槽查询</a></p>
+</div>
+
+<script src="/js/nav.js"></script>
+<script>
+const VERSION = 'v2';
+const DATA_STATUS = '数据经双AI（豆包+DeepSeek）交叉验证，并与 GB/T 1184-1996 标准原文核对一致';
+
+const DATA = { straightness: null, flatness: null };
+
+const TOLERANCE_TABLE = [
+  { min:0, max:10, label:"≤10", grades:{1:0.2,2:0.4,3:0.8,4:1.2,5:2,6:3,7:5,8:8,9:12,10:20,11:30,12:60} },
+  { min:10, max:16, label:">10~16", grades:{1:0.25,2:0.5,3:1,4:1.5,5:2.5,6:4,7:6,8:10,9:15,10:25,11:40,12:80} },
+  { min:16, max:25, label:">16~25", grades:{1:0.3,2:0.6,3:1.2,4:2,5:3,6:5,7:8,8:12,9:20,10:30,11:50,12:100} },
+  { min:25, max:40, label:">25~40", grades:{1:0.4,2:0.8,3:1.5,4:2.5,5:4,6:6,7:10,8:15,9:25,10:40,11:60,12:120} },
+  { min:40, max:63, label:">40~63", grades:{1:0.5,2:1,3:2,4:3,5:5,6:8,7:12,8:20,9:30,10:50,11:80,12:150} },
+  { min:63, max:100, label:">63~100", grades:{1:0.6,2:1.2,3:2.5,4:4,5:6,6:10,7:15,8:25,9:40,10:60,11:100,12:200} },
+  { min:100, max:160, label:">100~160", grades:{1:0.8,2:1.5,3:3,4:5,5:8,6:12,7:20,8:30,9:50,10:80,11:120,12:250} },
+  { min:160, max:250, label:">160~250", grades:{1:1,2:2,3:4,4:6,5:10,6:15,7:25,8:40,9:60,10:100,11:150,12:300} },
+  { min:250, max:400, label:">250~400", grades:{1:1.2,2:2.5,3:5,4:8,5:12,6:20,7:30,8:50,9:80,10:120,11:200,12:400} },
+  { min:400, max:630, label:">400~630", grades:{1:1.5,2:3,3:6,4:10,5:15,6:25,7:40,8:60,9:100,10:150,11:250,12:500} },
+  { min:630, max:1000, label:">630~1000", grades:{1:2,2:4,3:8,4:12,5:20,6:30,7:50,8:80,9:120,10:200,11:300,12:600} },
+  { min:1000, max:1600, label:">1000~1600", grades:{1:2.5,2:5,3:10,4:15,5:25,6:40,7:60,8:100,9:150,10:250,11:400,12:800} },
+  { min:1600, max:2500, label:">1600~2500", grades:{1:3,2:6,3:12,4:20,5:30,6:50,7:80,8:120,9:200,10:300,11:500,12:1000} },
+  { min:2500, max:4000, label:">2500~4000", grades:{1:4,2:8,3:15,4:25,5:40,6:60,7:100,8:150,9:250,10:400,11:600,12:1200} },
+  { min:4000, max:6300, label:">4000~6300", grades:{1:5,2:10,3:20,4:30,5:50,6:80,7:120,8:200,9:300,10:500,11:800,12:1500} },
+  { min:6300, max:10000, label:">6300~10000", grades:{1:6,2:12,3:25,4:40,5:60,6:100,7:150,8:250,9:400,10:600,11:1000,12:2000} }
+];
+
+const GENERAL_TOL = {
+  ranges: ["≤10",">10~30",">30~100",">100~300",">300~1000",">1000~3000"],
+  classes: {
+    H: { name:"精密级", values:[0.02,0.05,0.1,0.2,0.3,0.4] },
+    K: { name:"中等级", values:[0.05,0.1,0.2,0.4,0.6,0.8] },
+    L: { name:"粗糙级", values:[0.1,0.2,0.4,0.8,1.2,1.6] }
+  }
+};
+
+const STRAIGHTNESS_APPS = [
+  { name:"精密量仪导轨", grades:[1,2], desc:"三坐标测量机导轨、光学仪器导轨" },
+  { name:"精密机床导轨", grades:[3,4], desc:"磨床导轨、坐标镗床导轨" },
+  { name:"高精度液压阀芯", grades:[3,4], desc:"伺服阀芯、比例阀芯" },
+  { name:"一般机床导轨", grades:[5,6], desc:"车床导轨、铣床导轨" },
+  { name:"精密圆柱面", grades:[5,6], desc:"液压缸内孔、精密轴" },
+  { name:"一般机械零件", grades:[7,8], desc:"轴承配合面、导向面" },
+  { name:"普通加工面", grades:[9,10], desc:"支架导轨、滑块面" },
+  { name:"粗加工面", grades:[11,12], desc:"结构件非配合面、粗车面" }
+];
+
+const FLATNESS_APPS = [
+  { name:"精密量仪平台", grades:[1,2], desc:"三坐标测量机工作台、光学平台" },
+  { name:"精密机床工作台", grades:[3,4], desc:"磨床工作台、坐标镗床工作台" },
+  { name:"高精度基准面", grades:[3,4], desc:"精密平板、V形块基准面" },
+  { name:"一般机床工作台", grades:[5,6], desc:"车床工作台、铣床工作台" },
+  { name:"精密结合面", grades:[5,6], desc:"箱体分型面、法兰结合面" },
+  { name:"一般机械结合面", grades:[7,8], desc:"法兰面、安装面、垫圈面" },
+  { name:"普通加工面", grades:[9,10], desc:"机架安装面、底座面" },
+  { name:"粗加工面", grades:[11,12], desc:"结构件非配合面、毛坯面" }
+];
+
+const MFG_METHODS = [
+  { grades:[1,2], methods:"研磨、超精加工", desc:"极高精度" },
+  { grades:[3,4], methods:"精磨、坐标磨削", desc:"高精度" },
+  { grades:[5,6], methods:"精车、磨削、精铣", desc:"较高精度" },
+  { grades:[7,8], methods:"车削、铣削、刨削", desc:"中等精度" },
+  { grades:[9,10], methods:"粗车、粗铣、粗刨", desc:"一般精度" },
+  { grades:[11,12], methods:"粗加工、气割、锯切", desc:"低精度" }
+];
+
+const MEAS_METHODS = [
+  { grades:[1,3], methods:"激光干涉仪、电子水平仪、自准直仪" },
+  { grades:[4,6], methods:"光学平晶、合像水平仪、测微准直望远镜" },
+  { grades:[7,9], methods:"水平仪、指示表、平尺+塞尺" },
+  { grades:[10,12], methods:"钢直尺、塞尺、拉线" }
+];
+
+let currentTab = 'straightness';
+
+function init() {
+  const sel = document.getElementById('gradeSelect');
+  for (let i = 1; i <= 12; i++) {
+    sel.innerHTML += '<option value="'+i+'">'+i+' 级</option>';
+  }
+  populateScenarios();
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      currentTab = t.dataset.tab;
+      populateScenarios();
+      document.getElementById('resultArea').innerHTML = '';
+    });
+  });
+
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      const mode = b.dataset.mode;
+      document.getElementById('gradeMode').classList.toggle('hidden', mode !== 'grade');
+      document.getElementById('scenarioMode').classList.toggle('hidden', mode !== 'scenario');
+    });
+  });
+
+  renderGeneralTol();
+
+  document.getElementById('lengthInput').addEventListener('keydown', e => { if (e.key === 'Enter') queryByGrade(); });
+  document.getElementById('lengthInput2').addEventListener('keydown', e => { if (e.key === 'Enter') queryByScenario(); });
+}
+
+function populateScenarios() {
+  const apps = currentTab === 'straightness' ? STRAIGHTNESS_APPS : FLATNESS_APPS;
+  const sel = document.getElementById('scenarioSelect');
+  sel.innerHTML = '<option value="">请选择</option>';
+  apps.forEach((a, i) => {
+    sel.innerHTML += '<option value="'+i+'">'+a.name+'（'+a.grades[0]+'~'+a.grades[1]+'级）</option>';
+  });
+}
+
+function findRange(length) {
+  for (const r of TOLERANCE_TABLE) {
+    if (length > r.min && length <= r.max) return r;
+  }
+  if (length === 0) return TOLERANCE_TABLE[0];
+  return null;
+}
+
+function getTolerance(length, grade) {
+  const range = findRange(length);
+  if (!range) return null;
+  return range.grades[grade] || null;
+}
+
+function getMfgMethod(grade) {
+  for (const m of MFG_METHODS) {
+    if (grade >= m.grades[0] && grade <= m.grades[1]) return m;
+  }
+  return null;
+}
+
+function getMeasMethod(grade) {
+  for (const m of MEAS_METHODS) {
+    if (grade >= m.grades[0] && grade <= m.grades[1]) return m;
+  }
+  return null;
+}
+
+function queryByGrade() {
+  const length = parseFloat(document.getElementById('lengthInput').value);
+  const grade = parseInt(document.getElementById('gradeSelect').value);
+  const area = document.getElementById('resultArea');
+
+  if (isNaN(length) || length < 0 || length > 10000) {
+    area.innerHTML = '<p class="error">长度范围：0~10000mm</p>';
+    return;
+  }
+  if (!grade) {
+    area.innerHTML = '<p class="error">请选择公差等级</p>';
+    return;
+  }
+
+  const range = findRange(length);
+  if (!range) {
+    area.innerHTML = '<p class="error">未找到对应的长度范围</p>';
+    return;
+  }
+
+  const tol = getTolerance(length, grade);
+  const mfg = getMfgMethod(grade);
+  const meas = getMeasMethod(grade);
+  const apps = currentTab === 'straightness' ? STRAIGHTNESS_APPS : FLATNESS_APPS;
+  const matchedApps = apps.filter(a => grade >= a.grades[0] && grade <= a.grades[1]);
+
+  const param = currentTab === 'straightness' ? '直线度' : '平面度';
+  const symbol = currentTab === 'straightness' ? '⏤' : '⏥';
+
+  let html = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+param+'公差值</div><div class="result-value">'+tol+' <span class="result-unit">μm</span></div><div class="result-label">长度范围 '+range.label+' · '+grade+' 级</div></div></div><div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
+
+  if (matchedApps.length > 0) {
+    html += '<div class="info-item" style="margin-top:12px"><div class="info-label">适用场景</div><div class="info-value">'+matchedApps.map(a => a.name).join('、')+'</div></div>';
+  }
+
+  html += '<details style="margin-top:16px"><summary style="cursor:pointer;font-size:13px;color:#666">查看同长度范围全部等级</summary><table class="data-table"><tr><th>等级</th>';
+  for (let g = 1; g <= 12; g++) html += '<th>'+g+'</th>';
+  html += '</tr><tr><td>'+param+' (μm)</td>';
+  for (let g = 1; g <= 12; g++) {
+    const v = range.grades[g];
+    html += '<td'+(g === grade ? ' class="highlight"' : '')+'>'+v+'</td>';
+  }
+  html += '</tr></table></details>';
+
+  area.innerHTML = html;
+}
+
+function queryByScenario() {
+  const length = parseFloat(document.getElementById('lengthInput2').value);
+  const idx = document.getElementById('scenarioSelect').value;
+  const area = document.getElementById('resultArea');
+
+  if (isNaN(length) || length < 0 || length > 10000) {
+    area.innerHTML = '<p class="error">长度范围：0~10000mm</p>';
+    return;
+  }
+  if (idx === '') {
+    area.innerHTML = '<p class="error">请选择应用场景</p>';
+    return;
+  }
+
+  const apps = currentTab === 'straightness' ? STRAIGHTNESS_APPS : FLATNESS_APPS;
+  const app = apps[parseInt(idx)];
+  const param = currentTab === 'straightness' ? '直线度' : '平面度';
+  const symbol = currentTab === 'straightness' ? '⏤' : '⏥';
+
+  const range = findRange(length);
+  if (!range) {
+    area.innerHTML = '<p class="error">未找到对应的长度范围</p>';
+    return;
+  }
+
+  let gradeRows = '';
+  for (let g = app.grades[0]; g <= app.grades[1]; g++) {
+    const tol = range.grades[g];
+    gradeRows += '<tr><td>'+g+' 级</td><td>'+tol+' μm</td></tr>';
+  }
+
+  const mfg = getMfgMethod(app.grades[0]);
+  const meas = getMeasMethod(app.grades[0]);
+
+  area.innerHTML = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+app.name+' · 推荐等级 '+app.grades[0]+'~'+app.grades[1]+' 级</div><div class="result-label" style="margin-top:4px">'+app.desc+'</div><div class="result-label" style="margin-top:4px">长度范围 '+range.label+'</div></div></div><table class="data-table" style="margin-top:12px"><tr><th>推荐等级</th><th>公差值</th></tr>'+gradeRows+'</table><div class="info-grid" style="margin-top:12px"><div class="info-item"><div class="info-label">推荐加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">推荐测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
+}
+
+function renderGeneralTol() {
+  const area = document.getElementById('generalTolArea');
+  let html = '<table class="data-table"><tr><th>长度范围</th><th>H（精密级）</th><th>K（中等级）</th><th>L（粗糙级）</th></tr>';
+  GENERAL_TOL.ranges.forEach((r, i) => {
+    html += '<tr><td>'+r+'</td>';
+    for (const cls of ['H','K','L']) {
+      html += '<td>'+GENERAL_TOL.classes[cls].values[i]+' mm</td>';
+    }
+    html += '</tr>';
+  });
+  html += '</table>';
+  area.innerHTML = html;
+}
+
+init();
+</script>
+</body>
+</html>

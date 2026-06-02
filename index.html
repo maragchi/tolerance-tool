@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公差工具站 - 在线公差配合查询、形状公差查询 | GB/T 1800 GB/T 1184</title>
+<meta name="description" content="免费在线公差查询工具：ISO 286/GB/T 1800 公差配合计算、GB/T 1184 形状公差查询、GB/T 1095 键槽查询。支持公差等级查询、配合类型判断、极限偏差计算。">
+<meta name="keywords" content="公差查询,公差配合,形状公差,直线度,平面度,键槽,ISO 286,GB/T 1800,GB/T 1184,GB/T 1095,公差等级,配合代号,极限偏差">
+<link rel="canonical" href="https://gongcha.cc/">
+<meta property="og:title" content="公差工具站 - 在线公差查询工具">
+<meta property="og:description" content="免费在线公差查询：公差配合计算、形状公差查询、键槽尺寸查询。依据国家标准，数据已验证。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+<style>
+.hero { text-align: center; padding: 40px 0 32px; }
+.hero h1 { font-size: 28px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+.hero p { color: #666; font-size: 15px; line-height: 1.6; }
+.hero .tagline { color: #888; font-size: 13px; margin-top: 4px; }
+.tool-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
+.tool-card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid #2563eb; }
+.tool-card h2 { font-size: 18px; margin-bottom: 8px; color: #1a1a1a; }
+.tool-card p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
+.tool-card ul { list-style: none; padding: 0; margin-bottom: 12px; }
+.tool-card ul li { padding: 3px 0; font-size: 13px; color: #555; }
+.tool-card ul li::before { content: "✓ "; color: #2563eb; font-weight: bold; }
+.tool-card .std-ref { font-size: 12px; color: #888; margin-bottom: 12px; }
+.tool-card .tool-link { display: inline-block; padding: 8px 20px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 6px; font-size: 14px; transition: background 0.2s; }
+.tool-card .tool-link:hover { background: #1d4ed8; }
+.faq-section { margin-bottom: 32px; }
+.faq-section h2 { font-size: 18px; margin-bottom: 16px; color: #1a1a1a; }
+.faq-item { background: #fff; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+.faq-item summary { padding: 14px 20px; cursor: pointer; font-size: 14px; font-weight: 500; color: #333; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.faq-item summary::after { content: "+"; font-size: 18px; color: #999; transition: transform 0.2s; }
+.faq-item[open] summary::after { content: "−"; }
+.faq-item .faq-answer { padding: 0 20px 14px; font-size: 13px; color: #666; line-height: 1.8; }
+@media(max-width:600px){
+  .hero h1{font-size:22px}
+  .hero{padding:24px 0 20px}
+  .tool-card{padding:16px}
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "公差工具站",
+  "description": "面向中国机械工程师的免费在线公差查询工具",
+  "url": "https://gongcha.cc",
+  "inLanguage": "zh-CN"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "公差查询工具",
+  "itemListElement": [
+    { "@type": "WebApplication", "name": "公差配合查询", "url": "https://gongcha.cc/fit/", "description": "ISO 286 / GB/T 1800 公差配合在线计算器", "applicationCategory": "DesignApplication", "operatingSystem": "Any" },
+    { "@type": "WebApplication", "name": "形状公差查询", "url": "https://gongcha.cc/form/", "description": "GB/T 1184 直线度和平面度公差在线查询", "applicationCategory": "DesignApplication", "operatingSystem": "Any" },
+    { "@type": "WebApplication", "name": "键槽查询", "url": "https://gongcha.cc/keyway/", "description": "GB/T 1095 键槽尺寸在线查询，含工程剖面图", "applicationCategory": "DesignApplication", "operatingSystem": "Any" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "什么是公差配合？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "公差配合是指基本尺寸相同的孔和轴结合时，由于各自的极限尺寸不同而产生的配合关系。根据孔和轴公差带的相对位置关系，配合分为三种基本类型：间隙配合（孔的公差带在轴之上，有间隙）、过盈配合（轴的公差带在孔之上，有过盈）和过渡配合（公差带交叠，可能有间隙也可能有过盈）。公差配合由 ISO 286 国际标准和 GB/T 1800 中国国家标准规定，是机械设计中最基础的精度控制手段。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "H7/g6 是什么配合？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "H7/g6 是典型的间隙配合，属于基孔制配合。其中 H7 表示孔的基本偏差为 H（下偏差 EI=0）、公差等级为 IT7；g6 表示轴的基本偏差为 g（上偏差 es 为负值）、公差等级为 IT6。这种配合的特点是有保证的间隙，常用于要求灵活运转、容易拆装的场合，如滑动轴承配合、皮带轮与轴的配合、齿轮在轴上滑移等。以基本尺寸 50mm 为例，H7/g6 的最大间隙约为 0.050mm，最小间隙约为 0.009mm。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "直线度公差等级怎么选？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "直线度公差等级的选取取决于零件的功能要求和加工经济性。一般原则：1~2级用于精密量仪导轨、光学仪器导轨等极高精度场合，需研磨或超精加工；3~4级用于精密机床导轨、高精度液压阀芯，需精磨或坐标磨削；5~6级用于一般机床导轨、精密圆柱面，可通过精车、磨削实现；7~8级用于一般机械零件的配合面和导向面，通过普通车削、铣削即可达到；9~10级用于普通加工面；11~12级用于粗加工面和非配合面。选择时应综合考虑功能要求、批量大小和加工成本，在满足使用要求的前提下尽量选用较低的公差等级。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "GB/T 1184 和 ISO 2768-2 的关系？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GB/T 1184-1996《形状和位置公差 未注公差值》等同采用 ISO 2768-2:1989 国际标准。该标准规定了图样上未单独标注形状和位置公差时，应遵守的未注公差值。标准将未注形状公差分为三个等级：H（精密级）、K（中等级）和 L（粗糙级），企业可根据自身产品精度要求在企业标准中选择一个等级。需要注意的是，GB/T 1184 同时也包含了注出公差的公差值表（附录B），用于设计时查取直线度、平面度等形状公差的具体数值。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "键槽尺寸怎么查？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "键槽尺寸依据 GB/T 1095-2003 标准《平键 键槽的剖面尺寸》。查询方法：首先确定轴的直径 d，根据轴径范围在标准表中查找对应的键尺寸（键宽 b × 键高 h）、轴槽深 t₁、毂槽深 t₂、以及半径 r。标准同时规定了三种键槽配合：较松联结（轴槽 H9、毂槽 D10）、一般联结（轴槽 N9、毂槽 JS9）和较紧联结（轴和毂槽均为 P9）。使用本站键槽查询工具，只需输入轴径即可自动查表并获得包含全部尺寸标注的工程剖面图。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "公差等级和加工方法的关系？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "公差等级与加工方法密切相关，不同的加工方法能够经济地达到的精度等级不同。IT1~IT4 级需要研磨、超精加工、坐标磨削等精密加工方法，用于量具、精密仪器零件；IT5~IT6 级可通过精磨、精车、精铣实现，用于精密机械、重要配合件；IT7~IT8 级是常用精度等级，普通车削、铣削、刨削即可达到，广泛用于一般机械的配合面；IT9~IT10 级通过粗车、粗铣等工序可达，用于非精密配合；IT11~IT12 级为粗加工精度，通过气割、锯切等即可达到。选择加工方法时应在满足公差要求的前提下，优先选择最经济的加工方法。"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-name">公差工具站</a>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>公差工具站</h1>
+  <p>面向中国机械工程师的免费在线公差查询工具</p>
+  <p class="tagline">数据依据 GB/T 1800 · GB/T 1184 · GB/T 1095 国家标准</p>
+</section>
+
+<section class="tool-grid">
+  <div class="tool-card">
+    <h2>公差配合查询</h2>
+    <p>ISO 286 / GB/T 1800 公差配合计算器。输入基本尺寸和公差代号，即时计算上下偏差、极限尺寸和配合类型。</p>
+    <ul>
+      <li>单要素公差查询（H7、g6 等）</li>
+      <li>配合查询（H7/g6、H7/k6 等），自动判断间隙/过渡/过盈配合</li>
+      <li>支持 d~u 共 12 种轴偏差代号 + js 对称偏差</li>
+    </ul>
+    <div class="std-ref">标准：ISO 286-1/2 · GB/T 1800.1/1800.2</div>
+    <a href="/fit/" class="tool-link">开始查询 →</a>
+  </div>
+
+  <div class="tool-card">
+    <h2>形状公差查询</h2>
+    <p>GB/T 1184-1996 直线度和平面度公差值查询。输入长度和公差等级，获取公差值、推荐加工方法和测量方法。</p>
+    <ul>
+      <li>直线度 + 平面度公差查询（16段 R5 优先数系，1~12 级）</li>
+      <li>按应用场景反向查询推荐等级</li>
+      <li>未注公差（一般公差 H/K/L 级）参考表</li>
+    </ul>
+    <div class="std-ref">标准：GB/T 1184-1996 · ISO 2768-2</div>
+    <a href="/form/" class="tool-link">开始查询 →</a>
+  </div>
+
+  <div class="tool-card">
+    <h2>键槽查询</h2>
+    <p>GB/T 1095-2003 键槽尺寸查询。输入轴径，自动查表生成轴和轮毂的键槽工程剖面图，支持 PDF 导出。</p>
+    <ul>
+      <li>自动查找键宽 b、键高 h、轴槽深 t₁、毂槽深 t₂</li>
+      <li>三种配合：较松(H9/D10)、一般(N9/JS9)、较紧(P9)</li>
+      <li>国标工程图，含尺寸公差标注，支持导出打印</li>
+    </ul>
+    <div class="std-ref">标准：GB/T 1095-2003</div>
+    <a href="/keyway/" class="tool-link">开始查询 →</a>
+  </div>
+</section>
+
+<section class="faq-section">
+  <h2>常见问题</h2>
+
+  <details class="faq-item">
+    <summary>什么是公差配合？</summary>
+    <div class="faq-answer">
+      <p>公差配合是指基本尺寸相同的孔和轴结合时，由于各自的极限尺寸不同而产生的配合关系。根据孔和轴公差带的相对位置关系，配合分为三种基本类型：间隙配合（孔的公差带在轴之上，有间隙）、过盈配合（轴的公差带在孔之上，有过盈）和过渡配合（公差带交叠，可能有间隙也可能有过盈）。公差配合由 ISO 286 国际标准和 GB/T 1800 中国国家标准规定，是机械设计中最基础的精度控制手段。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>H7/g6 是什么配合？</summary>
+    <div class="faq-answer">
+      <p>H7/g6 是典型的间隙配合，属于基孔制配合。其中 H7 表示孔的基本偏差为 H（下偏差 EI=0）、公差等级为 IT7；g6 表示轴的基本偏差为 g（上偏差 es 为负值）、公差等级为 IT6。这种配合的特点是有保证的间隙，常用于要求灵活运转、容易拆装的场合，如滑动轴承配合、皮带轮与轴的配合、齿轮在轴上滑移等。以基本尺寸 50mm 为例，H7/g6 的最大间隙约为 0.050mm，最小间隙约为 0.009mm。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>直线度公差等级怎么选？</summary>
+    <div class="faq-answer">
+      <p>直线度公差等级的选取取决于零件的功能要求和加工经济性。一般原则：1~2级用于精密量仪导轨、光学仪器导轨等极高精度场合，需研磨或超精加工；3~4级用于精密机床导轨、高精度液压阀芯，需精磨或坐标磨削；5~6级用于一般机床导轨、精密圆柱面，可通过精车、磨削实现；7~8级用于一般机械零件的配合面和导向面，通过普通车削、铣削即可达到；9~10级用于普通加工面；11~12级用于粗加工面和非配合面。选择时应综合考虑功能要求、批量大小和加工成本，在满足使用要求的前提下尽量选用较低的公差等级。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>GB/T 1184 和 ISO 2768-2 的关系？</summary>
+    <div class="faq-answer">
+      <p>GB/T 1184-1996《形状和位置公差 未注公差值》等同采用 ISO 2768-2:1989 国际标准。该标准规定了图样上未单独标注形状和位置公差时，应遵守的未注公差值。标准将未注形状公差分为三个等级：H（精密级）、K（中等级）和 L（粗糙级），企业可根据自身产品精度要求在企业标准中选择一个等级。需要注意的是，GB/T 1184 同时也包含了注出公差的公差值表（附录B），用于设计时查取直线度、平面度等形状公差的具体数值。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>键槽尺寸怎么查？</summary>
+    <div class="faq-answer">
+      <p>键槽尺寸依据 GB/T 1095-2003 标准《平键 键槽的剖面尺寸》。查询方法：首先确定轴的直径 d，根据轴径范围在标准表中查找对应的键尺寸（键宽 b × 键高 h）、轴槽深 t₁、毂槽深 t₂、以及半径 r。标准同时规定了三种键槽配合：较松联结（轴槽 H9、毂槽 D10）、一般联结（轴槽 N9、毂槽 JS9）和较紧联结（轴和毂槽均为 P9）。使用本站键槽查询工具，只需输入轴径即可自动查表并获得包含全部尺寸标注的工程剖面图。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>公差等级和加工方法的关系？</summary>
+    <div class="faq-answer">
+      <p>公差等级与加工方法密切相关，不同的加工方法能够经济地达到的精度等级不同。IT1~IT4 级需要研磨、超精加工、坐标磨削等精密加工方法，用于量具、精密仪器零件；IT5~IT6 级可通过精磨、精车、精铣实现，用于精密机械、重要配合件；IT7~IT8 级是常用精度等级，普通车削、铣削、刨削即可达到，广泛用于一般机械的配合面；IT9~IT10 级通过粗车、粗铣等工序可达，用于非精密配合；IT11~IT12 级为粗加工精度，通过气割、锯切等即可达到。选择加工方法时应在满足公差要求的前提下，优先选择最经济的加工方法。</p>
+    </div>
+  </details>
+</section>
+
+<div class="site-footer">
+  <p>公差工具站 | 数据依据国家标准，已与标准原文核对</p>
+  <p style="margin-top:4px">如发现数据有误请反馈 · 工具持续更新中</p>
+</div>
+
+<script src="/js/nav.js"></script>
+</body>
+</html>
