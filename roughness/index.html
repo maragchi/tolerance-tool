@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>表面粗糙度查询 | Ra推荐、加工方法对照、标注符号 | GB/T 1031</title>
+<meta name="description" content="表面粗糙度在线查询：按应用场景推荐Ra值（配合面/密封面/导轨等），加工方法可达Ra对照，粗糙度标注符号规范（GB/T 131）。依据GB/T 1031-2009。">
+<meta name="keywords" content="表面粗糙度,Ra推荐,粗糙度查询,加工方法,Ra范围,取样长度,GB/T 1031,GB/T 131,粗糙度标注,配合面粗糙度">
+<link rel="canonical" href="https://gongcha.cc/roughness/">
+<meta property="og:title" content="表面粗糙度查询 | Ra推荐与标注">
+<meta property="og:description" content="按场景推荐Ra、加工方法对照、标注符号规范。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');</script>
+<script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();</script>
+
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"表面粗糙度查询","description":"按应用场景推荐Ra、加工方法可达Ra对照、粗糙度标注符号规范","url":"https://gongcha.cc/roughness/","applicationCategory":"DesignApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"} }
+</script>
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"配合面一般标多少Ra？","acceptedAnswer":{"@type":"Answer","text":"一般配合面（IT7-IT8，如键槽工作面）常用 Ra 0.8~1.6μm；精密配合面（IT5-IT6）用 Ra 0.4~0.8μm；滚动轴承配合面通常 Ra 0.4~0.8μm，需精磨达到。"}},
+{"@type":"Question","name":"Ra 3.2 是什么概念？","acceptedAnswer":{"@type":"Answer","text":"Ra 3.2μm 属于半精加工表面，可通过精车、精铣达到，成本中等。常用于一般机械零件的非关键配合面、安装基准面、一般外观面。对应取样长度 lr=0.8mm、评定长度 ln=4.0mm。"}},
+{"@type":"Question","name":"不同加工方法能达到的Ra范围？","acceptedAnswer":{"@type":"Answer","text":"粗车/粗铣约 Ra 6.3~25μm；精车/精铣约 Ra 0.8~3.2μm；磨削约 Ra 0.1~1.6μm；研磨/超精加工可达 Ra 0.012~0.1μm。Ra要求越高（数值越小），加工成本呈指数级上升。"}}
+]}
+</script>
+<style>
+h1{font-size:22px;margin-bottom:2px}
+.subtitle{color:#666;font-size:13px;margin-bottom:20px}
+.subtitle a{color:#2563eb;text-decoration:none}
+.tabs{display:flex;border-bottom:2px solid #e5e7eb;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:10px 20px;font-size:15px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:#888;transition:all .2s;user-select:none}
+.tab:hover{color:#333}
+.tab.active{color:#2563eb;border-bottom-color:#2563eb;font-weight:600}
+.input-group select{width:260px;max-width:100%}
+.result-highlight{display:flex;align-items:baseline;gap:8px;margin:16px 0;padding:16px;background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-radius:8px;border-left:4px solid #2563eb}
+.result-value{font-size:30px;font-weight:700;color:#1a1a1a;font-family:Consolas,monospace}
+.result-unit{font-size:14px;color:#666}
+.result-label{font-size:13px;color:#888}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.info-item{padding:12px;background:#f9fafb;border-radius:6px}
+.info-item .info-label{font-size:12px;color:#888;margin-bottom:4px}
+.info-item .info-value{font-size:14px;color:#1a1a1a;font-weight:500}
+.cost-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600}
+.cost-low{background:#d1fae5;color:#065f46}
+.cost-mid{background:#fef3c7;color:#92400e}
+.cost-high{background:#fee2e2;color:#991b1b}
+.cost-vhigh{background:#fce7f3;color:#9d174d}
+.verify-badge{background:#d1fae5;border:1px solid #34d399;border-radius:6px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#065f46}
+.data-note{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;margin-top:12px;font-size:12px;color:#92400e}
+table.data-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+table.data-table th,table.data-table td{padding:8px 10px;border:1px solid #e5e7eb;text-align:left}
+table.data-table th{background:#f9fafb;font-weight:600;color:#555}
+table.data-table tr:hover{background:#f9fafb}
+.symbol-row{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}
+.symbol-card{flex:1;min-width:160px;padding:16px;background:#f9fafb;border-radius:8px;text-align:center}
+.symbol-card svg{color:#2563eb;margin-bottom:8px}
+.symbol-card .sym-name{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+.symbol-card .sym-desc{font-size:12px;color:#666;line-height:1.5}
+.annotation-diagram{background:#f9fafb;border-radius:8px;padding:20px;margin:12px 0;text-align:center}
+.annotation-diagram svg{max-width:340px;width:100%}
+.pos-list{font-size:13px;color:#555;line-height:1.9;margin-top:8px}
+.pos-list code{background:#eff6ff;padding:1px 6px;border-radius:3px;color:#1e40af;font-family:Consolas,monospace}
+.example-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.example-card{flex:1;min-width:130px;padding:12px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;text-align:center}
+.example-card svg{color:#1a1a1a}
+.example-card .ex-label{font-size:12px;color:#666;margin-top:6px}
+details.fold{margin-top:12px;border:1px solid #e5e7eb;border-radius:6px;padding:0}
+details.fold summary{padding:12px 16px;cursor:pointer;font-size:14px;font-weight:500;color:#333;list-style:none}
+details.fold summary::after{content:"▾";float:right;color:#999}
+details.fold[open] summary::after{content:"▴"}
+details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-height:1.7}
+@media(max-width:600px){
+  h1{font-size:18px}
+  .tabs{gap:0}.tab{padding:8px 12px;font-size:14px}
+  .input-row{flex-direction:column;align-items:stretch}
+  .input-group select{width:100%}
+  button{width:100%}
+  .result-value{font-size:22px}
+  .info-grid{grid-template-columns:1fr}
+  table.data-table{font-size:11px}
+  table.data-table th,table.data-table td{padding:5px 6px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-name">公差工具站</a>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+    <a href="/roughness/">粗糙度</a>
+  </nav>
+</header>
+
+<div class="breadcrumb"><a href="/">公差工具站</a><span>›</span>表面粗糙度查询</div>
+
+<h1>表面粗糙度查询</h1>
+<p class="subtitle">该标多少 Ra？怎么加工？符号怎么画？ | GB/T 1031-2009 · GB/T 131-2006 | <a href="/form/">形状公差查询 →</a></p>
+<div class="verify-badge">✓ 标准数据依据 GB/T 1031-2009 原文；Ra 推荐与加工对照为工程经验值（机械手册共识），见页面说明</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="scenario">Ra 推荐</div>
+  <div class="tab" data-tab="method">加工对照</div>
+  <div class="tab" data-tab="annotation">标注符号</div>
+</div>
+
+<!-- ========== 场景推荐 ========== -->
+<div id="scenarioPanel">
+  <div class="card">
+    <h2>这个面该标多少 Ra？</h2>
+    <p class="hint" style="margin-bottom:10px">选择面的用途，给出推荐 Ra、取样长度、成本等级和加工方法</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>应用场景</label>
+        <select id="scenarioSelect"><option value="">请选择面的用途</option></select>
+      </div>
+      <button onclick="queryScenario()">查询</button>
+    </div>
+    <div id="scenarioResult"></div>
+  </div>
+  <div class="card">
+    <h2>关于 Ra 选值的经验法则</h2>
+    <div class="info-grid">
+      <div class="info-item"><div class="info-label">成本递增规律</div><div class="info-value">Ra 每降低一个等级，加工成本明显上升；Ra≤0.4 需磨削，Ra≤0.1 需研磨/超精，成本数倍增长</div></div>
+      <div class="info-item"><div class="info-label">降本原则</div><div class="info-value">非关键面尽量放宽 Ra（如非配合面用 6.3~12.5 而非 1.6），避免过度要求</div></div>
+    </div>
+    <div class="data-note">📐 <strong>成本分级基准</strong>（以普通粗车 Ra 12.5 为参照）：低成本 ×1（粗加工即可）；中等 ×2~3（需精加工）；较高 ×5~10（需磨削）；极高 ×20 以上（需研磨/超精）。倍数为粗略经验，实际因材料/批量差异很大。</div>
+    <div class="data-note">⚠️ 推荐 Ra 为工程经验值（综合自《机械设计手册》《机械加工工艺手册》），默认针对<strong>典型钢件、中等批量</strong>。铸铁/铝合金/塑料达到同 Ra 的难度不同；具体取值需结合材料、工况、公差等级（如 IT7 配合面常用 Ra 0.8~1.6），以企业工艺标准为准。</div>
+  </div>
+</div>
+
+<!-- ========== 加工对照 ========== -->
+<div id="methodPanel" class="hidden">
+  <div class="card">
+    <h2>加工方法能达到的 Ra 范围</h2>
+    <p class="hint" style="margin-bottom:8px">判断现有工艺能否达到图纸要求；Ra 范围为该加工方法常见可达区间</p>
+    <div id="methodTable"></div>
+    <div class="data-note">⚠️ 加工方法可达 Ra 为经验区间，受机床精度、刀具、参数、材料影响，实际以试加工为准。</div>
+  </div>
+</div>
+
+<!-- ========== 标注符号 ========== -->
+<div id="annotationPanel" class="hidden">
+  <div class="card">
+    <h2>表面粗糙度标注符号</h2>
+    <p class="hint" style="margin-bottom:4px">依据 GB/T 131-2006《产品几何技术规范（GPS）技术产品文件中表面结构的表示法》（等同采用 ISO 1302:2002）</p>
+
+    <h3 style="font-size:15px;margin:16px 0 4px">三种基本符号</h3>
+    <div class="symbol-row">
+      <div class="symbol-card">
+        <svg width="44" height="42" viewBox="0 0 60 56"><polyline points="20,34 30,50 48,18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="sym-name">基本图形符号</div>
+        <div class="sym-desc">不可单独使用<br>需补充参数要求</div>
+      </div>
+      <div class="symbol-card">
+        <svg width="54" height="42" viewBox="0 0 66 56"><polyline points="20,34 30,50 48,18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><line x1="48" y1="18" x2="64" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="sym-name">去除材料符号</div>
+        <div class="sym-desc">车、铣、磨、刨等<br>最常用</div>
+      </div>
+      <div class="symbol-card">
+        <svg width="44" height="48" viewBox="0 0 60 62"><polyline points="20,34 30,50 48,18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="30" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="sym-name">不去除材料符号</div>
+        <div class="sym-desc">铸、锻、冲压等<br>不去除材料方法</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;margin:20px 0 4px">完整标注位置</h3>
+    <div class="annotation-diagram">
+      <svg viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="135,118 155,150 195,82" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <line x1="195" y1="82" x2="232" y2="82" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="200" y="62" font-size="13" fill="#1e40af" font-family="Consolas,monospace">a</text>
+        <line x1="210" y1="66" x2="210" y2="78" stroke="#1e40af" stroke-width="1"/>
+        <text x="240" y="87" font-size="13" fill="#1e40af" font-family="Consolas,monospace">b</text>
+        <line x1="236" y1="83" x2="228" y2="83" stroke="#1e40af" stroke-width="1"/>
+        <text x="95" y="124" font-size="13" fill="#1e40af" font-family="Consolas,monospace">c</text>
+        <line x1="107" y1="120" x2="130" y2="132" stroke="#1e40af" stroke-width="1"/>
+        <text x="205" y="112" font-size="13" fill="#1e40af" font-family="Consolas,monospace">d</text>
+        <line x1="201" y1="108" x2="180" y2="114" stroke="#1e40af" stroke-width="1"/>
+        <text x="150" y="174" font-size="13" fill="#1e40af" font-family="Consolas,monospace">e</text>
+        <line x1="156" y1="162" x2="156" y2="152" stroke="#1e40af" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="pos-list">
+      <code>a</code> 传输带「短波截止 λs / 长波截止 λc」（如 <code>0.0025/0.8</code>），其中 λc 即取样长度 lr，标注于横线正上方<br>
+      <code>b</code> 参数代号与数值（如 <code>Ra 3.2</code>），标注于横线右侧；仅写数值默认 Ra，单位默认 μm 不标注<br>
+      <code>c</code> 加工方法、镀涂等（如 <code>铣</code>），标注于左斜边左侧<br>
+      <code>d</code> 表面纹理方向符号（<code>=</code> 平行、<code>⊥</code> 垂直、<code>X</code> 交叉、<code>M</code> 多向、<code>C</code> 同心圆、<code>R</code> 放射状），标注于右斜边外侧<br>
+      <code>e</code> 加工余量（mm），标注于尖端正下方
+    </div>
+
+    <h3 style="font-size:15px;margin:20px 0 4px">常见标注示例</h3>
+    <div class="example-row">
+      <div class="example-card">
+        <svg width="62" height="44" viewBox="0 0 76 54"><text x="0" y="14" font-size="12" fill="#1a1a1a" font-family="Consolas,monospace">Ra 3.2</text><polyline points="26,38 34,50 50,22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><line x1="50" y1="22" x2="66" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="ex-label">去除材料，Ra 3.2（μm 省略）</div>
+      </div>
+      <div class="example-card">
+        <svg width="62" height="44" viewBox="0 0 76 54"><text x="0" y="14" font-size="12" fill="#1a1a1a" font-family="Consolas,monospace">Ra 1.6</text><polyline points="26,38 34,50 50,22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><line x1="50" y1="22" x2="66" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="ex-label">精加工面，Ra 1.6</div>
+      </div>
+      <div class="example-card">
+        <svg width="62" height="48" viewBox="0 0 76 58"><text x="0" y="14" font-size="12" fill="#1a1a1a" font-family="Consolas,monospace">Ra 25</text><polyline points="26,38 34,50 50,22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="34" cy="44" r="6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <div class="ex-label">铸件表面，不去除材料</div>
+      </div>
+      <div class="example-card">
+        <svg width="80" height="52" viewBox="0 0 98 60"><text x="0" y="12" font-size="11" fill="#666" font-family="Consolas,monospace">0.8/Ra</text><text x="0" y="28" font-size="12" fill="#1a1a1a" font-family="Consolas,monospace">Ra 3.2</text><text x="50" y="40" font-size="10" fill="#666" font-family="Consolas,monospace">铣</text><polyline points="46,44 54,54 70,26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><line x1="70" y1="26" x2="88" y2="26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="ex-label">复杂标注：铣削 + 取样长度0.8 + Ra 3.2</div>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:12px"><strong>核心标注规则：</strong>① 符号尖端必须从材料外部指向被测表面；② 标注方向与尺寸标注方向一致；③ 仅写数值（如 3.2）默认参数 Ra、单位 μm，均不标注。</p>
+
+    <h3 style="font-size:15px;margin:18px 0 4px">简化标注（图纸中最常用）</h3>
+    <div class="pos-list">
+      • <strong>「其余」标注</strong>：图纸右上角注「其余 Ra 3.2」，表示未单独标注的表面统一按此要求——这是绝大多数零件图的标配<br>
+      • <strong>全周表面统一</strong>：在符号横线与长边的<strong>拐角处</strong>加一个圆圈（注意区别：不去除材料符号的圆在<strong>尖端</strong>，位置完全不同），表示该要求适用于零件整个周向表面<br>
+      • <strong>多数表面相同</strong>：在标题栏附近注出多数表面的 Ra，少数不同的表面单独标注
+    </div>
+    <p class="hint" style="margin-top:10px"><strong>标注禁忌：</strong>粗糙度符号不得标在虚线或点划线上；符号尖端必须从材料外指向表面，不能反向；同一表面只标注一次。</p>
+  </div>
+</div>
+
+<!-- ========== 折叠补充 ========== -->
+<details class="fold" open>
+  <summary>Ra 和 Rz 的区别（无精确换算）</summary>
+  <div class="fold-body">
+    <p><strong>Ra</strong>（轮廓算术平均偏差）：反映整个评定长度内轮廓偏离中线的平均程度，能综合表征表面，稳定性好，<strong>GB/T 1031 推荐优先使用</strong>。</p>
+    <p><strong>Rz</strong>（轮廓最大高度）：五个取样长度中最大峰谷高度的平均，对表面极端缺陷更敏感。</p>
+    <p><strong>关于换算</strong>：Ra 和 Rz 反映的表面特征不同，<strong>没有精确数学换算关系</strong>。工程上常用经验比例 Rz ≈ (4~7)×Ra 粗略参考，但因加工方法不同差异很大，不能替代。需 Rz 时应直接按 GB/T 1031 的 Rz 标准系列选取。</p>
+  </div>
+</details>
+
+<div class="site-footer">
+  <p>表面粗糙度查询 | GB/T 1031-2009 · GB/T 131-2006 | 标准数据来自原文，经验数据来自机械手册</p>
+  <p style="margin-top:4px"><a href="/">返回首页</a> · 经验数据综合自《机械设计手册》《机械加工工艺手册》，正式设计请以国标及企业工艺标准为准</p>
+</div>
+
+<script src="/js/nav.js"></script>
+<script>
+// ===== 数据（经验值初稿，待豆包/手册核对）=====
+const SCENARIOS = [
+  {name:'动密封面（O型圈/油封）', raMin:0.4, raMax:0.8, cost:'high', methods:'精磨', note:'防泄漏，要求严，需磨削'},
+  {name:'静密封面（垫片密封）', raMin:1.6, raMax:3.2, cost:'mid', methods:'精车/精铣', note:'一般静密封'},
+  {name:'滚动轴承配合面（轴颈/箱体孔）', raMin:0.4, raMax:1.6, cost:'high', methods:'精磨', note:'0级：轴颈Ra0.8/箱体孔Ra1.6；6级高精度：轴颈0.4/箱体孔0.8'},
+  {name:'滑动轴承/轴颈（高速）', raMin:0.2, raMax:0.4, cost:'high', methods:'精磨', note:'减摩耐磨'},
+  {name:'精密配合面（IT5-IT6）', raMin:0.4, raMax:0.8, cost:'high', methods:'精磨', note:'高精度孔轴配合'},
+  {name:'普通间隙配合面（IT7-IT9）', raMin:1.6, raMax:3.2, cost:'mid', methods:'精车/精铣', note:'间隙配合，如滑动配合、低相对运动面'},
+  {name:'一般配合面（IT7-IT8）/ 键槽工作面', raMin:0.8, raMax:1.6, cost:'mid', methods:'精车/精铣/磨', note:'最常用配合'},
+  {name:'导轨/滑块工作面', raMin:0.4, raMax:0.8, cost:'high', methods:'精磨/刮研', note:'滑动导向'},
+  {name:'安装基准面/定位面', raMin:1.6, raMax:3.2, cost:'mid', methods:'精铣/精车', note:'装配定位'},
+  {name:'齿轮齿面', raMin:0.8, raMax:1.6, cost:'mid', methods:'剃齿/磨齿', note:'传动面'},
+  {name:'螺纹工作牙面', raMin:1.6, raMax:3.2, cost:'mid', methods:'车/滚压', note:'连接螺纹'},
+  {name:'外观装饰面（高要求）', raMin:0.4, raMax:0.8, cost:'high', methods:'抛光/精磨', note:'可见美观面'},
+  {name:'一般外观面', raMin:1.6, raMax:3.2, cost:'mid', methods:'精车/精铣', note:'普通可见面'},
+  {name:'半精配合面/不重要配合', raMin:3.2, raMax:6.3, cost:'low', methods:'车/铣', note:'一般机械零件'},
+  {name:'非配合面/非接触面', raMin:6.3, raMax:12.5, cost:'low', methods:'粗加工', note:'自由表面'},
+  {name:'粗加工面/结构件非配合', raMin:12.5, raMax:25, cost:'low', methods:'粗车/粗铣', note:'非配合结构面'},
+  {name:'铸锻毛坯面', raMin:25, raMax:50, cost:'low', methods:'铸造/锻造', note:'毛坯未加工面'}
+];
+
+const METHODS = [
+  {name:'砂型铸造', cat:'毛坯成型', raMin:12.5, raMax:50, cost:'low', note:'毛坯面'},
+  {name:'锻造（模锻）', cat:'毛坯成型', raMin:12.5, raMax:25, cost:'low', note:'毛坯'},
+  {name:'气割/锯切', cat:'毛坯成型', raMin:12.5, raMax:50, cost:'low', note:'粗分离'},
+  {name:'钻孔', cat:'切削加工', raMin:6.3, raMax:25, cost:'low', note:'经济6.3~25，精密钻头极限3.2（不易稳定）'},
+  {name:'粗车/粗铣/粗刨', cat:'切削加工', raMin:6.3, raMax:25, cost:'low', note:'粗加工'},
+  {name:'半精车/铣', cat:'切削加工', raMin:3.2, raMax:12.5, cost:'mid', note:'半精加工（IT9~IT10）'},
+  {name:'精车/精铣/精刨', cat:'切削加工', raMin:0.8, raMax:3.2, cost:'mid', note:'精加工'},
+  {name:'铰孔', cat:'切削加工', raMin:0.8, raMax:3.2, cost:'mid', note:'精孔'},
+  {name:'镗孔', cat:'切削加工', raMin:0.4, raMax:6.3, cost:'mid', note:'孔精加工'},
+  {name:'粗磨', cat:'磨削与光整', raMin:0.4, raMax:1.6, cost:'mid', note:'磨削'},
+  {name:'精磨', cat:'磨削与光整', raMin:0.1, raMax:0.4, cost:'high', note:'高精度面'},
+  {name:'珩磨', cat:'磨削与光整', raMin:0.05, raMax:0.4, cost:'high', note:'孔超精'},
+  {name:'超精加工', cat:'磨削与光整', raMin:0.012, raMax:0.1, cost:'vhigh', note:'超精密'},
+  {name:'研磨', cat:'磨削与光整', raMin:0.012, raMax:0.1, cost:'vhigh', note:'手工/机精'},
+  {name:'抛光', cat:'磨削与光整', raMin:0.025, raMax:0.8, cost:'high', note:'机械抛光，镜面可达 Ra 0.01'},
+  {name:'电火花加工', cat:'特种加工', raMin:0.8, raMax:12.5, cost:'mid', note:'成型放电，精规准可达0.8'},
+  {name:'线切割', cat:'特种加工', raMin:0.2, raMax:6.3, cost:'mid', note:'快走丝1.6~6.3，慢走丝0.2~1.6'},
+  {name:'拉削', cat:'切削加工', raMin:0.4, raMax:3.2, cost:'mid', note:'高精度孔/键槽'},
+  {name:'喷砂/喷丸', cat:'表面处理', raMin:1.6, raMax:12.5, cost:'low', note:'毛坯/装饰面强化'}
+];
+
+// Ra → 取样长度 lr / 评定长度 ln（GB/T 1031 表6，标准数据）
+function findLrForRa(ra) {
+  const map = [
+    {min:0.008, max:0.02, minIn:true, lr:0.08, ln:0.4},
+    {min:0.02, max:0.1, minIn:false, lr:0.25, ln:1.25},
+    {min:0.1, max:2.0, minIn:false, lr:0.8, ln:4.0},
+    {min:2.0, max:10.0, minIn:false, lr:2.5, ln:12.5},
+    {min:10.0, max:80.0, minIn:false, lr:8.0, ln:40.0}
+  ];
+  for (const m of map) {
+    const inRange = m.minIn ? (ra >= m.min && ra <= m.max) : (ra > m.min && ra <= m.max);
+    if (inRange) return m;
+  }
+  return null;
+}
+
+const COST_LABEL = {low:'低成本', mid:'中等成本', high:'较高成本', vhigh:'极高成本'};
+const COST_CLASS = {low:'cost-low', mid:'cost-mid', high:'cost-high', vhigh:'cost-vhigh'};
+
+function init() {
+  const sel = document.getElementById('scenarioSelect');
+  SCENARIOS.forEach((s,i) => { sel.innerHTML += '<option value="'+i+'">'+s.name+'</option>'; });
+  renderMethods();
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const tab = t.dataset.tab;
+      document.getElementById('scenarioPanel').classList.toggle('hidden', tab !== 'scenario');
+      document.getElementById('methodPanel').classList.toggle('hidden', tab !== 'method');
+      document.getElementById('annotationPanel').classList.toggle('hidden', tab !== 'annotation');
+    });
+  });
+}
+
+function queryScenario() {
+  const idx = document.getElementById('scenarioSelect').value;
+  const area = document.getElementById('scenarioResult');
+  if (idx === '') { area.innerHTML = '<p class="error">请选择应用场景</p>'; return; }
+  const s = SCENARIOS[parseInt(idx)];
+  const lr = findLrForRa(s.raMax);
+  let html = '<div class="result-highlight"><div><div class="result-label">推荐 '+s.name+'</div><div class="result-value">Ra '+s.raMin+' ~ '+s.raMax+' <span class="result-unit">μm</span></div><div class="result-label">'+s.note+'</div></div></div>';
+  html += '<div class="info-grid">';
+  html += '<div class="info-item"><div class="info-label">成本等级</div><div class="info-value"><span class="cost-badge '+COST_CLASS[s.cost]+'">'+COST_LABEL[s.cost]+'</span></div></div>';
+  html += '<div class="info-item"><div class="info-label">推荐加工方法</div><div class="info-value">'+s.methods+'</div></div>';
+  html += '<div class="info-item"><div class="info-label">取样长度 lr（按 Ra '+s.raMax+'）</div><div class="info-value">'+(lr ? lr.lr+' mm' : '—')+'</div></div>';
+  html += '<div class="info-item"><div class="info-label">评定长度 ln（=5×lr）</div><div class="info-value">'+(lr ? lr.ln+' mm' : '—')+'</div></div>';
+  html += '</div>';
+  if (s.cost === 'high' || s.cost === 'vhigh') {
+    html += '<div class="data-note">💡 该 Ra 范围要求较高，加工成本显著。若该面非关键功能面，可考虑放宽 Ra 以降本。</div>';
+  }
+  area.innerHTML = html;
+}
+
+function renderMethods() {
+  const area = document.getElementById('methodTable');
+  const cats = ['毛坯成型','切削加工','磨削与光整','特种加工','表面处理'];
+  const catDesc = {'毛坯成型':'铸造、锻造、气割等，提供毛坯或粗表面','切削加工':'车、铣、刨、钻、镗、铰、拉削等切削','磨削与光整':'磨削、珩磨、研磨、抛光等高精度光整','特种加工':'电火花、线切割等非传统加工','表面处理':'喷砂、喷丸等表面强化'};
+  let html = '';
+  cats.forEach(cat => {
+    const items = METHODS.filter(m => m.cat === cat);
+    if (items.length === 0) return;
+    html += '<h3 style="font-size:14px;margin:16px 0 4px;color:#1a1a1a">'+cat+' <span style="font-weight:400;color:#999;font-size:12px">'+catDesc[cat]+'</span></h3>';
+    html += '<table class="data-table"><tr><th>加工方法</th><th>可达 Ra (μm)</th><th>成本</th><th>说明</th></tr>';
+    items.forEach(m => {
+      html += '<tr><td>'+m.name+'</td><td>'+m.raMin+' ~ '+m.raMax+'</td><td><span class="cost-badge '+COST_CLASS[m.cost]+'">'+COST_LABEL[m.cost]+'</span></td><td>'+m.note+'</td></tr>';
+    });
+    html += '</table>';
+  });
+  area.innerHTML = html;
+}
+
+init();
+</script>
+</body>
+</html>
