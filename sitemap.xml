@@ -2,22 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gongcha.cc/</loc>
+    <lastmod>2026-07-13</lastmod>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://gongcha.cc/fit/</loc>
+    <lastmod>2026-06-02</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://gongcha.cc/form/</loc>
+    <lastmod>2026-06-02</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://gongcha.cc/keyway/</loc>
+    <lastmod>2026-06-22</lastmod>
     <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://gongcha.cc/roughness/</loc>
+    <lastmod>2026-06-02</lastmod>
+    <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>
