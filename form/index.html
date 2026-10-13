@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" translate="no">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/css/common.css">
 
 <!-- Google Analytics: 替换 G-QNG5GE6S5Z 为你的实际 ID -->
+<script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');
@@ -22,7 +23,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 
 <!-- 百度统计: 替换下方 dd63a540d9441532766fd5b3c53e8311 为你的实际统计代码 key -->
 <script>
-var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
+var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
 </script>
 
 <script type="application/ld+json">
@@ -84,6 +85,8 @@ h1 { font-size: 22px; margin-bottom: 2px; }
     <a href="/fit/">公差配合</a>
     <a href="/form/">形状公差</a>
     <a href="/keyway/">键槽查询</a>
+    <a href="/roughness/">粗糙度</a>
+    <a href="/cylinder/">气缸选型</a>
   </nav>
 </header>
 
@@ -92,7 +95,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 </div>
 
 <h1>直线度 / 平面度公差查询</h1>
-<p class="subtitle">GB/T 1184-1996 | 长度 0~10000mm | 公差等级 1~12 级 | v2 | <a href="/fit/">公差配合查询 →</a></p>
+<p class="subtitle">GB/T 1184-1996 | 长度 0~10000mm（毫米） | 公差等级 1~12 级 | v2 | <a href="/fit/">公差配合查询 →</a></p>
 <div class="verify-badge">✓ 公差值依据 GB/T 1184-1996 标准原文</div>
 
 <div class="tabs">
@@ -109,24 +112,21 @@ h1 { font-size: 22px; margin-bottom: 2px; }
   <div id="gradeMode">
     <div class="input-row">
       <div class="input-group">
-        <label>主参数长度 L (mm)</label>
-        <input type="number" id="lengthInput" value="100" min="0" max="10000" step="1">
+        <label>主参数长度 L (mm/毫米)</label>
+        <input type="number" id="lengthInput" value="100" min="0" max="10000" step="1" list="lenList" class="dim-input" placeholder="输入或点箭头选">
       </div>
       <div class="input-group">
         <label>公差等级</label>
-        <select id="gradeSelect">
-          <option value="">请选择</option>
-        </select>
+        <select id="gradeSelect"></select>
       </div>
-      <button onclick="queryByGrade()">查询</button>
     </div>
-    <p class="hint">主参数为被测要素的长度尺寸</p>
+    <p class="hint">主参数为被测要素的长度尺寸 ｜ 选好即出结果</p>
   </div>
   <div id="scenarioMode" class="hidden">
     <div class="input-row">
       <div class="input-group">
-        <label>主参数长度 L (mm)</label>
-        <input type="number" id="lengthInput2" value="100" min="0" max="10000" step="1">
+        <label>主参数长度 L (mm/毫米)</label>
+        <input type="number" id="lengthInput2" value="100" min="0" max="10000" step="1" list="lenList" class="dim-input" placeholder="输入或点箭头选">
       </div>
       <div class="input-group">
         <label>应用场景</label>
@@ -134,7 +134,6 @@ h1 { font-size: 22px; margin-bottom: 2px; }
           <option value="">请选择</option>
         </select>
       </div>
-      <button onclick="queryByScenario()">查询</button>
     </div>
   </div>
   <div id="resultArea"></div>
@@ -153,6 +152,20 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 
 <script src="/js/nav.js"></script>
 <script>
+// === 车间友好：长度可输入 + 下拉候选（密集档位） ===
+const LENGTHS = (function(){
+  var a = [];
+  for (var i = 10; i <= 500; i++) a.push(i);          // 10~500 每 1mm
+  for (var j = 510; j <= 2000; j += 10) a.push(j);    // 510~2000 每 10mm
+  for (var k = 2100; k <= 10000; k += 100) a.push(k); // 2100~10000 每 100mm
+  return a;
+})();
+function initLenList(){
+  var dl = document.createElement('datalist'); dl.id = 'lenList';
+  dl.innerHTML = LENGTHS.map(function(v){ return '<option value="' + v + '">'; }).join('');
+  document.body.appendChild(dl);
+}
+
 const VERSION = 'v2';
 const DATA_STATUS = '数据依据 GB/T 1184-1996 标准原文';
 
@@ -231,6 +244,7 @@ function init() {
   for (let i = 1; i <= 12; i++) {
     sel.innerHTML += '<option value="'+i+'">'+i+' 级</option>';
   }
+  sel.value = '7';
   populateScenarios();
 
   document.querySelectorAll('.tab').forEach(t => {
@@ -257,6 +271,15 @@ function init() {
 
   document.getElementById('lengthInput').addEventListener('keydown', e => { if (e.key === 'Enter') queryByGrade(); });
   document.getElementById('lengthInput2').addEventListener('keydown', e => { if (e.key === 'Enter') queryByScenario(); });
+
+  // 输入/选择即出结果（无需点"查询"）
+  initLenList();
+  document.getElementById('lengthInput').addEventListener('input', queryByGrade);
+  document.getElementById('lengthInput2').addEventListener('input', queryByScenario);
+  document.getElementById('gradeSelect').addEventListener('change', function(){ queryByGrade(); });
+  document.getElementById('scenarioSelect').addEventListener('change', function(){ if (this.value !== '') queryByScenario(); });
+
+  queryByGrade();
 }
 
 function populateScenarios() {
@@ -302,7 +325,7 @@ function queryByGrade() {
   const area = document.getElementById('resultArea');
 
   if (isNaN(length) || length < 0 || length > 10000) {
-    area.innerHTML = '<p class="error">长度范围：0~10000mm</p>';
+    area.innerHTML = '<p class="error">长度范围：0~10000mm（毫米）</p>';
     return;
   }
   if (!grade) {
@@ -349,7 +372,7 @@ function queryByScenario() {
   const area = document.getElementById('resultArea');
 
   if (isNaN(length) || length < 0 || length > 10000) {
-    area.innerHTML = '<p class="error">长度范围：0~10000mm</p>';
+    area.innerHTML = '<p class="error">长度范围：0~10000mm（毫米）</p>';
     return;
   }
   if (idx === '') {
@@ -386,7 +409,7 @@ function renderGeneralTol() {
   GENERAL_TOL.ranges.forEach((r, i) => {
     html += '<tr><td>'+r+'</td>';
     for (const cls of ['H','K','L']) {
-      html += '<td>'+GENERAL_TOL.classes[cls].values[i]+' mm</td>';
+      html += '<td>'+GENERAL_TOL.classes[cls].values[i]+' mm（毫米）</td>';
     }
     html += '</tr>';
   });

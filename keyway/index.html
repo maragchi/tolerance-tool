@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" translate="no">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -14,12 +14,13 @@
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
 
+<script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');
 </script>
 <script>
-var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
+var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
 </script>
 
 <script type="application/ld+json">
@@ -106,8 +107,9 @@ details summary:hover { color: #2563eb; }
     <a href="/">首页</a>
     <a href="/fit/">公差配合</a>
     <a href="/form/">形状公差</a>
-    <a href="/keyway/" class="active">键槽查询</a>
+    <a href="/keyway/">键槽查询</a>
     <a href="/roughness/">粗糙度</a>
+    <a href="/cylinder/">气缸选型</a>
   </nav>
 </header>
 
@@ -116,15 +118,15 @@ details summary:hover { color: #2563eb; }
 </div>
 
 <h1>键槽查询 — GB/T 1095-2003</h1>
-<p class="subtitle">平键 键槽的剖面尺寸 | 轴径 6~500mm | 较松 / 一般 / 较紧 三种联结 | <a href="/fit/">公差配合查询 →</a></p>
+<p class="subtitle">平键 键槽的剖面尺寸 | 轴径 6~500mm（毫米） | 较松 / 一般 / 较紧 三种联结 | <a href="/fit/">公差配合查询 →</a></p>
 <div class="verify-badge">✓ 数据依据 GB/T 1095-2003《平键 键槽的剖面尺寸》；键宽公差按 GB/T 1800.2（ISO 286-2），N9 上偏差 ≤0（b≥3 时 ES=0）</div>
 
 <div class="card">
   <h2>键槽尺寸查询</h2>
   <div class="input-row">
     <div class="input-group">
-      <label>轴径 d (mm)</label>
-      <input type="number" id="diaInput" value="50" min="6" max="500" step="0.5">
+      <label>轴径 d (mm/毫米)</label>
+      <input type="number" id="diaInput" value="50" min="6" max="500" step="1" list="diaList" class="dim-input" placeholder="输入或点箭头选">
     </div>
     <div class="input-group" style="flex:1;min-width:260px">
       <label>联结类型（决定键槽宽配合，基轴制 键 h9）</label>
@@ -135,7 +137,7 @@ details summary:hover { color: #2563eb; }
       </div>
     </div>
   </div>
-  <p class="hint">输入轴径即时查询，范围 6~500mm；切换联结类型对比键宽公差。键槽宽与标准平键（h9）配合。</p>
+  <p class="hint">轴径从下拉点选，即时查询（范围 6~500mm（毫米））。切换联结类型对比键宽公差。键槽宽与标准平键（h9）配合。</p>
   <div id="resultArea"></div>
 </div>
 
@@ -153,6 +155,13 @@ details summary:hover { color: #2563eb; }
 <div class="toast" id="toast"></div>
 
 <script>
+/* ============ 车间友好：轴径可输入 + 下拉候选（每 1mm） ============ */
+const DIAS = (function(){
+  var a = [];
+  for (var i = 6; i <= 500; i++) a.push(i);
+  return a;
+})();
+
 /* ============ 数据（GB/T 1095-2003 + ISO 286-2）============ */
 var KEYWAY=[
   {d1:6,d2:8,b:2,h:2,t1:1.2,t2:1.0,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
@@ -183,9 +192,9 @@ var KEYWAY=[
   {d1:440,d2:500,b:100,h:50,t1:31.0,t2:19.5,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50}
 ];
 
-/* 键宽 b 公差带极限偏差 [上偏差, 下偏差]（mm），按 ISO 286-2。
+/* 键宽 b 公差带极限偏差 [上偏差, 下偏差]（mm/毫米），按 ISO 286-2。
    N9/P9 为孔公差带、上偏差为负（槽宽只能比公称尺寸小）。
-   N9 值按 ISO 286-2 标准表验证：IT9 及以上等级，K/M/N 基本偏差 ES→0（仅 b=2 在 0-3mm 段 ES=-4μm）。H9/D10/JS9/P9 均已验证。 */
+   N9 值按 ISO 286-2 标准表验证：IT9 及以上等级，K/M/N 基本偏差 ES→0（仅 b=2 在 0-3mm（毫米） 段 ES=-4μm）。H9/D10/JS9/P9 均已验证。 */
 var KEY_TOL={
   2:{H9:[0,0.025],D10:[0.020,0.060],N9:[-0.004,-0.029],JS9:0.0125,P9:[-0.006,-0.031]},
   3:{H9:[0,0.025],D10:[0.020,0.060],N9:[-0.004,-0.029],JS9:0.0125,P9:[-0.006,-0.031]},
@@ -265,12 +274,12 @@ function render(){
   var area=document.getElementById('resultArea');
   var d=parseFloat(document.getElementById('diaInput').value);
   if(isNaN(d)||d<6||d>500){
-    area.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">请输入 6~500mm 范围内的轴径。</p>';
+    area.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">请输入 6~500mm（毫米） 范围内的轴径。</p>';
     return;
   }
   var row=findKeyway(d);
   if(!row){
-    area.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">该轴径超出 GB/T 1095-2003 范围（6~500mm）。</p>';
+    area.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">该轴径超出 GB/T 1095-2003 范围（6~500mm（毫米））。</p>';
     return;
   }
   var fit=FIT_DEF[curFit];
@@ -281,29 +290,29 @@ function render(){
   var html='';
   html+='<div class="result-highlight">'
     +'<div><div class="result-label">键尺寸 b × h</div>'
-    +'<div class="result-value">'+row.b+' × '+row.h+' <span class="result-unit">mm</span></div>'
-    +'<div class="result-label">轴径 '+d+'mm · 范围 '+row.d1+'~'+row.d2+'mm</div></div>'
+    +'<div class="result-value">'+row.b+' × '+row.h+' <span class="result-unit">mm（毫米）</span></div>'
+    +'<div class="result-label">轴径 '+d+'mm（毫米） · 范围 '+row.d1+'~'+row.d2+'mm（毫米）</div></div>'
     +'<div class="result-fit">'+fit.name+'<small>轴槽 '+fit.shaft+' · 毂槽 '+fit.hub+'<br>'+fit.desc+'</small></div></div>';
 
   html+='<div class="group-title">轴槽参数</div>';
   html+='<div class="info-grid">'
-    +infoItem('轴槽宽 b', row.b+' mm', fit.shaft+'（'+fmtTol(sTv)+'）')
-    +infoItem('轴槽深 d−t₁', (d-row.t1).toFixed(1)+' mm','0 / −'+row.t1tol)
-    +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm')
+    +infoItem('轴槽宽 b', row.b+' mm（毫米）', fit.shaft+'（'+fmtTol(sTv)+'）')
+    +infoItem('轴槽深 d−t₁', (d-row.t1).toFixed(1)+' mm（毫米）','0 / −'+row.t1tol)
+    +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm（毫米）')
     +'</div>';
 
   html+='<div class="group-title">轮毂槽参数</div>';
   html+='<div class="info-grid">'
-    +infoItem('毂槽宽 b', row.b+' mm', fit.hub+'（'+fmtTol(hTv)+'）')
-    +infoItem('毂槽深 d+t₂', (d+row.t2).toFixed(1)+' mm','+'+row.t2tol+' / 0')
-    +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm')
+    +infoItem('毂槽宽 b', row.b+' mm（毫米）', fit.hub+'（'+fmtTol(hTv)+'）')
+    +infoItem('毂槽深 d+t₂', (d+row.t2).toFixed(1)+' mm（毫米）','+'+row.t2tol+' / 0')
+    +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm（毫米）')
     +'</div>';
 
   html+='<div class="group-title">形位公差与标准件</div>';
   html+='<div class="info-grid">'
-    +infoItem('对称度', symTol(row.b).toFixed(3)+' mm','GB/T 1184 8级 · 基准 A 轴线')
-    +infoItem('标准平键', row.b+'×'+row.h,'mm · 公差 h9')
-    +infoItem('槽深公称 t₁/t₂', row.t1+' / '+row.t2,'mm · 仅查表参考')
+    +infoItem('对称度', symTol(row.b).toFixed(3)+' mm（毫米）','GB/T 1184 8级 · 基准 A 轴线')
+    +infoItem('标准平键', row.b+'×'+row.h,'mm（毫米） · 公差 h9')
+    +infoItem('槽深公称 t₁/t₂', row.t1+' / '+row.t2,'mm（毫米） · 仅查表参考')
     +'</div>';
 
   html+='<div class="action-row">'
@@ -311,7 +320,7 @@ function render(){
     +'<button class="act-btn" id="btnPrint">打印 / PDF</button>'
     +'</div>';
 
-  html+='<details><summary>查看 '+row.d1+'~'+row.d2+'mm 轴径段完整数据</summary>'
+  html+='<details><summary>查看 '+row.d1+'~'+row.d2+'mm（毫米） 轴径段完整数据</summary>'
     +'<table class="data-table" style="margin-top:10px">'
     +'<tr><th>b</th><th>h</th><th>t₁</th><th>t₂</th><th>t₁ 偏差</th><th>t₂ 偏差</th><th>r</th></tr>'
     +'<tr><td>'+row.b+'</td><td>'+row.h+'</td><td>'+row.t1+'</td><td>'+row.t2+'</td>'
@@ -331,8 +340,8 @@ function infoItem(label,value,sub){
 /* ============ 复制数据 ============ */
 function copyData(row,d,fit,sTv,hTv){
   var text='GB/T 1095-2003 键槽尺寸（键宽公差按 ISO 286-2 / GB/T 1800.2）\n';
-  text+='轴径 d = '+d+' mm\n';
-  text+='标准平键 b×h = '+row.b+'×'+row.h+' mm（h9）\n';
+  text+='轴径 d = '+d+' mm（毫米）\n';
+  text+='标准平键 b×h = '+row.b+'×'+row.h+' mm（毫米）（h9）\n';
   text+='联结类型：'+fit.name+'（轴槽 '+fit.shaft+' / 毂槽 '+fit.hub+'）—— '+fit.desc+'\n';
   text+='----------------------------------------\n';
   text+='轴键槽：\n';
@@ -343,7 +352,7 @@ function copyData(row,d,fit,sTv,hTv){
   text+='  槽宽 b = '+row.b+' ('+fmtTol(hTv)+')\n';
   text+='  d+t₂ = '+(d+row.t2).toFixed(1)+' (+'+row.t2tol+' / 0)   [t₂='+row.t2+' 仅供参考]\n';
   text+='  半径 r = '+row.r1+'~'+row.r2+'\n';
-  text+='对称度 = '+symTol(row.b).toFixed(3)+' mm（GB/T 1184 8级，基准 A 为轴线）';
+  text+='对称度 = '+symTol(row.b).toFixed(3)+' mm（毫米）（GB/T 1184 8级，基准 A 为轴线）';
 
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(function(){showToast('已复制到剪贴板');},function(){fallbackCopy(text);});
@@ -366,6 +375,9 @@ function showToast(msg){
 }
 
 /* ============ 初始化 ============ */
+var diaDl = document.createElement('datalist'); diaDl.id = 'diaList';
+diaDl.innerHTML = DIAS.map(function(v){ return '<option value="' + v + '">'; }).join('');
+document.body.appendChild(diaDl);
 document.getElementById('diaInput').addEventListener('input',render);
 document.querySelectorAll('.fit-btn').forEach(function(btn){
   btn.addEventListener('click',function(){

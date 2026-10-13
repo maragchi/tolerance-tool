@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" translate="no">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/css/common.css">
 
 <!-- Google Analytics: 替换 G-QNG5GE6S5Z 为你的实际 ID -->
+<script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');
@@ -22,7 +23,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 
 <!-- 百度统计: 替换下方 dd63a540d9441532766fd5b3c53e8311 为你的实际统计代码 key -->
 <script>
-var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
+var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
 </script>
 
 <script type="application/ld+json">
@@ -59,6 +60,8 @@ h1 { font-size: 24px; margin-bottom: 4px; }
     <a href="/fit/">公差配合</a>
     <a href="/form/">形状公差</a>
     <a href="/keyway/">键槽查询</a>
+    <a href="/roughness/">粗糙度</a>
+    <a href="/cylinder/">气缸选型</a>
   </nav>
 </header>
 
@@ -67,40 +70,72 @@ h1 { font-size: 24px; margin-bottom: 4px; }
 </div>
 
 <h1>公差配合查询</h1>
-<p class="subtitle">ISO 286 / GB/T 1800 | 基本尺寸 1~500mm | IT5~IT13</p>
+<p class="subtitle">ISO 286 / GB/T 1800 | 基本尺寸 1~500mm（毫米） | IT5~IT13</p>
 
 <div class="card">
   <h2>单要素查询</h2>
-  <div class="input-row">
-    <div class="input-group">
-      <label>基本尺寸 (mm)</label>
-      <input type="number" id="dim" value="50" min="1" max="500" step="0.1">
+  <div class="card-split">
+    <div class="card-main">
+      <div class="input-row">
+        <div class="input-group">
+          <label>基本尺寸 (mm/毫米)</label>
+          <input type="number" id="dim" value="50" min="1" max="1000" step="1" list="dimList" class="dim-input" placeholder="输入或点箭头选">
+        </div>
+        <div class="input-group">
+          <label>公差代号（孔大写 / 轴小写）</label>
+          <select id="codeSel" style="min-width:150px;font-size:16px;font-weight:600"></select>
+        </div>
+      </div>
+      <div class="quick-picks" id="quickSingle"><span class="qp-label">常用：</span></div>
+      <p class="hint">选好后立即出结果 ｜ 尺寸从下拉直接点选；特殊值选"其他…（手动输入）"</p>
+      <div id="singleResult"></div>
     </div>
-    <div class="input-group">
-      <label>公差代号</label>
-      <input type="text" id="code" value="H7" placeholder="如 H7, g6">
-    </div>
-    <button onclick="querySingle()">查询</button>
+    <aside class="example-box">
+      <div class="ex-title">示例 · 基本尺寸 40</div>
+      <div class="ex-row"><span class="dev-up">↑ 上偏差 ＋0.02</span></div>
+      <div class="ex-row"><span class="dev-down">↓ 下偏差 −0.02</span></div>
+      <div class="ex-note">红 = 上偏差（公差带上限）<br>蓝 = 下偏差（公差带下限）<br>偏差 = 极限尺寸 − 公称尺寸</div>
+    </aside>
   </div>
-  <p class="hint">孔用大写（H7），轴用小写（g6）</p>
-  <div id="singleResult"></div>
 </div>
 
 <div class="card">
-  <h2>配合查询</h2>
+  <h2>配合查询 <button type="button" class="help-btn" onclick="toggleHelp()" title="什么是间隙 / 过渡 / 过盈配合？" aria-label="展开配合知识科普">?</button></h2>
   <div class="input-row">
     <div class="input-group">
-      <label>基本尺寸 (mm)</label>
-      <input type="number" id="fitDim" value="50" min="1" max="500" step="0.1">
+      <label>基本尺寸 (mm/毫米)</label>
+      <input type="number" id="fitDim" value="50" min="1" max="1000" step="1" list="dimList" class="dim-input" placeholder="输入或点箭头选">
+    </div>
+  </div>
+  <div class="input-row" style="margin-top:14px">
+    <div class="input-group">
+      <label>孔公差（大写）</label>
+      <select id="holeSel" style="min-width:150px;font-size:16px;font-weight:600"></select>
     </div>
     <div class="input-group">
-      <label>配合代号</label>
-      <input type="text" id="fitCode" value="H7/g6" class="fit-input" placeholder="如 H7/g6">
+      <label>轴公差（小写）</label>
+      <select id="shaftSel" style="min-width:150px;font-size:16px;font-weight:600"></select>
     </div>
-    <button onclick="queryFit()">查询</button>
   </div>
-  <p class="hint">格式：孔公差/轴公差，如 H7/g6、H7/k6</p>
+  <div class="quick-picks" id="quickFit"><span class="qp-label">常用配合：</span></div>
   <div id="fitResult"></div>
+  <div class="help-panel" id="helpPanel" style="display:none">
+    <div class="help-item clearance">
+      <h4><span class="dot"></span>间隙配合</h4>
+      <p><b>是什么：</b>孔的公差带完全在轴的公差带之上，装配后<b>总有间隙</b>（最小间隙 ≥ 0）。</p>
+      <p><b>什么时候用：</b>需要相对运动、转动，或经常拆装 —— 滑动轴承、机床导轨、导向柱、皮带轮与轴、齿轮在轴上滑移、定位销的导向段。</p>
+    </div>
+    <div class="help-item transition">
+      <h4><span class="dot"></span>过渡配合</h4>
+      <p><b>是什么：</b>孔与轴的公差带相互交叠，装配后<b>可能间隙、也可能过盈</b>，取决于实际加工尺寸。</p>
+      <p><b>什么时候用：</b>要求精确定位、又不常拆装 —— 齿轮/联轴器与轴、定位销的紧固段、蜗轮与轴、轴承的过渡配合部位。</p>
+    </div>
+    <div class="help-item interference">
+      <h4><span class="dot"></span>过盈配合</h4>
+      <p><b>是什么：</b>轴的公差带完全在孔之上，装配后<b>总有过盈</b>，靠材料弹性变形传递扭矩、固定零件。</p>
+      <p><b>什么时候用：</b>不拆装、靠过盈传力 —— 压装齿轮/蜗轮/叶轮、滚动轴承内圈与轴（紧配合）、销钉固定、车轮与轴。</p>
+    </div>
+  </div>
 </div>
 
 <div class="site-footer">
@@ -110,6 +145,76 @@ h1 { font-size: 24px; margin-bottom: 4px; }
 
 <script src="/js/nav.js"></script>
 <script>
+// === 车间友好：密集尺寸下拉 + 公差代号下拉 + 快捷点选 ===
+const DIMS = (function(){
+  var a = [];
+  for (var i = 1; i <= 500; i++) a.push(i);         // 1~500 每 1mm（毫米）
+  for (var j = 510; j <= 1000; j += 10) a.push(j);  // 510~1000 每 10mm（毫米）
+  return a;
+})();
+// 下拉可选的完整代号（必须与 SHAFT_DEV 数据表支持的偏差一致：d,e,f,g,h,js,k,m,n,p,r,s,u）
+const HOLE_CODES = ['H7','H8','H9','H11','H12','JS7','JS8','JS9','K7','M7','N7','P7','R7','S7','U7','F8','G7','D10','E9'];
+const SHAFT_CODES = ['h6','h7','h9','h11','h12','js6','js7','js9','g6','g7','f7','f8','e8','e9','d9','d10','k6','m6','n6','p6','r6','s6','u6'];
+const SINGLE_QUICK = ['H7','H8','h6','h7','g6','f7','k6','js6','p6','N7'];
+const FIT_QUICK = ['H7/g6','H7/h6','H7/k6','H7/n6','H7/p6','H7/s6','H8/f7','H9/d9','H7/js6','H7/u6'];
+
+function optList(arr){
+  // 自动过滤：只保留 SHAFT_DEV 数据表支持的偏差（防下拉与数据不一致）
+  var OK = 'd,e,f,g,h,js,k,m,n,p,r,s,u'.split(',');
+  return arr.filter(function(c){
+    return OK.indexOf(c.replace(/[0-9]+/g, '').toLowerCase()) !== -1;
+  }).map(function(c){ return '<option value="' + c + '">' + c + '</option>'; }).join('');
+}
+function toggleHelp(){
+  var p = document.getElementById('helpPanel');
+  p.style.display = (p.style.display === 'none' || !p.style.display) ? 'block' : 'none';
+}
+function initPickers(){
+  var dl = document.createElement('datalist'); dl.id = 'dimList';
+  dl.innerHTML = DIMS.map(function(v){ return '<option value="' + v + '">'; }).join('');
+  document.body.appendChild(dl);
+
+  var cl = document.getElementById('codeSel');
+  cl.innerHTML = '<optgroup label="孔（大写）">' + optList(HOLE_CODES) + '</optgroup><optgroup label="轴（小写）">' + optList(SHAFT_CODES) + '</optgroup>';
+  cl.value = 'H7';
+  var hs = document.getElementById('holeSel'); hs.innerHTML = optList(HOLE_CODES); hs.value = 'H7';
+  var ss = document.getElementById('shaftSel'); ss.innerHTML = optList(SHAFT_CODES); ss.value = 'g6';
+
+  var qs = document.getElementById('quickSingle');
+  SINGLE_QUICK.forEach(function(c){
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = c;
+    b.onclick = function(){
+      cl.value = c;
+      Array.prototype.forEach.call(qs.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      querySingle();
+    };
+    qs.appendChild(b);
+  });
+
+  var qf = document.getElementById('quickFit');
+  FIT_QUICK.forEach(function(c){
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = c;
+    b.onclick = function(){
+      var p = c.split('/');
+      hs.value = p[0];
+      ss.value = p[1];
+      Array.prototype.forEach.call(qf.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      queryFit();
+    };
+    qf.appendChild(b);
+  });
+
+  // 输入/选择即出结果（无需点"查询"）
+  document.getElementById('dim').addEventListener('input', querySingle);
+  document.getElementById('fitDim').addEventListener('input', queryFit);
+  document.getElementById('codeSel').addEventListener('change', querySingle);
+  ['holeSel','shaftSel'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', queryFit);
+  });
+}
+
 // === IT 标准公差值 (μm) ===
 const IT = {
   IT5:  [4,5,6,8,9,11,13,15,18,20,23,25,27],
@@ -191,7 +296,7 @@ function calcTolerance(dim, code) {
   const isHole = letter === letter.toUpperCase();
 
   if (grade < 5 || grade > 13) return { error: 'IT等级范围: 5~13' };
-  if (dim < 1 || dim > 500) return { error: '基本尺寸范围: 1~500mm' };
+  if (dim < 1 || dim > 500) return { error: '超出 ISO 286 标准范围（1~500mm（毫米）），请改用标准内尺寸' };
 
   const normalLetter = letter.toLowerCase();
   const itVal = getIT(dim, grade);
@@ -278,7 +383,7 @@ function formatMM(um) {
 
 function querySingle() {
   const dim = parseFloat(document.getElementById('dim').value);
-  const code = document.getElementById('code').value.trim();
+  const code = document.getElementById('codeSel').value;
   const result = calcTolerance(dim, code);
   const container = document.getElementById('singleResult');
 
@@ -287,58 +392,73 @@ function querySingle() {
     return;
   }
 
-  const type = result.isHole ? '孔' : '轴';
+  const isHole = result.isHole;
+  const typeTag = isHole
+    ? '<span class="tag" style="background:#dbeafe;color:#1e40af;border:1px solid #93c5fd">孔 ' + code + '</span>'
+    : '<span class="tag" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d">轴 ' + code + '</span>';
   const maxLimit = (dim * 1000 + result.upper) / 1000;
   const minLimit = (dim * 1000 + result.lower) / 1000;
+  const warn = (isHole && result.letter.charAt(0).toLowerCase() !== 'h' && result.letter.toLowerCase() !== 'js')
+    ? '<p class="hint">提示：非 H/JS 孔偏差按 ISO 286 通用规则换算，高等级（IT≤8 的 K/M/N/P~U）存在 Δ 修正差异，重要配合请核对标准原文。</p>' : '';
 
   container.innerHTML = `
     <table class="result-table">
-      <tr><th>类型</th><td>${type} (${code})</td></tr>
-      <tr><th>上偏差</th><td class="value">${formatDev(result.upper)} mm</td></tr>
-      <tr><th>下偏差</th><td class="value">${formatDev(result.lower)} mm</td></tr>
-      <tr><th>公差值</th><td class="value">${formatMM(result.it)} mm</td></tr>
-      <tr><th>最大极限尺寸</th><td class="value">${maxLimit.toFixed(4)} mm</td></tr>
-      <tr><th>最小极限尺寸</th><td class="value">${minLimit.toFixed(4)} mm</td></tr>
+      <tr><th>类型</th><td>${typeTag}</td></tr>
+      <tr><th><span class="dev-key up">↑ 上偏差</span></th><td class="value"><span class="dev-up">${formatDev(result.upper)}</span> mm（毫米）</td></tr>
+      <tr><th><span class="dev-key down">↓ 下偏差</span></th><td class="value"><span class="dev-down">${formatDev(result.lower)}</span> mm（毫米）</td></tr>
+      <tr><th>公差值</th><td class="value">${formatMM(result.it)} mm（毫米）</td></tr>
+      <tr><th>最大极限尺寸</th><td class="value"><span class="dev-up">${maxLimit.toFixed(4)}</span> mm（毫米）</td></tr>
+      <tr><th>最小极限尺寸</th><td class="value"><span class="dev-down">${minLimit.toFixed(4)}</span> mm（毫米）</td></tr>
     </table>
+    ${warn}
   `;
 }
 
 function queryFit() {
   const dim = parseFloat(document.getElementById('fitDim').value);
-  const code = document.getElementById('fitCode').value.trim();
-  const parts = code.split('/');
+  const holeCode = document.getElementById('holeSel').value;
+  const shaftCode = document.getElementById('shaftSel').value;
   const container = document.getElementById('fitResult');
 
-  if (parts.length !== 2) {
-    container.innerHTML = '<p class="error">请输入配合代号，如 H7/g6</p>';
-    return;
-  }
-
-  const result = calcFit(dim, parts[0], parts[1]);
+  const result = calcFit(dim, holeCode, shaftCode);
 
   if (result.error) {
     container.innerHTML = '<p class="error">' + result.error + '</p>';
     return;
   }
 
-  const tagClass = 'tag-' + result.fitType;
   const holeMax = (dim * 1000 + result.hole.upper) / 1000;
   const holeMin = (dim * 1000 + result.hole.lower) / 1000;
   const shaftMax = (dim * 1000 + result.shaft.upper) / 1000;
   const shaftMin = (dim * 1000 + result.shaft.lower) / 1000;
 
+  const noteMap = {
+    clearance: '孔公差带在轴之上 → 有保证间隙，装配顺畅',
+    transition: '公差带交叠 → 可能间隙也可能过盈，需过渡配合件',
+    interference: '轴公差带在孔之上 → 有保证过盈，需压装/热装'
+  };
+  const colorize = v => v >= 0
+    ? '<span style="color:#1d4ed8;font-weight:600">' + formatMM(v) + '</span>'
+    : '<span style="color:#b91c1c;font-weight:600">' + formatMM(v) + '</span>';
+
   container.innerHTML = `
-    <div style="margin-top:12px">
-      <span class="tag ${tagClass}">${result.fitTypeCN}</span>
+    <div class="fit-banner ${result.fitType}">
+      <span class="dot"></span>${result.fitTypeCN}
+      <span class="banner-note">${noteMap[result.fitType]}</span>
     </div>
     <table class="result-table">
-      <tr><th>孔 ${parts[0]}</th><td>上偏差 ${formatDev(result.hole.upper)} / 下偏差 ${formatDev(result.hole.lower)}</td><td class="value">${holeMin.toFixed(4)} ~ ${holeMax.toFixed(4)}</td></tr>
-      <tr><th>轴 ${parts[1]}</th><td>上偏差 ${formatDev(result.shaft.upper)} / 下偏差 ${formatDev(result.shaft.lower)}</td><td class="value">${shaftMin.toFixed(4)} ~ ${shaftMax.toFixed(4)}</td></tr>
-      <tr><th>最大间隙/过盈</th><td colspan="2" class="value">${formatMM(result.maxClearance)} mm</td></tr>
-      <tr><th>最小间隙/过盈</th><td colspan="2" class="value">${formatMM(result.minClearance)} mm</td></tr>
+      <tr><th>孔 ${holeCode}</th><td><span class="dev-up">↑上偏差 ${formatDev(result.hole.upper)}</span> / <span class="dev-down">↓下偏差 ${formatDev(result.hole.lower)}</span></td><td class="value">${holeMin.toFixed(4)} ~ ${holeMax.toFixed(4)}</td></tr>
+      <tr><th>轴 ${shaftCode}</th><td><span class="dev-up">↑上偏差 ${formatDev(result.shaft.upper)}</span> / <span class="dev-down">↓下偏差 ${formatDev(result.shaft.lower)}</span></td><td class="value">${shaftMin.toFixed(4)} ~ ${shaftMax.toFixed(4)}</td></tr>
+      <tr><th>最大间隙/过盈</th><td colspan="2" class="value">${colorize(result.maxClearance)} mm（毫米）</td></tr>
+      <tr><th>最小间隙/过盈</th><td colspan="2" class="value">${colorize(result.minClearance)} mm（毫米）</td></tr>
     </table>
+    <p class="hint">正值 = 间隙（蓝），负值 = 过盈（红）</p>
   `;
 }
+
+initPickers();
+querySingle();
+queryFit();
 </script>
 </body>
 </html>

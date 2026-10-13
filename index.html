@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" translate="no">
 <head>
 <meta charset="UTF-8">
 <meta name="baidu-site-verification" content="codeva-o737Qf3JHF" />
@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="/css/common.css">
 
 <!-- Google Analytics: 替换 G-QNG5GE6S5Z 为你的实际 ID -->
+<script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');
@@ -24,7 +25,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
 
 <!-- 百度统计: 替换下方 dd63a540d9441532766fd5b3c53e8311 为你的实际统计代码 key -->
 <script>
-var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
+var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
 </script>
 
 <style>
@@ -96,7 +97,7 @@ var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="ht
       "name": "H7/g6 是什么配合？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "H7/g6 是典型的间隙配合，属于基孔制配合。其中 H7 表示孔的基本偏差为 H（下偏差 EI=0）、公差等级为 IT7；g6 表示轴的基本偏差为 g（上偏差 es 为负值）、公差等级为 IT6。这种配合的特点是有保证的间隙，常用于要求灵活运转、容易拆装的场合，如滑动轴承配合、皮带轮与轴的配合、齿轮在轴上滑移等。以基本尺寸 50mm 为例，H7/g6 的最大间隙约为 0.050mm，最小间隙约为 0.009mm。"
+        "text": "H7/g6 是典型的间隙配合，属于基孔制配合。其中 H7 表示孔的基本偏差为 H（下偏差 EI=0）、公差等级为 IT7；g6 表示轴的基本偏差为 g（上偏差 es 为负值）、公差等级为 IT6。这种配合的特点是有保证的间隙，常用于要求灵活运转、容易拆装的场合，如滑动轴承配合、皮带轮与轴的配合、齿轮在轴上滑移等。以基本尺寸 50mm（毫米） 为例，H7/g6 的最大间隙约为 0.050mm（毫米），最小间隙约为 0.009mm（毫米）。"
       }
     },
     {
@@ -145,6 +146,7 @@ var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="ht
     <a href="/form/">形状公差</a>
     <a href="/keyway/">键槽查询</a>
     <a href="/roughness/">粗糙度</a>
+    <a href="/cylinder/">气缸选型</a>
   </nav>
 </header>
 
@@ -183,7 +185,7 @@ var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="ht
     <h2>键槽查询</h2>
     <p>GB/T 1095-2003 键槽尺寸查询。输入轴径即出键宽 b、键高 h、轴槽深 t₁、毂槽深 t₂，支持三种配合类型切换。</p>
     <ul>
-      <li>自动查找键宽 b、键高 h、轴槽深 t₁、毂槽深 t₂（轴径 6~500mm）</li>
+      <li>自动查找键宽 b、键高 h、轴槽深 t₁、毂槽深 t₂（轴径 6~500mm（毫米））</li>
       <li>三种联结类型：较松(H9/D10)、一般(N9/JS9)、较紧(P9/P9)</li>
       <li>公差数据经 ISO 286-2 复核修正（N9 上偏差已更正为负值）</li>
     </ul>
@@ -202,6 +204,17 @@ var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="ht
     <div class="std-ref">标准：GB/T 1031-2009 · GB/T 131-2006</div>
     <a href="/roughness/" class="tool-link">开始查询 →</a>
   </div>
+  <div class="tool-card">
+    <h2>气缸选型计算</h2>
+    <p>气动执行元件选型计算器。按负载与负载率计算缸径行程，估算耗气量，支持回转气缸转矩校核、气爪夹持力与选型报告导出。</p>
+    <ul>
+      <li>直线缸选型向导（负载→负载率→缸径→行程→安装缓冲→磁性开关）</li>
+      <li>耗气量与气源计算 + 回转气缸转矩/动能校核 + 气爪夹持力</li>
+      <li>杆屈曲校核、类型智能推荐、理论出力查询、选型报告导出</li>
+    </ul>
+    <div class="std-ref">依据：GB/T 2348 · ISO 3320 · 工程手册经验公式</div>
+    <a href="/cylinder/" class="tool-link">开始计算 →</a>
+  </div>
 </section>
 
 <section class="faq-section">
@@ -217,7 +230,7 @@ var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="ht
   <details class="faq-item">
     <summary>H7/g6 是什么配合？</summary>
     <div class="faq-answer">
-      <p>H7/g6 是典型的间隙配合，属于基孔制配合。其中 H7 表示孔的基本偏差为 H（下偏差 EI=0）、公差等级为 IT7；g6 表示轴的基本偏差为 g（上偏差 es 为负值）、公差等级为 IT6。这种配合的特点是有保证的间隙，常用于要求灵活运转、容易拆装的场合，如滑动轴承配合、皮带轮与轴的配合、齿轮在轴上滑移等。以基本尺寸 50mm 为例，H7/g6 的最大间隙约为 0.050mm，最小间隙约为 0.009mm。</p>
+      <p>H7/g6 是典型的间隙配合，属于基孔制配合。其中 H7 表示孔的基本偏差为 H（下偏差 EI=0）、公差等级为 IT7；g6 表示轴的基本偏差为 g（上偏差 es 为负值）、公差等级为 IT6。这种配合的特点是有保证的间隙，常用于要求灵活运转、容易拆装的场合，如滑动轴承配合、皮带轮与轴的配合、齿轮在轴上滑移等。以基本尺寸 50mm（毫米） 为例，H7/g6 的最大间隙约为 0.050mm（毫米），最小间隙约为 0.009mm（毫米）。</p>
     </div>
   </details>
 

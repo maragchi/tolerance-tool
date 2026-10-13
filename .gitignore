@@ -27,3 +27,10 @@ ROADMAP.md
 # 截图和开发文件
 *.png
 *.dxf
+
+# 本地脚本、开发资源与文档（不上传公开仓库）
+scripts/
+*.py
+KEY-*.svg
+KEYWAY-REDESIGN-BRIEF.md
+优化建议-*.md
