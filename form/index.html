@@ -113,7 +113,11 @@ h1 { font-size: 22px; margin-bottom: 2px; }
     <div class="input-row">
       <div class="input-group">
         <label>主参数长度 L (mm/毫米)</label>
-        <input type="number" id="lengthInput" value="100" min="0" max="10000" step="1" list="lenList" class="dim-input" placeholder="输入或点箭头选">
+        <div class="picker">
+          <input type="number" id="lengthInput" value="100" min="0" max="10000" step="1" class="dim-input" placeholder="输入或点箭头选">
+          <button type="button" class="picker-toggle" aria-label="展开长度列表">▼</button>
+          <div class="picker-list" id="lengthList"></div>
+        </div>
       </div>
       <div class="input-group">
         <label>公差等级</label>
@@ -126,7 +130,11 @@ h1 { font-size: 22px; margin-bottom: 2px; }
     <div class="input-row">
       <div class="input-group">
         <label>主参数长度 L (mm/毫米)</label>
-        <input type="number" id="lengthInput2" value="100" min="0" max="10000" step="1" list="lenList" class="dim-input" placeholder="输入或点箭头选">
+        <div class="picker">
+          <input type="number" id="lengthInput2" value="100" min="0" max="10000" step="1" class="dim-input" placeholder="输入或点箭头选">
+          <button type="button" class="picker-toggle" aria-label="展开长度列表">▼</button>
+          <div class="picker-list" id="lengthList2"></div>
+        </div>
       </div>
       <div class="input-group">
         <label>应用场景</label>
@@ -160,10 +168,50 @@ const LENGTHS = (function(){
   for (var k = 2100; k <= 10000; k += 100) a.push(k); // 2100~10000 每 100mm
   return a;
 })();
+/* 长度下拉（自定义实现，手机 / 微信内也能用；替代原生 datalist） */
+function setupPicker(inputId, listId, values) {
+  var inp = document.getElementById(inputId);
+  var list = document.getElementById(listId);
+  if (!inp || !list) return;
+  var toggle = list.parentNode.querySelector('.picker-toggle');
+  var buf = [];
+  for (var i = 0; i < values.length; i++) buf.push('<div class="picker-item" data-v="' + values[i] + '">' + values[i] + '</div>');
+  list.innerHTML = buf.join('');
+
+  function closeList() { list.classList.remove('open'); }
+  function closeOthers() {
+    var open = document.querySelectorAll('.picker-list.open');
+    for (var i = 0; i < open.length; i++) if (open[i] !== list) open[i].classList.remove('open');
+  }
+  function markSel() {
+    var items = list.querySelectorAll('.picker-item');
+    for (var i = 0; i < items.length; i++) items[i].classList.toggle('sel', items[i].dataset.v === inp.value);
+  }
+  function openList() {
+    closeOthers(); markSel(); list.classList.add('open');
+    var cur = list.querySelector('.picker-item.sel');
+    if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.clientHeight / 2 + cur.offsetHeight / 2);
+  }
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (list.classList.contains('open')) closeList(); else openList();
+  });
+  list.addEventListener('click', function (e) {
+    var it = e.target.closest ? e.target.closest('.picker-item') : null;
+    if (!it) return;
+    inp.value = it.dataset.v;
+    closeList();
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  document.addEventListener('click', function (e) {
+    if (!list.parentNode.contains(e.target)) closeList();
+  });
+}
+
 function initLenList(){
-  var dl = document.createElement('datalist'); dl.id = 'lenList';
-  dl.innerHTML = LENGTHS.map(function(v){ return '<option value="' + v + '">'; }).join('');
-  document.body.appendChild(dl);
+  setupPicker('lengthInput', 'lengthList', LENGTHS);
+  setupPicker('lengthInput2', 'lengthList2', LENGTHS);
 }
 
 const VERSION = 'v2';

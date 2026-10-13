@@ -39,16 +39,119 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 }
 </script>
 <style>
-h1 { font-size: 24px; margin-bottom: 4px; }
-.subtitle { color: #666; font-size: 14px; margin-bottom: 24px; }
-.subtitle a { color: #2563eb; text-decoration: none; }
-.subtitle a:hover { text-decoration: underline; }
-.input-group input { width: 120px; font-size: 16px; }
-.input-group input.fit-input { width: 100px; text-transform: none; }
-.positive::before { content: "+"; }
-.divider { height: 1px; background: #eee; margin: 16px 0; }
-.fit-result { margin-top: 12px; }
-.fit-result h3 { font-size: 14px; color: #888; margin-bottom: 8px; }
+/* ===================== 设计系统 v1（精品质感） ===================== */
+:root{
+  --bg:#f8fafc; --surface:#fff; --surface-2:#f1f5f9; --surface-3:#e2e8f0;
+  --border:#e2e8f0; --border-strong:#cbd5e1;
+  --text-1:#0f172a; --text-2:#475569; --text-3:#94a3b8;
+  --primary:#2563eb; --primary-hover:#1d4ed8; --primary-soft:#eff6ff; --primary-border:#bfdbfe;
+  --clearance:#3b82f6; --transition:#22c55e; --interference:#ef4444;
+  --dev-up:#dc2626; --dev-down:#1d4ed8;
+  --sh-sm:0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.06);
+  --sh-md:0 2px 4px rgba(15,23,42,.04), 0 4px 12px rgba(15,23,42,.08);
+  --r-sm:6px; --r-md:10px; --r-lg:14px; --r-full:999px;
+  --ease:cubic-bezier(.16,1,.3,1); --dur-fast:150ms; --dur:220ms;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei UI","Microsoft YaHei","Segoe UI",sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Consolas,monospace;
+}
+
+/* ---- 基础 ---- */
+body{font-family:var(--sans);background:var(--bg);color:var(--text-1);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.site-header{background:var(--surface);border-bottom:1px solid var(--border);box-shadow:none}
+.site-header .site-name{color:var(--text-1);font-weight:700;letter-spacing:-.01em}
+.site-nav a{color:var(--text-2);font-weight:500;transition:color var(--dur-fast) var(--ease)}
+.site-nav a:hover,.site-nav a.active{color:var(--primary)}
+.breadcrumb{color:var(--text-3);font-size:12px}
+.breadcrumb a{color:var(--text-2)}
+.breadcrumb a:hover{color:var(--primary)}
+h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.subtitle{color:var(--text-2);font-size:14px;margin-bottom:28px}
+.site-footer{border-top:1px solid var(--border);color:var(--text-3)}
+
+/* ---- 卡片 ---- */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;box-shadow:var(--sh-sm)}
+.card h2{font-size:16px;font-weight:600;color:var(--text-1);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* ---- 表单 ---- */
+.input-group label{font-size:12px;color:var(--text-2);font-weight:500;margin-bottom:6px}
+.input-group input,.input-group select{font-family:var(--sans);font-size:14px;padding:9px 12px;border:1px solid var(--border-strong);border-radius:var(--r-sm);background:var(--surface);color:var(--text-1);
+  transition:border-color var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease)}
+.input-group input:hover,.input-group select:hover{border-color:#94a3b8}
+.input-group input:focus,.input-group select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.dim-input{font-family:var(--mono);font-weight:600;font-size:15px;width:140px}
+.code-select{min-width:150px;font-family:var(--mono);font-size:15px;font-weight:600}
+
+/* ---- 快捷选择（默认收起，点击展开） ---- */
+.quick-toggle{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12px;font-weight:500;color:var(--text-2);
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-full);padding:6px 13px;cursor:pointer;
+  transition:all var(--dur-fast) var(--ease);margin-top:12px}
+.quick-toggle:hover{background:var(--primary-soft);color:var(--primary);border-color:var(--primary-border)}
+.quick-toggle .caret{font-size:9px;line-height:1;transition:transform var(--dur) var(--ease)}
+.quick-toggle.open .caret{transform:rotate(180deg)}
+.quick-picks{display:none;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.quick-picks.open{display:flex}
+.qp-label{display:none}
+.quick-picks button{font:inherit;font-size:12px;font-weight:500;padding:5px 12px;background:var(--surface);color:var(--text-2);
+  border:1px solid var(--border);border-radius:var(--r-full);cursor:pointer;transition:all var(--dur-fast) var(--ease)}
+.quick-picks button:hover{background:var(--primary-soft);color:var(--primary);border-color:var(--primary-border)}
+.quick-picks button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.hint{font-size:12px;color:var(--text-3);margin-top:10px}
+.error{color:var(--interference);font-size:13px;margin-top:10px;padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:var(--r-sm)}
+
+/* ---- 结果表格 ---- */
+.result-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
+.result-table th{text-align:left;padding:9px 12px;font-size:12px;font-weight:500;color:var(--text-3);background:var(--surface-2);border-bottom:1px solid var(--border)}
+.result-table td{padding:10px 12px;border-bottom:1px solid var(--surface-2);transition:background var(--dur-fast) var(--ease)}
+.result-table tbody tr:hover td,.result-table tr:hover td{background:#fafbfc}
+.result-table tr:last-child td{border-bottom:none}
+.result-table .value{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text-1)}
+.dev-key{font-size:12px;font-weight:500;color:var(--text-3)}
+.dev-key.up{color:var(--dev-up)}
+.dev-key.down{color:var(--dev-down)}
+.dev-up{color:var(--dev-up);font-weight:700;font-family:var(--mono)}
+.dev-down{color:var(--dev-down);font-weight:700;font-family:var(--mono)}
+
+/* ---- 配合色条 ---- */
+.fit-banner{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:var(--r-md);margin:16px 0 4px;font-size:14px;font-weight:600}
+.fit-banner .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.fit-banner .banner-note{font-size:12px;font-weight:400;color:var(--text-2);margin-left:auto;text-align:right}
+.fit-banner.clearance{background:#eff6ff;border-left:4px solid var(--clearance);color:#1e40af}
+.fit-banner.clearance .dot{background:var(--clearance)}
+.fit-banner.transition{background:#f0fdf4;border-left:4px solid var(--transition);color:#166534}
+.fit-banner.transition .dot{background:var(--transition)}
+.fit-banner.interference{background:#fef2f2;border-left:4px solid var(--interference);color:#991b1b}
+.fit-banner.interference .dot{background:var(--interference)}
+
+/* ---- 示例框 ---- */
+.card-split{display:flex;gap:20px;align-items:flex-start}
+.card-main{flex:1 1 auto;min-width:0}
+.example-box{flex:0 0 214px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:16px}
+.example-box .ex-title{font-size:12px;color:var(--text-3);margin-bottom:12px;font-weight:500}
+.example-box .ex-row{padding:5px 0;font-family:var(--mono);font-size:13px}
+.example-box .ex-note{font-size:11px;color:var(--text-3);margin-top:12px;padding-top:10px;border-top:1px dashed var(--border-strong);line-height:1.7}
+@media(max-width:680px){.card-split{flex-direction:column}.example-box{flex:1 1 auto;width:100%}}
+
+/* ---- 公差带示意图 ---- */
+.tol-chart{margin-top:16px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface);padding:8px 4px}
+.tol-chart svg{display:block;width:100%;height:auto}
+
+/* ---- 科普面板 ---- */
+.help-btn{width:22px;height:22px;padding:0;border-radius:50%;background:var(--primary-soft);color:var(--primary);border:1px solid var(--primary-border);
+  font-size:13px;font-weight:700;line-height:1;cursor:pointer;transition:all var(--dur-fast) var(--ease)}
+.help-btn:hover{background:var(--primary-border)}
+.help-panel{margin-top:16px;padding-top:16px;border-top:1px dashed var(--border-strong)}
+.help-item{border-radius:var(--r-md);padding:13px 15px;margin-bottom:10px;font-size:13px;line-height:1.7}
+.help-item h4{font-size:13px;margin-bottom:6px;display:flex;align-items:center;gap:8px;font-weight:700}
+.help-item .dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+.help-item p{margin:3px 0;color:var(--text-2)}
+.help-item.clearance{background:#eff6ff;border-left:4px solid var(--clearance)} .help-item.clearance h4{color:#1e40af} .help-item.clearance .dot{background:var(--clearance)}
+.help-item.transition{background:#f0fdf4;border-left:4px solid var(--transition)} .help-item.transition h4{color:#166534} .help-item.transition .dot{background:var(--transition)}
+.help-item.interference{background:#fef2f2;border-left:4px solid var(--interference)} .help-item.interference h4{color:#991b1b} .help-item.interference .dot{background:var(--interference)}
+
+/* ---- 动效 ---- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fade-up{animation:fadeUp var(--dur) var(--ease) both}
+.positive::before{content:"+";}
 </style>
 </head>
 <body>
@@ -79,15 +182,20 @@ h1 { font-size: 24px; margin-bottom: 4px; }
       <div class="input-row">
         <div class="input-group">
           <label>基本尺寸 (mm/毫米)</label>
-          <input type="number" id="dim" value="50" min="1" max="1000" step="1" list="dimList" class="dim-input" placeholder="输入或点箭头选">
+          <div class="picker">
+            <input type="number" id="dim" value="50" min="1" max="1000" step="1" class="dim-input" placeholder="输入或点箭头选">
+            <button type="button" class="picker-toggle" aria-label="展开尺寸列表">▼</button>
+            <div class="picker-list" id="dimList"></div>
+          </div>
         </div>
         <div class="input-group">
           <label>公差代号（孔大写 / 轴小写）</label>
-          <select id="codeSel" style="min-width:150px;font-size:16px;font-weight:600"></select>
+          <select id="codeSel" class="code-select"></select>
         </div>
       </div>
-      <div class="quick-picks" id="quickSingle"><span class="qp-label">常用：</span></div>
-      <p class="hint">选好后立即出结果 ｜ 尺寸从下拉直接点选；特殊值选"其他…（手动输入）"</p>
+      <button type="button" class="quick-toggle" onclick="toggleQuick('quickSingle')">常用代号 <span class="caret">▼</span></button>
+      <div class="quick-picks" id="quickSingle"></div>
+      <p class="hint">输入框可直接打字，或点右侧箭头从列表选 ｜ 选好立即出结果</p>
       <div id="singleResult"></div>
     </div>
     <aside class="example-box">
@@ -104,20 +212,25 @@ h1 { font-size: 24px; margin-bottom: 4px; }
   <div class="input-row">
     <div class="input-group">
       <label>基本尺寸 (mm/毫米)</label>
-      <input type="number" id="fitDim" value="50" min="1" max="1000" step="1" list="dimList" class="dim-input" placeholder="输入或点箭头选">
+      <div class="picker">
+        <input type="number" id="fitDim" value="50" min="1" max="1000" step="1" class="dim-input" placeholder="输入或点箭头选">
+        <button type="button" class="picker-toggle" aria-label="展开尺寸列表">▼</button>
+        <div class="picker-list" id="fitDimList"></div>
+      </div>
     </div>
   </div>
   <div class="input-row" style="margin-top:14px">
     <div class="input-group">
       <label>孔公差（大写）</label>
-      <select id="holeSel" style="min-width:150px;font-size:16px;font-weight:600"></select>
+      <select id="holeSel" class="code-select"></select>
     </div>
     <div class="input-group">
       <label>轴公差（小写）</label>
-      <select id="shaftSel" style="min-width:150px;font-size:16px;font-weight:600"></select>
+      <select id="shaftSel" class="code-select"></select>
     </div>
   </div>
-  <div class="quick-picks" id="quickFit"><span class="qp-label">常用配合：</span></div>
+  <button type="button" class="quick-toggle" onclick="toggleQuick('quickFit')">常用配合 <span class="caret">▼</span></button>
+  <div class="quick-picks" id="quickFit"></div>
   <div id="fitResult"></div>
   <div class="help-panel" id="helpPanel" style="display:none">
     <div class="help-item clearance">
@@ -169,10 +282,65 @@ function toggleHelp(){
   var p = document.getElementById('helpPanel');
   p.style.display = (p.style.display === 'none' || !p.style.display) ? 'block' : 'none';
 }
+/* 快捷代号/配合面板：展开收起 */
+function toggleQuick(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  var btn = el.previousElementSibling;
+  if (btn && btn.classList.contains('quick-toggle')) btn.classList.toggle('open');
+}
+function closeQuick(el) {
+  if (!el) return;
+  el.classList.remove('open');
+  var btn = el.previousElementSibling;
+  if (btn && btn.classList.contains('quick-toggle')) btn.classList.remove('open');
+}
+
+/* 尺寸下拉（自定义实现，手机 / 微信内也能用；替代原生 datalist） */
+function setupPicker(inputId, listId, values) {
+  var inp = document.getElementById(inputId);
+  var list = document.getElementById(listId);
+  if (!inp || !list) return;
+  var toggle = list.parentNode.querySelector('.picker-toggle');
+  var buf = [];
+  for (var i = 0; i < values.length; i++) buf.push('<div class="picker-item" data-v="' + values[i] + '">' + values[i] + '</div>');
+  list.innerHTML = buf.join('');
+
+  function closeList() { list.classList.remove('open'); }
+  function closeOthers() {
+    var open = document.querySelectorAll('.picker-list.open');
+    for (var i = 0; i < open.length; i++) if (open[i] !== list) open[i].classList.remove('open');
+  }
+  function markSel() {
+    var items = list.querySelectorAll('.picker-item');
+    for (var i = 0; i < items.length; i++) items[i].classList.toggle('sel', items[i].dataset.v === inp.value);
+  }
+  function openList() {
+    closeOthers(); markSel(); list.classList.add('open');
+    var cur = list.querySelector('.picker-item.sel');
+    if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.clientHeight / 2 + cur.offsetHeight / 2);
+  }
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (list.classList.contains('open')) closeList(); else openList();
+  });
+  list.addEventListener('click', function (e) {
+    var it = e.target.closest ? e.target.closest('.picker-item') : null;
+    if (!it) return;
+    inp.value = it.dataset.v;
+    closeList();
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  document.addEventListener('click', function (e) {
+    if (!list.parentNode.contains(e.target)) closeList();
+  });
+}
+
 function initPickers(){
-  var dl = document.createElement('datalist'); dl.id = 'dimList';
-  dl.innerHTML = DIMS.map(function(v){ return '<option value="' + v + '">'; }).join('');
-  document.body.appendChild(dl);
+  setupPicker('dim', 'dimList', DIMS);
+  setupPicker('fitDim', 'fitDimList', DIMS);
 
   var cl = document.getElementById('codeSel');
   cl.innerHTML = '<optgroup label="孔（大写）">' + optList(HOLE_CODES) + '</optgroup><optgroup label="轴（小写）">' + optList(SHAFT_CODES) + '</optgroup>';
@@ -187,6 +355,7 @@ function initPickers(){
       cl.value = c;
       Array.prototype.forEach.call(qs.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
       b.classList.add('on');
+      closeQuick(qs);
       querySingle();
     };
     qs.appendChild(b);
@@ -201,6 +370,7 @@ function initPickers(){
       ss.value = p[1];
       Array.prototype.forEach.call(qf.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
       b.classList.add('on');
+      closeQuick(qf);
       queryFit();
     };
     qf.appendChild(b);
@@ -381,6 +551,35 @@ function formatMM(um) {
   return (um / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
 }
 
+/* 公差带示意图：把孔/轴的公差带画出来（单位 μm，自动缩放） */
+function buildToleranceChart(dim, bands) {
+  var vals = [0], i;
+  for (i = 0; i < bands.length; i++) { if (bands[i]) { vals.push(bands[i].upper, bands[i].lower); } }
+  var mx = Math.max.apply(null, vals), mn = Math.min.apply(null, vals);
+  var span = (mx - mn) || 1;
+  var pad = span * 0.24;
+  mx += pad; mn -= pad; span = mx - mn;
+  var W = 460, H = 186, top = 24, bot = 30;
+  var innerH = H - top - bot;
+  function y(v) { return top + (mx - v) / span * innerH; }
+  var zeroY = y(0);
+  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="公差带示意图">';
+  s += '<line x1="14" y1="' + zeroY.toFixed(1) + '" x2="' + (W - 14) + '" y2="' + zeroY.toFixed(1) + '" stroke="#94a3b8" stroke-width="1" stroke-dasharray="5 4"/>';
+  s += '<text x="' + (W - 14) + '" y="' + (zeroY - 6).toFixed(1) + '" font-size="10" fill="#94a3b8" text-anchor="end">公称尺寸线（偏差 0）</text>';
+  var xs = [92, 258], bw = 104;
+  function f(v) { return (v > 0 ? '+' : '') + (v / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, ''); }
+  for (i = 0; i < bands.length; i++) {
+    var b = bands[i]; if (!b) continue;
+    var x = xs[i], yT = y(b.upper), yB = y(b.lower), hh = Math.max(yB - yT, 3.5);
+    s += '<rect x="' + x + '" y="' + yT.toFixed(1) + '" width="' + bw + '" height="' + hh.toFixed(1) + '" rx="3" fill="' + b.color + '" fill-opacity="0.15" stroke="' + b.color + '" stroke-width="1.5"/>';
+    s += '<text x="' + (x + bw / 2) + '" y="' + (H - 11) + '" font-size="11.5" font-weight="600" fill="' + b.color + '" text-anchor="middle">' + b.label + '</text>';
+    s += '<text x="' + (x + bw + 7) + '" y="' + (yT + 3.5).toFixed(1) + '" font-size="10" font-family="ui-monospace,monospace" fill="' + b.color + '">' + f(b.upper) + '</text>';
+    s += '<text x="' + (x + bw + 7) + '" y="' + (yB + 3.5).toFixed(1) + '" font-size="10" font-family="ui-monospace,monospace" fill="' + b.color + '">' + f(b.lower) + '</text>';
+  }
+  s += '</svg>';
+  return '<div class="tol-chart fade-up">' + s + '</div>';
+}
+
 function querySingle() {
   const dim = parseFloat(document.getElementById('dim').value);
   const code = document.getElementById('codeSel').value;
@@ -401,6 +600,12 @@ function querySingle() {
   const warn = (isHole && result.letter.charAt(0).toLowerCase() !== 'h' && result.letter.toLowerCase() !== 'js')
     ? '<p class="hint">提示：非 H/JS 孔偏差按 ISO 286 通用规则换算，高等级（IT≤8 的 K/M/N/P~U）存在 Δ 修正差异，重要配合请核对标准原文。</p>' : '';
 
+  const chart = buildToleranceChart(dim, [{
+    label: (isHole ? '孔 ' : '轴 ') + code,
+    upper: result.upper, lower: result.lower,
+    color: isHole ? '#2563eb' : '#d97706'
+  }]);
+
   container.innerHTML = `
     <table class="result-table">
       <tr><th>类型</th><td>${typeTag}</td></tr>
@@ -410,6 +615,7 @@ function querySingle() {
       <tr><th>最大极限尺寸</th><td class="value"><span class="dev-up">${maxLimit.toFixed(4)}</span> mm（毫米）</td></tr>
       <tr><th>最小极限尺寸</th><td class="value"><span class="dev-down">${minLimit.toFixed(4)}</span> mm（毫米）</td></tr>
     </table>
+    ${chart}
     ${warn}
   `;
 }
@@ -441,6 +647,11 @@ function queryFit() {
     ? '<span style="color:#1d4ed8;font-weight:600">' + formatMM(v) + '</span>'
     : '<span style="color:#b91c1c;font-weight:600">' + formatMM(v) + '</span>';
 
+  const chart = buildToleranceChart(dim, [
+    { label: '孔 ' + holeCode, upper: result.hole.upper, lower: result.hole.lower, color: '#2563eb' },
+    { label: '轴 ' + shaftCode, upper: result.shaft.upper, lower: result.shaft.lower, color: '#d97706' }
+  ]);
+
   container.innerHTML = `
     <div class="fit-banner ${result.fitType}">
       <span class="dot"></span>${result.fitTypeCN}
@@ -452,7 +663,8 @@ function queryFit() {
       <tr><th>最大间隙/过盈</th><td colspan="2" class="value">${colorize(result.maxClearance)} mm（毫米）</td></tr>
       <tr><th>最小间隙/过盈</th><td colspan="2" class="value">${colorize(result.minClearance)} mm（毫米）</td></tr>
     </table>
-    <p class="hint">正值 = 间隙（蓝），负值 = 过盈（红）</p>
+    ${chart}
+    <p class="hint">实线框 = 公差带；虚线 = 公称尺寸（偏差 0）｜差值正值 = 间隙（蓝），负值 = 过盈（红）</p>
   `;
 }
 

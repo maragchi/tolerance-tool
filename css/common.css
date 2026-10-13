@@ -177,6 +177,23 @@ button:hover { background: #1d4ed8; }
 .dim-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .dim-input[type=number] { -moz-appearance: textfield; }
 
+/* 尺寸选择器：输入框 + 自定义下拉（兼容手机/微信，替代原生 datalist） */
+.picker { position: relative; display: inline-flex; align-items: stretch; }
+.picker input { border-radius: 6px 0 0 6px !important; border-right: none !important; }
+.picker .picker-toggle { width: 40px; flex-shrink: 0; background: #f1f5f9; border: 1px solid #cbd5e1; border-left: none;
+  border-radius: 0 6px 6px 0; color: #475569; font-size: 11px; line-height: 1; cursor: pointer; padding: 0;
+  display: flex; align-items: center; justify-content: center; transition: background .15s; }
+.picker .picker-toggle:hover { background: #e2e8f0; }
+.picker .picker-toggle:active { background: #cbd5e1; }
+.picker-list { position: absolute; top: calc(100% + 4px); left: 0; min-width: 100%; max-height: 264px; overflow-y: auto;
+  background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 4px 16px rgba(15,23,42,.14);
+  z-index: 60; display: none; -webkit-overflow-scrolling: touch; }
+.picker-list.open { display: block; }
+.picker-item { padding: 10px 16px; font-family: Consolas, ui-monospace, monospace; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.picker-item:hover, .picker-item.hi { background: #eff6ff; color: #2563eb; }
+.picker-item.sel { background: #2563eb; color: #fff; font-weight: 600; }
+@media (max-width: 640px) { .picker { width: 100%; } .picker input { flex: 1 1 auto; width: auto !important; } .picker-list { min-width: 140px; } }
+
 /* 快捷选择（常用值/常用配合 一键点选） */
 .quick-picks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .quick-picks .qp-label { font-size: 12px; color: #888; align-self: center; margin-right: 2px; }

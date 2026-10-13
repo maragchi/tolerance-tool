@@ -126,7 +126,11 @@ details summary:hover { color: #2563eb; }
   <div class="input-row">
     <div class="input-group">
       <label>轴径 d (mm/毫米)</label>
-      <input type="number" id="diaInput" value="50" min="6" max="500" step="1" list="diaList" class="dim-input" placeholder="输入或点箭头选">
+      <div class="picker">
+        <input type="number" id="diaInput" value="50" min="6" max="500" step="1" class="dim-input" placeholder="输入或点箭头选">
+        <button type="button" class="picker-toggle" aria-label="展开轴径列表">▼</button>
+        <div class="picker-list" id="diaList"></div>
+      </div>
     </div>
     <div class="input-group" style="flex:1;min-width:260px">
       <label>联结类型（决定键槽宽配合，基轴制 键 h9）</label>
@@ -374,10 +378,49 @@ function showToast(msg){
   setTimeout(function(){ el.classList.remove('show'); },1600);
 }
 
+/* ============ 轴径下拉（自定义实现，手机 / 微信内也能用） ============ */
+function setupPicker(inputId, listId, values) {
+  var inp = document.getElementById(inputId);
+  var list = document.getElementById(listId);
+  if (!inp || !list) return;
+  var toggle = list.parentNode.querySelector('.picker-toggle');
+  var buf = [];
+  for (var i = 0; i < values.length; i++) buf.push('<div class="picker-item" data-v="' + values[i] + '">' + values[i] + '</div>');
+  list.innerHTML = buf.join('');
+
+  function closeList() { list.classList.remove('open'); }
+  function closeOthers() {
+    var open = document.querySelectorAll('.picker-list.open');
+    for (var i = 0; i < open.length; i++) if (open[i] !== list) open[i].classList.remove('open');
+  }
+  function markSel() {
+    var items = list.querySelectorAll('.picker-item');
+    for (var i = 0; i < items.length; i++) items[i].classList.toggle('sel', items[i].dataset.v === inp.value);
+  }
+  function openList() {
+    closeOthers(); markSel(); list.classList.add('open');
+    var cur = list.querySelector('.picker-item.sel');
+    if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.clientHeight / 2 + cur.offsetHeight / 2);
+  }
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (list.classList.contains('open')) closeList(); else openList();
+  });
+  list.addEventListener('click', function (e) {
+    var it = e.target.closest ? e.target.closest('.picker-item') : null;
+    if (!it) return;
+    inp.value = it.dataset.v;
+    closeList();
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  document.addEventListener('click', function (e) {
+    if (!list.parentNode.contains(e.target)) closeList();
+  });
+}
+
 /* ============ 初始化 ============ */
-var diaDl = document.createElement('datalist'); diaDl.id = 'diaList';
-diaDl.innerHTML = DIAS.map(function(v){ return '<option value="' + v + '">'; }).join('');
-document.body.appendChild(diaDl);
+setupPicker('diaInput', 'diaList', DIAS);
 document.getElementById('diaInput').addEventListener('input',render);
 document.querySelectorAll('.fit-btn').forEach(function(btn){
   btn.addEventListener('click',function(){
