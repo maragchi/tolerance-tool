@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#2563eb"/>
-  <text x="16" y="23" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="bold" fill="white">公</text>
+  <rect width="32" height="32" rx="7" fill="#2563eb"/>
+  <rect x="4.5" y="13.6" width="23" height="3.2" rx="1.6" fill="#fff"/>
+  <rect x="7.1" y="17.2" width="1.5" height="4.6" rx="0.75" fill="#fff"/>
+  <rect x="11" y="17.2" width="1.2" height="3" rx="0.6" fill="#fff"/>
+  <rect x="14.7" y="17.2" width="1.2" height="3" rx="0.6" fill="#fff"/>
+  <rect x="18.4" y="17.2" width="1.2" height="3" rx="0.6" fill="#fff"/>
+  <path d="M8 13.6 L8 6.6 L10.5 6.6 L10.5 13.6 Z" fill="#fff"/>
+  <rect x="20.6" y="10.4" width="7.2" height="9.6" rx="2.2" fill="#fff"/>
+  <rect x="22.6" y="13.9" width="3.2" height="2.8" rx="0.9" fill="#2563eb"/>
 </svg>

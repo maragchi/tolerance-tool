@@ -28,9 +28,18 @@
     '.pwa-bar .pwa-txt{flex:1 1 auto;line-height:1.45;min-width:0}',
     '.pwa-bar .pwa-txt b{display:block;font-size:13.5px;margin-bottom:1px}',
     '.pwa-bar .pwa-txt span{color:#94a3b8;font-size:12px}',
-    '.pwa-bar .pwa-btn{background:#2563eb;color:#fff;border:none;border-radius:999px;padding:9px 16px;',
-    'font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:inherit}',
+    '.pwa-bar .pwa-btn{background:#2563eb;color:#fff;border:none;border-radius:999px;padding:9px 18px;',
+    'font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0;font-family:inherit;white-space:nowrap;line-height:1.4}',
     '.pwa-bar .pwa-btn:active{transform:scale(.97)}',
+    '@media(max-width:430px){.pwa-bar{flex-wrap:wrap;padding:12px 14px 14px}',
+    '.pwa-bar .pwa-txt{flex:1 1 100%;order:-1;margin-bottom:2px}',
+    '.pwa-bar .pwa-btn{flex:1 1 auto;order:1}',
+    '.pwa-bar .pwa-close{order:2}}',
+    '.pwa-install-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:9px 18px;',
+    'font-size:13px;font-weight:600;color:#2563eb;background:#eff6ff;border:1px solid #bfdbfe;',
+    'border-radius:999px;cursor:pointer;font-family:inherit;white-space:nowrap;line-height:1.4}',
+    '.pwa-install-btn:hover{background:#dbeafe}',
+    '.pwa-install-btn:active{transform:scale(.98)}',
     '.pwa-bar .pwa-close{background:transparent;border:none;color:#64748b;font-size:20px;cursor:pointer;',
     'padding:0 2px;flex-shrink:0;line-height:1}',
     '.pwa-modal{position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,.55);display:flex;',
@@ -149,8 +158,22 @@
   });
   window.addEventListener('appinstalled', function () { hideBar(true); });
 
+  /* ---------- 常驻入口：页面底部始终有一个「添加到桌面」按钮 ---------- */
+  function injectInstallEntry() {
+    if (isStandalone) return;
+    var host = document.querySelector('.site-footer') || document.body;
+    if (host.querySelector('.pwa-install-btn')) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pwa-install-btn';
+    b.innerHTML = '\uD83D\uDCF2 添加到桌面';
+    b.addEventListener('click', doInstall);
+    host.appendChild(b);
+  }
+
   // 没有 beforeinstallprompt 的浏览器（iOS/Safari/微信）：延迟显示引导条
   window.addEventListener('load', function () {
+    injectInstallEntry();
     setTimeout(function () {
       if (!deferredPrompt && !isStandalone) showBar();
     }, 3500);
