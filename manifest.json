@@ -1,0 +1,53 @@
+{
+  "name": "公差工具站 · 机械查询工具",
+  "short_name": "公差工具",
+  "description": "ISO 286 公差配合、形状公差、键槽、表面粗糙度、气缸选型在线查询工具，数据本地计算，离线可用。",
+  "start_url": "/?from=app",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["productivity", "utilities", "education"],
+  "icons": [
+    { "src": "/icons/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "公差配合查询",
+      "short_name": "公差配合",
+      "url": "/fit/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "键槽查询",
+      "short_name": "键槽",
+      "url": "/keyway/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "形状公差",
+      "short_name": "形状公差",
+      "url": "/form/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "表面粗糙度",
+      "short_name": "粗糙度",
+      "url": "/roughness/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "气缸选型",
+      "short_name": "气缸选型",
+      "url": "/cylinder/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

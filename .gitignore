@@ -28,9 +28,16 @@ ROADMAP.md
 *.png
 *.dxf
 
+# 例外：PWA 应用图标必须上线
+!icons/*.png
+icons/_clean_master.png
+
 # 本地脚本、开发资源与文档（不上传公开仓库）
 scripts/
 *.py
 KEY-*.svg
 KEYWAY-REDESIGN-BRIEF.md
 优化建议-*.md
+
+# 本地演示页（未定稿，不上线）
+demo/

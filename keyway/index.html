@@ -98,6 +98,12 @@ details summary:hover { color: #2563eb; }
   .fit-btn{flex:1 1 100%}
 }
 </style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="公差工具">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 
@@ -432,5 +438,6 @@ document.getElementById('noteList').innerHTML=NOTES.map(function(n){return '<li>
 document.getElementById('tipBox').innerHTML=TIPS;
 render();
 </script>
+<script src="/js/pwa.js" defer></script>
 </body>
 </html>

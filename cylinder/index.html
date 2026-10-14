@@ -109,6 +109,12 @@
   @media(max-width:900px){ .layout{flex-direction:column} #nav{width:100%!important;border-right:none;border-bottom:1px solid var(--line);display:flex;overflow-x:auto} #nav a{white-space:nowrap;border-left:none;border-bottom:3px solid transparent} #nav a.active{border-left:none;border-bottom-color:var(--primary)} }
   @media print{ .site-header,.breadcrumb{display:none!important} }
 </style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="公差工具">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 <header class="site-header">
@@ -851,5 +857,6 @@ function calcForce(){
 $('f-cat').addEventListener('change',calcForce);
 calcForce();
 </script>
+<script src="/js/pwa.js" defer></script>
 </body>
 </html>
