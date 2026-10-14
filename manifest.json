@@ -2,7 +2,7 @@
   "name": "公差工具站 · 机械查询工具",
   "short_name": "公差工具",
   "description": "ISO 286 公差配合、形状公差、键槽、表面粗糙度、气缸选型在线查询工具，数据本地计算，离线可用。",
-  "start_url": "/?from=app",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],

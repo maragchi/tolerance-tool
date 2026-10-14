@@ -16,7 +16,10 @@
     });
   }
 
-  if (isStandalone) return; // 已经是独立应用，不再提示
+  // 返回手势处理：已安装(standalone)时也必须生效，所以放在 return 之前
+  setupBackExit();
+
+  if (isStandalone) return; // 已经是独立应用，不再显示安装提示
 
   /* ---------- 样式 ---------- */
   var CSS = [
@@ -157,6 +160,33 @@
     showBar();
   });
   window.addEventListener('appinstalled', function () { hideBar(true); });
+
+  /* ---------- 返回手势：standalone 下在首页按「返回」应能退出应用 ----------
+   * Android 上 PWA 有历史记录时，边缘返回手势会去回退历史而不是退出，
+   * 表现就是「怎么划都退不出去」。这里在首页压一条占位历史，
+   * 接到返回事件时主动关闭应用窗口（Chrome/Edge PWA 支持 window.close）。
+   */
+  function setupBackExit() {
+    if (!isStandalone) return;
+    var isHome = (location.pathname === '/' || /\/index\.html$/.test(location.pathname));
+    if (!isHome) return;
+
+    try { history.pushState({ pwaHome: 1 }, '', location.href); } catch (e) { return; }
+
+    window.addEventListener('popstate', function () {
+      var stillHome = (location.pathname === '/' || /\/index\.html$/.test(location.pathname));
+      if (stillHome) {
+        // 用户意图：退出应用
+        try { window.close(); } catch (e) {}
+        setTimeout(function () {
+          // window.close 被忽略时（少数环境），补一条历史避免「划不动」
+          if (!document.hidden) {
+            try { history.pushState({ pwaHome: 2 }, '', location.href); } catch (e) {}
+          }
+        }, 150);
+      }
+    });
+  }
 
   /* ---------- 常驻入口：页面底部始终有一个「添加到桌面」按钮 ---------- */
   function injectInstallEntry() {
