@@ -264,6 +264,11 @@ table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1
 .nav-mask { display: none; }
 /* 抽屉按钮在网格里的位置：最右一栏（窄屏时导航进抽屉，header 里右边只剩它） */
 .nav-toggle { grid-column: 3; justify-self: end; }
+/* 首帧不要动画：抽屉模式（has-drawer）是在 <head> 里尽早加上的，
+   如果此时 transition 已经生效，导航会从"横排"滑到右侧抽屉 —— 就是用户反馈的
+   "点进一个页面，侧边栏唰一下刷到右边去"。等布局稳定（nav-ready）再放开过渡。 */
+html.has-drawer:not(.nav-ready) .site-nav,
+html.has-drawer:not(.nav-ready) .nav-mask { transition: none !important; }
 /* 抽屉里才用的两个元素（关闭按钮、分组标题）—— 桌面宽度下必须收起来，
    否则它们会跟着 .site-nav 一起横排在 header 里 */
 .nav-close, .nav-title { display: none; }

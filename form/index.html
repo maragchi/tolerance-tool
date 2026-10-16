@@ -6,6 +6,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>/* 抽屉模式尽早生效，避免首帧导航"唰"地滑到右边 */
+(function(){var h=document.documentElement;
+if(!(window.matchMedia&&window.matchMedia("(max-width:720px)").matches))return;
+h.className+=" has-drawer";
+setTimeout(function(){if(!document.querySelector(".nav-toggle")){
+h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta name="color-scheme" content="only light">
 <title>直线度/平面度公差查询 | GB/T 1184</title>
 <meta name="description" content="在线查询直线度和平面度公差值，支持 GB/T 1184-1996 标准，输入长度和等级即可获取公差值、加工方法和测量方法推荐。">

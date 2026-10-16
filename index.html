@@ -8,6 +8,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>/* 抽屉模式尽早生效，避免首帧导航"唰"地滑到右边 */
+(function(){var h=document.documentElement;
+if(!(window.matchMedia&&window.matchMedia("(max-width:720px)").matches))return;
+h.className+=" has-drawer";
+setTimeout(function(){if(!document.querySelector(".nav-toggle")){
+h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <title>公差工具站 - 在线公差配合、形状公差、表面粗糙度查询 | GB/T 1800 GB/T 1184 GB/T 1031</title>
 <meta name="description" content="免费在线公差查询工具：ISO 286/GB/T 1800 公差配合计算、GB/T 1184 形状公差查询、GB/T 1095 键槽查询、GB/T 1031 表面粗糙度 Ra 查询。支持公差等级、配合类型、粗糙度推荐与标注符号。">
 <meta name="keywords" content="公差查询,公差配合,形状公差,表面粗糙度,Ra,粗糙度查询,直线度,平面度,键槽,ISO 286,GB/T 1800,GB/T 1184,GB/T 1095,GB/T 1031,公差等级,配合代号">

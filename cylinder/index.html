@@ -8,6 +8,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>/* 抽屉模式尽早生效，避免首帧导航"唰"地滑到右边 */
+(function(){var h=document.documentElement;
+if(!(window.matchMedia&&window.matchMedia("(max-width:720px)").matches))return;
+h.className+=" has-drawer";
+setTimeout(function(){if(!document.querySelector(".nav-toggle")){
+h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <title>气缸选型计算器 | 缸径/行程/耗气量/回转缸/气爪/选型报告 | 公差工具站</title>
 <meta name="description" content="免费在线气缸选型计算器：按负载和负载率自动计算缸径与行程、估算耗气量与气源，提供回转气缸转矩校核、气爪夹持力计算、杆屈曲校核与选型报告导出。依据 GB2348 / ISO3320 及工程手册公式。">
 <meta name="keywords" content="气缸选型,气缸缸径计算,气缸选型计算,耗气量计算,回转气缸选型,气爪选型,气缸推力计算,活塞杆屈曲校核,GB2348,ISO3320">

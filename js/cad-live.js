@@ -341,5 +341,9 @@
   }
 
   // 调试用：控制台里改 window.CAD_DEBUG.paint() 可手动重画
-  window.CAD_DEBUG = {params: P, derive: derive, paint: paint, splitDev: splitDev};
+  // fmt 是给页面复用的排版原语（配合页把断面图克隆一份到「单要素查询」时用同一套规则）
+  window.CAD_DEBUG = {
+    params: P, derive: derive, paint: paint, splitDev: splitDev,
+    fmt: {mergePM: mergePM, splitDev: splitDev, devColor: devColor}
+  };
 })();

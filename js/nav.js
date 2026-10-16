@@ -68,6 +68,8 @@
   var nav = header && header.querySelector('.site-nav');
   if(header && nav){
     document.documentElement.classList.add('has-drawer');
+    /* 布局稳定后再放开过渡（首帧加 has-drawer 时若已有过渡，导航会"唰"地滑到右边） */
+    requestAnimationFrame(function(){ document.documentElement.classList.add('nav-ready'); });
 
     var btn = document.createElement('button');
     btn.type = 'button';

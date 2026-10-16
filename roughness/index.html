@@ -6,6 +6,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>/* 抽屉模式尽早生效，避免首帧导航"唰"地滑到右边 */
+(function(){var h=document.documentElement;
+if(!(window.matchMedia&&window.matchMedia("(max-width:720px)").matches))return;
+h.className+=" has-drawer";
+setTimeout(function(){if(!document.querySelector(".nav-toggle")){
+h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta name="color-scheme" content="only light">
 <title>表面粗糙度查询 | Ra推荐、加工方法对照、标注符号 | GB/T 1031</title>
 <meta name="description" content="表面粗糙度在线查询：按应用场景推荐Ra值（配合面/密封面/导轨等），加工方法可达Ra对照，粗糙度标注符号规范（GB/T 131）。依据GB/T 1031-2009。">
