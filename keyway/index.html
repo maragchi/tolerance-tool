@@ -39,11 +39,12 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 </script>
 
 <style>
-h1 { font-size: 22px; margin-bottom: 2px; }
-.subtitle { color: #666; font-size: 13px; margin-bottom: 16px; }
+h1 { font-size: 22px; margin-bottom: 6px; text-align: center; }
+.subtitle { color: #666; font-size: 13px; margin-bottom: 18px; text-align: center; }
 .subtitle a { color: #2563eb; text-decoration: none; }
 .subtitle a:hover { text-decoration: underline; }
-.verify-badge { background: #d1fae5; border: 1px solid #34d399; border-radius: 6px; padding: 8px 12px; margin-bottom: 14px; font-size: 12px; color: #065f46; line-height: 1.6; }
+/* 数据依据：从顶部挪到页尾，做一条不抢视线的说明 */
+.verify-badge { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 9px 13px; margin: 18px 0 0; font-size: 11.5px; color: #166534; line-height: 1.7; }
 
 .input-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
 .input-group input { width: 140px; }
@@ -59,8 +60,6 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 .result-value { font-size: 34px; font-weight: 700; color: #1a1a1a; font-family: Consolas, monospace; line-height: 1; }
 .result-unit { font-size: 14px; color: #666; }
 .result-label { font-size: 13px; color: #888; }
-.result-fit { margin-left: auto; padding: 6px 12px; background: #2563eb; color: #fff; border-radius: 8px; font-size: 12px; font-weight: 600; text-align: right; line-height: 1.5; max-width: 240px; }
-.result-fit small { display: block; font-weight: 400; opacity: .92; margin-top: 2px; }
 
 .group-title { font-size: 12px; color: #2563eb; font-weight: 600; margin: 14px 0 6px; letter-spacing: .5px; }
 .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -96,9 +95,99 @@ details summary:hover { color: #2563eb; }
   h1{font-size:18px}
   .info-grid{grid-template-columns:1fr}
   .result-value{font-size:26px}
-  .result-fit{margin-left:0;max-width:100%}
-  .fit-btn{flex:1 1 100%}
 }
+/* 键槽断面图区块（CAD 渲染） */
+.dwg-block{margin-top:18px;border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#f8fafc}
+.dwg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:600;color:#0f172a}
+.dwg-tag{font-size:11px;font-weight:500;color:#2563eb;background:#eff6ff;border:1px solid #bfdbfe;border-radius:999px;padding:2px 9px}
+.dwg-fig{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px}
+.dwg-fig img{display:block;width:100%;max-width:620px;margin:0 auto;height:auto}
+.dwg-note{font-size:11.5px;color:#94a3b8;margin-top:9px;line-height:1.7}
+
+/* ==== 本页专属：左右布局（左＝查询，右＝断面图）====
+   全站默认容器 800px 放不下并排，本页单独放宽到 1140px。
+   左列压窄、右列加宽（0.82 : 1.18）+ 整体从 1140 放宽到 1240 ——
+   查询那几块本来就窄，省下的宽度全给断面图：图更大，右列起点也更靠左。
+   桌面：标题 / 查询+核心结果 / 补充参数 三块同在左列；图纸跨三行占右列。
+   窄屏（≤960px）：塌成单列，顺序＝ 输入+核心结果 → 断面图 → 补充参数 */
+body{max-width:1240px}
+.kw-layout{
+  display:grid;align-items:start;gap:0 18px;
+  grid-template-columns:minmax(0,0.82fr) minmax(0,1.18fr);
+  grid-template-areas:"h2 fig" "head fig" "detail fig";
+}
+.kw-h2{grid-area:h2}
+.kw-head{grid-area:head;min-width:0}
+.kw-fig{grid-area:fig;min-width:0}
+.kw-detail{grid-area:detail;min-width:0}
+
+/* 输入区：轴径一行；联结类型三个按钮已挪进下面的结果行（见 .result-highlight .fit-toggle） */
+/* 联结类型三按钮：放进"键尺寸 b×h"那块里、独占一行 —— 与它决定的结果同框，省掉原来的标签行 + 右侧重复徽标 */
+.result-highlight .fit-toggle{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;width:100%}
+.result-highlight .fit-btn{flex:1 1 0;min-width:0;padding:6px 8px;font-size:12px;line-height:1.35}
+.result-highlight .fit-btn small{font-size:10.5px;margin-top:1px;white-space:nowrap}
+.fit-desc{font-size:12px;color:#888;margin:7px 0 0;line-height:1.6}
+
+/* 标注与使用说明：默认收起（重点是易错点，想看的再展开） */
+.notes-fold{margin:0;border:0;padding:0}
+.notes-fold>summary{display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;
+  font-size:16px;font-weight:600;color:#1a1a1a;margin:0}
+.notes-fold>summary::-webkit-details-marker{display:none}
+.notes-fold>summary::before{content:"▸";color:#2563eb;font-size:12px;line-height:1;transition:transform .18s}
+.notes-fold[open]>summary::before{transform:rotate(90deg)}
+.notes-fold .fold-hint{font-size:12px;font-weight:400;color:#9aa3af}
+.notes-fold .note-list{margin-top:12px}
+/* 说明里的重点词：标准/尺寸=蓝，易错/禁止=红，查表提示=棕，代号=等宽底纹 */
+.hl{color:#2563eb;font-weight:600}
+.hl-warn{color:#dc2626;font-weight:600}
+.hl-dim{color:#b45309;font-weight:600}
+.hl-code{font-family:Consolas,monospace;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:0 4px;font-weight:600;color:#0f172a}
+/* 收紧纵向留白，让查询区 + 图纸尽量一屏放下 */
+.kw-h2{margin-bottom:10px;text-align:center}
+.kw-head .input-group label{text-align:center}
+.kw-head .result-highlight{padding:12px 14px;margin:4px 0 2px}
+/* 结果块：键尺寸 b×h 居中（联结类型按钮仍是整行三等分） */
+.kw-head .result-highlight{flex-direction:column;align-items:center;text-align:center;gap:0}
+/* 轴径输入：全页最主要的输入，放大一号（含右侧下拉箭头）
+   —— 必须给 input 加 flex:1，否则 .picker 变宽了输入框自己不长，还是 140px */
+.kw-head .picker{width:100%;max-width:420px;margin:0 auto}
+.kw-head .picker input{flex:1 1 auto;width:auto;min-width:0}
+.kw-head .dim-input{font-size:23px;font-weight:700;padding:15px 16px;text-align:center}
+.kw-head .picker .picker-toggle{width:56px;font-size:14px}
+.kw-head .hint{text-align:center}
+/* 标题区挪到查询卡之后：客户进来第一眼就是查询和图纸 */
+.intro-block{margin:22px 0 4px}
+.intro-block .breadcrumb{margin-bottom:8px;text-align:center}
+.intro-block h1{margin-bottom:4px}
+.intro-block .subtitle{margin-bottom:0}
+.kw-head .result-value{font-size:30px}
+.kw-head .group-title,.kw-detail .group-title{margin:8px 0 4px}
+.kw-head .info-item,.kw-detail .info-item{padding:8px 10px}
+/* 形位公差那组的文案最长（如 "GB/T 1184 8级 · 基准 A 轴线"），窄列里排 3 列会折行 → 单独给它 2 列 */
+.kw-detail .info-grid.info-grid-2{grid-template-columns:repeat(2,1fr)}
+.kw-fig .dwg-block{margin-top:0}
+.kw-fig .action-row{margin-top:14px}
+.kw-fig .act-btn{flex:1 1 0}
+
+@media(max-width:520px){
+  /* 手机上两行排（2 + 1），比三个全宽按钮省约 45px，让断面图落到首屏底 */
+  .result-highlight .fit-btn{flex:1 1 calc(50% - 3px);min-width:0}
+  /* 手机上参数项保持两列（全站默认在该断点会塌成一列，太长） */
+  .kw-head .info-grid,.kw-detail .info-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:960px){
+  .kw-layout{grid-template-columns:1fr;gap:0;
+    grid-template-areas:"h2" "head" "fig" "detail";}
+  .kw-fig .dwg-block{margin-top:16px}
+}
+
+/* 全档位速查表 */
+.ref-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ref-wrap table.data-table{font-family:Consolas,monospace;font-size:12.5px;min-width:800px}
+.ref-wrap table.data-table th{white-space:nowrap;font-size:11.5px}
+.ref-wrap table.data-table td{white-space:nowrap}
+.ref-wrap table.data-table tbody tr:hover{background:#f8fbff}
+.ref-wrap table.data-table tr.hit td{background:#dbeafe;font-weight:600;color:#1e40af}
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#2563eb">
@@ -120,43 +209,56 @@ details summary:hover { color: #2563eb; }
   </nav>
 </header>
 
-<div class="breadcrumb">
-  <a href="/">公差工具站</a><span>›</span>键槽查询
-</div>
-
-<h1>键槽查询 — GB/T 1095-2003</h1>
-<p class="subtitle">平键 键槽的剖面尺寸 | 轴径 6~500mm（毫米） | 较松 / 一般 / 较紧 三种联结 | <a href="/fit/">公差配合查询 →</a></p>
-<div class="verify-badge">✓ 数据依据 GB/T 1095-2003《平键 键槽的剖面尺寸》；键宽公差按 GB/T 1800.2（ISO 286-2），N9 上偏差 ≤0（b≥3 时 ES=0）</div>
-
 <div class="card">
-  <h2>键槽尺寸查询</h2>
-  <div class="input-row">
-    <div class="input-group">
-      <label>轴径 d (mm/毫米)</label>
-      <div class="picker">
-        <input type="number" id="diaInput" value="50" min="6" max="500" step="1" class="dim-input" placeholder="输入或点箭头选">
-        <button type="button" class="picker-toggle" aria-label="展开轴径列表">▼</button>
-        <div class="picker-list" id="diaList"></div>
+  <div class="kw-layout">
+    <h2 class="kw-h2">键槽尺寸查询</h2>
+
+    <div class="kw-head">
+      <div class="input-group">
+        <label>轴径 d (mm/毫米)</label>
+        <div class="picker">
+          <input type="number" id="diaInput" value="50" min="6" max="500" step="1" class="dim-input" placeholder="输入或点箭头选">
+          <button type="button" class="picker-toggle" aria-label="展开轴径列表">▼</button>
+          <div class="picker-list" id="diaList"></div>
+        </div>
       </div>
+      <p class="hint">轴径点选即查（6~500mm（毫米））；下面的联结类型按钮决定键宽公差，切换即可对比。</p>
+      <div id="coreArea"></div>
     </div>
-    <div class="input-group" style="flex:1;min-width:260px">
-      <label>联结类型（决定键槽宽配合，基轴制 键 h9）</label>
-      <div class="fit-toggle">
-        <button class="fit-btn" data-fit="loose">较松联结<small>轴槽 H9 · 毂槽 D10</small></button>
-        <button class="fit-btn active" data-fit="normal">一般联结<small>轴槽 N9 · 毂槽 Js9</small></button>
-        <button class="fit-btn" data-fit="tight">较紧联结<small>轴槽 P9 · 毂槽 P9</small></button>
-      </div>
-    </div>
+
+    <div class="kw-fig" id="dwgArea"></div>
+
+    <div class="kw-detail" id="detailArea"></div>
   </div>
-  <p class="hint">轴径从下拉点选，即时查询（范围 6~500mm（毫米））。切换联结类型对比键宽公差。键槽宽与标准平键（h9）配合。</p>
-  <div id="resultArea"></div>
+</div>
+
+<!-- 标题区放在查询卡之后：进来的客户第一眼就是"轴径 + 结果 + 断面图"，
+     H1 / 副标题 / 面包屑仍留在 DOM 里（SEO 与结构化数据不受影响），只是往后排。 -->
+<div class="intro-block">
+  <div class="breadcrumb">
+    <a href="/">公差工具站</a><span>›</span>键槽查询
+  </div>
+  <h1>键槽查询 — GB/T 1095-2003</h1>
+  <p class="subtitle">平键 键槽的剖面尺寸 | 轴径 6~500mm（毫米） | 较松 / 一般 / 较紧 三种联结 | <a href="/fit/">公差配合查询 →</a></p>
 </div>
 
 <div class="card">
-  <h2>标注与使用说明</h2>
-  <ul class="note-list" id="noteList"></ul>
-  <div class="tip-box" id="tipBox"></div>
+  <details class="notes-fold">
+    <summary>标注与使用说明<span class="fold-hint">4 条标注规则 · 易错点已标色</span></summary>
+    <ul class="note-list" id="noteList"></ul>
+    <div class="tip-box" id="tipBox"></div>
+  </details>
 </div>
+
+<div class="card">
+  <h2>GB/T 1095 平键键槽尺寸速查表（全档位）</h2>
+  <div class="ref-wrap">
+    <table class="data-table" id="refTable"></table>
+  </div>
+  <p class="hint">轴径落在哪一段，就取该行的 键槽宽 b / 键高 h / 轴槽深 t₁ / 毂槽深 t₂；键宽 b 的极限偏差随联结类型变化（见上方查询结果）。表中 t₁、t₂ 为公称值，图上按 d−t₁、d+t₂ 标注。</p>
+</div>
+
+<div class="verify-badge">✓ 数据依据 GB/T 1095-2003《平键 键槽的剖面尺寸》；键宽公差按 GB/T 1800.2（ISO 286-2），N9 上偏差 ≤0（b≥3 时 ES=0）</div>
 
 <div class="site-footer">
   <p>键槽查询工具 | GB/T 1095-2003 | 键宽公差按 GB/T 1800.2 (ISO 286-2)，N9/P9 孔公差带上下偏差均为负值</p>
@@ -174,6 +276,18 @@ const DIAS = (function(){
 })();
 
 /* ============ 数据（GB/T 1095-2003 + ISO 286-2）============ */
+/* 键槽断面图的档位映射：[d1, d2, 代表图号]，与 GB/T 1095 档位一一对应 */
+var SHOT_ROWS=[[6,8,7],[8,10,9],[10,12,11],[12,17,14],[17,22,20],[22,30,26],[30,38,34],
+  [38,44,41],[44,50,47],[50,58,54],[58,65,62],[65,75,70],[75,85,80],[85,95,90],[95,110,102]];
+
+/* 按轴径找到对应的断面图（超出范围时取最近档） */
+function pickShotDia(d){
+  for(var i=0;i<SHOT_ROWS.length;i++){
+    if(d>=SHOT_ROWS[i][0] && d<=SHOT_ROWS[i][1]) return SHOT_ROWS[i][2];
+  }
+  return d<SHOT_ROWS[0][0] ? SHOT_ROWS[0][2] : SHOT_ROWS[SHOT_ROWS.length-1][2];
+}
+
 var KEYWAY=[
   {d1:6,d2:8,b:2,h:2,t1:1.2,t2:1.0,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
   {d1:8,d2:10,b:3,h:3,t1:1.8,t2:1.4,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
@@ -242,10 +356,10 @@ var FIT_DEF={
 };
 
 var NOTES=[
-  '轴槽深以 (d−t₁) 标注、极限偏差取负号（槽只深不浅，如 0 / −0.2）；轮毂槽深以 (d+t₂) 标注、极限偏差取正号（如 +0.2 / 0）。这是 GB/T 1095 规定的正式标注尺寸——图上只需标 d−t₁ 与 d+t₂，t₁、t₂ 仅为查表公称值。',
-  '键宽 b 公差带：较松 轴槽 H9 / 毂槽 D10；一般 轴槽 N9 / 毂槽 Js9；较紧 轴槽·毂槽 P9。均与标准平键（h9）配合，属基轴制。N9 上偏差≤0、P9 上偏差为负——即槽宽不大于公称尺寸，与平键形成过渡 / 过盈配合，传扭时不松动。',
-  '键槽对称度按 GB/T 1184-1996 取 7 至 9 级（键槽一般取 8 级），公差值随键宽 b 查取，基准 A 为轴线——必须标在中心线上，不可标在端面或槽侧面。',
-  'r 为槽底（侧面与底面交接处）的过渡圆角半径，用于减小应力集中，随轴径增大而增大。平键轴槽长度公差为 H14；键本身为标准件（公差 h9）。'
+  '轴槽深以 <b class="hl-code">d−t₁</b> 标注、极限偏差取<b class="hl-warn">负号</b>（<b class="hl-warn">槽只深不浅</b>，如 0 / −0.2）；轮毂槽深以 <b class="hl-code">d+t₂</b> 标注、极限偏差取<b class="hl-warn">正号</b>（<b class="hl-warn">只大不小</b>，如 +0.2 / 0）。这是 GB/T 1095 规定的正式标注尺寸——图上只需标 <b class="hl-code">d−t₁</b> 与 <b class="hl-code">d+t₂</b>，t₁、t₂ 仅为<b class="hl-dim">查表公称值</b>。',
+  '键宽 b 公差带：较松 <b class="hl-code">轴槽 H9 / 毂槽 D10</b>；一般 <b class="hl-code">轴槽 N9 / 毂槽 Js9</b>；较紧 <b class="hl-code">轴槽·毂槽 P9</b>。均与标准平键（h9）配合，属<b class="hl">基轴制</b>。N9 上偏差≤0、P9 上偏差为负——即<b class="hl">槽宽不大于公称尺寸</b>，与平键形成过渡 / 过盈配合，传扭时不松动。',
+  '键槽对称度按 GB/T 1184-1996 取 7 至 9 级（键槽一般取 <b class="hl-dim">8 级</b>），公差值随键宽 b 查取，<b class="hl-warn">基准 A 为轴线</b>——必须标在中心线上，<b class="hl-warn">不可标在端面或槽侧面</b>。',
+  'r 为槽底的<b class="hl">过渡圆角半径</b>（侧面与底面交接处），用于减小应力集中，随轴径增大而增大。平键轴槽长度公差为 <b class="hl-code">H14</b>；键本身为标准件（公差 <b class="hl-code">h9</b>）。'
 ];
 
 var TIPS='<b>易错提示</b>：① 槽深公差方向不能标反——轴槽 d−t₁ 只许做小、毂槽 d+t₂ 只许做大；② 对称度基准必须是轴线（中心线），不能标在端面；③ 键槽尺寸不可标在虚线（不可见轮廓）上。';
@@ -281,29 +395,68 @@ function symTol(b){
 }
 
 /* ============ 渲染 ============ */
+/* 断面积图放右列；无效输入时给一个占位块，避免右列塌掉 */
+var FIG_PLACEHOLDER='<div class="dwg-block"><div class="dwg-head"><span>键槽断面图</span>'
+  +'<span class="dwg-tag">GB/T 1095 · CAD 渲染</span></div>'
+  +'<div class="dwg-fig" style="padding:34px 14px;text-align:center;color:#94a3b8;font-size:12.5px">'
+  +'输入 6~500mm（毫米） 范围内的有效轴径后，这里显示键槽断面图</div></div>';
+
+/* 全档位速查表（数据源同查询，命中行高亮） */
+function renderRefTable(hitRow){
+  var tb=document.getElementById('refTable');
+  if(!tb) return;
+  var buf='<thead><tr><th>轴径 d 范围 (mm/毫米)</th><th>键槽宽 b</th><th>键高 h</th><th>轴槽深 t₁</th><th>毂槽深 t₂</th>'
+    +'<th>轴槽深偏差</th><th>毂槽深偏差</th><th>槽底圆角 r</th></tr></thead><tbody>';
+  for(var i=0;i<KEYWAY.length;i++){
+    var r=KEYWAY[i];
+    var hit = hitRow && r.d1===hitRow.d1 && r.d2===hitRow.d2;
+    buf+='<tr'+(hit?' class="hit"':'')+'>'
+      +'<td>'+r.d1+' ~ '+r.d2+'</td>'
+      +'<td>'+r.b+'</td><td>'+r.h+'</td><td>'+r.t1+'</td><td>'+r.t2+'</td>'
+      +'<td>+'+r.t1tol+' / 0</td><td>+'+r.t2tol+' / 0</td>'
+      +'<td>'+r.r1+'~'+r.r2+'</td></tr>';
+  }
+  tb.innerHTML=buf+'</tbody>';
+}
+
+/* 联结类型三个按钮：跟着结果一起重画（挪进「键尺寸 b×h」那一行右侧） */
+function fitToggleHTML(){
+  var buf='<div class="fit-toggle">';
+  ['loose','normal','tight'].forEach(function(k){
+    var f=FIT_DEF[k];
+    buf+='<button type="button" class="fit-btn'+(k===curFit?' active':'')+'" data-fit="'+k+'">'
+      +f.name+'<small>轴槽 '+f.shaft+' · 毂槽 '+f.hub+'</small></button>';
+  });
+  return buf+'</div>';
+}
+
 function render(){
-  var area=document.getElementById('resultArea');
+  var core=document.getElementById('coreArea');
+  var det=document.getElementById('detailArea');
+  var fig=document.getElementById('dwgArea');
   var d=parseFloat(document.getElementById('diaInput').value);
-  if(isNaN(d)||d<6||d>500){
-    area.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">请输入 6~500mm（毫米） 范围内的轴径。</p>';
-    return;
+  function fail(msg){
+    core.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">'+msg+'</p>';
+    det.innerHTML='';
+    fig.innerHTML=FIG_PLACEHOLDER;
+    renderRefTable(null);
   }
+  if(isNaN(d)||d<6||d>500){ fail('请输入 6~500mm（毫米） 范围内的轴径。'); return; }
   var row=findKeyway(d);
-  if(!row){
-    area.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">该轴径超出 GB/T 1095-2003 范围（6~500mm（毫米））。</p>';
-    return;
-  }
+  if(!row){ fail('该轴径超出 GB/T 1095-2003 范围（6~500mm（毫米））。'); return; }
   var fit=FIT_DEF[curFit];
   var tol=KEY_TOL[row.b];
   var sTv=getTolValues(tol[fit.shaft]);
   var hTv=getTolValues(tol[fit.hub]);
 
+  /* ---- 核心结果（左列上部：手机上也先看到这段）---- */
   var html='';
   html+='<div class="result-highlight">'
     +'<div><div class="result-label">键尺寸 b × h</div>'
     +'<div class="result-value">'+row.b+' × '+row.h+' <span class="result-unit">mm（毫米）</span></div>'
     +'<div class="result-label">轴径 '+d+'mm（毫米） · 范围 '+row.d1+'~'+row.d2+'mm（毫米）</div></div>'
-    +'<div class="result-fit">'+fit.name+'<small>轴槽 '+fit.shaft+' · 毂槽 '+fit.hub+'<br>'+fit.desc+'</small></div></div>';
+    +fitToggleHTML()+'</div>';
+  html+='<p class="fit-desc">'+fit.name+'：'+fit.desc+'（轴槽 '+fit.shaft+' · 毂槽 '+fit.hub+'）</p>';
 
   html+='<div class="group-title">轴槽参数</div>';
   html+='<div class="info-grid">'
@@ -311,34 +464,42 @@ function render(){
     +infoItem('轴槽深 d−t₁', (d-row.t1).toFixed(1)+' mm（毫米）','0 / −'+row.t1tol)
     +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm（毫米）')
     +'</div>';
+  core.innerHTML=html;
 
-  html+='<div class="group-title">轮毂槽参数</div>';
-  html+='<div class="info-grid">'
+  /* ---- 补充参数（左列下部：手机上排在图之后）---- */
+  var dh='';
+  dh+='<div class="group-title">轮毂槽参数</div>';
+  dh+='<div class="info-grid">'
     +infoItem('毂槽宽 b', row.b+' mm（毫米）', fit.hub+'（'+fmtTol(hTv)+'）')
     +infoItem('毂槽深 d+t₂', (d+row.t2).toFixed(1)+' mm（毫米）','+'+row.t2tol+' / 0')
     +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm（毫米）')
     +'</div>';
 
-  html+='<div class="group-title">形位公差与标准件</div>';
-  html+='<div class="info-grid">'
+  dh+='<div class="group-title">形位公差与标准件</div>';
+  dh+='<div class="info-grid info-grid-2">'
     +infoItem('对称度', symTol(row.b).toFixed(3)+' mm（毫米）','GB/T 1184 8级 · 基准 A 轴线')
     +infoItem('标准平键', row.b+'×'+row.h,'mm（毫米） · 公差 h9')
     +infoItem('槽深公称 t₁/t₂', row.t1+' / '+row.t2,'mm（毫米） · 仅查表参考')
     +'</div>';
 
-  html+='<div class="action-row">'
-    +'<button class="act-btn primary" id="btnCopy">复制全部数据</button>'
-    +'<button class="act-btn" id="btnPrint">打印 / PDF</button>'
-    +'</div>';
+  // 说明：原先此处还有「查看 XX~XXmm 轴径段完整数据」的可展开表，
+  // 因页面底部新增的「全档位速查表」已覆盖同样字段并会高亮当前档位，故移除避免重复。
+  det.innerHTML=dh;
 
-  html+='<details><summary>查看 '+row.d1+'~'+row.d2+'mm（毫米） 轴径段完整数据</summary>'
-    +'<table class="data-table" style="margin-top:10px">'
-    +'<tr><th>b</th><th>h</th><th>t₁</th><th>t₂</th><th>t₁ 偏差</th><th>t₂ 偏差</th><th>r</th></tr>'
-    +'<tr><td>'+row.b+'</td><td>'+row.h+'</td><td>'+row.t1+'</td><td>'+row.t2+'</td>'
-    +'<td>+'+row.t1tol+'/0</td><td>+'+row.t2tol+'/0</td><td>'+row.r1+'~'+row.r2+'</td></tr>'
-    +'</table></details>';
+  // ---- 右列：键槽断面图（CAD 渲染，按轴径档位切换）+ 操作按钮 ----
+  // 公差按 GB/T 4458.4 排版：下偏差与基本尺寸同底线、上下偏差小数点对齐、字号小一号
+  fig.innerHTML = '<div class="dwg-block">'
+        +   '<div class="dwg-head"><span>键槽断面图</span>'
+        +   '<span class="dwg-tag">GB/T 1095 · CAD 渲染</span></div>'
+        +   '<div class="dwg-fig"><img id="dwgImg" src="shots/d' + pickShotDia(d) + '.svg" alt="键槽断面图" loading="lazy"></div>'
+        +   '<div class="dwg-note">示意图 · 按 GB/T 1095 档位 d=' + row.d1 + '~' + row.d2 + 'mm（毫米） 渲染，图中轴径用档位代表值 Φ' + pickShotDia(d) + ' 表示；键槽 ' + row.b + '×' + row.h + '（宽×高），槽深 t₁=' + row.t1 + 'mm（毫米）</div>'
+        + '</div>'
+        + '<div class="action-row kw-fig-actions">'
+        +   '<button class="act-btn primary" id="btnCopy">复制全部数据</button>'
+        +   '<button class="act-btn" id="btnPrint">打印 / PDF</button>'
+        + '</div>';
 
-  area.innerHTML=html;
+  renderRefTable(row);
 
   document.getElementById('btnCopy').addEventListener('click',function(){copyData(row,d,fit,sTv,hTv);});
   document.getElementById('btnPrint').addEventListener('click',function(){window.print();});
@@ -429,16 +590,18 @@ function setupPicker(inputId, listId, values) {
 /* ============ 初始化 ============ */
 setupPicker('diaInput', 'diaList', DIAS);
 document.getElementById('diaInput').addEventListener('input',render);
-document.querySelectorAll('.fit-btn').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    document.querySelectorAll('.fit-btn').forEach(function(b){b.classList.remove('active');});
-    btn.classList.add('active'); curFit=btn.dataset.fit; render();
-  });
+/* 联结类型按钮现在是每次 render 重画的（挪进了结果行），所以用事件委托 */
+document.getElementById('coreArea').addEventListener('click',function(e){
+  var btn=e.target.closest?e.target.closest('.fit-btn'):null;
+  if(!btn) return;
+  curFit=btn.dataset.fit;
+  render();
 });
 document.getElementById('noteList').innerHTML=NOTES.map(function(n){return '<li>'+n+'</li>';}).join('');
 document.getElementById('tipBox').innerHTML=TIPS;
 render();
 </script>
+<script src="/js/nav.js" defer></script>
 <script src="/js/pwa.js" defer></script>
 </body>
 </html>

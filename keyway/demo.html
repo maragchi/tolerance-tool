@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="zh-CN" translate="no">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+
+<title>键槽查询 | GB/T 1095-2003 平键键槽剖面尺寸</title>
+<meta name="description" content="在线键槽尺寸查询工具，依据 GB/T 1095-2003。输入轴径即出键宽、键高、轴槽深、毂槽深、对称度及公差配合，支持复制与打印。数据经 ISO 286 (GB/T 1800.2) 交叉验证。">
+<meta name="keywords" content="键槽查询,键槽尺寸,GB/T 1095,平键,键宽,键高,轴槽深,毂槽深,键配合,对称度">
+<link rel="canonical" href="https://gongcha.cc/keyway/">
+<meta property="og:title" content="键槽查询 | GB/T 1095-2003">
+<meta property="og:description" content="输入轴径即出键槽全部尺寸公差，支持复制与打印。数据经 ISO 286 复核。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+<style>
+/* ==== DEMO：CAD 动态尺寸图（由 gen_site_demo.py 注入，删掉这段即恢复原样）==== */
+.demo-badge{display:inline-block;vertical-align:middle;margin-left:8px;padding:2px 8px;border-radius:999px;
+  background:#fef3c7;border:1px solid #fcd34d;color:#92400e;font-size:11px;font-weight:600;letter-spacing:.5px;vertical-align:2px}
+.cad-intro{font-size:12.5px;color:#475569;line-height:1.85;margin-bottom:14px}
+.cad-intro b{color:#0f172a}
+.cad-figs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cad-figbox{min-width:0}
+.cad-figwrap{position:relative;border:1px solid #e2e8f0;border-radius:8px;padding:4px;background:#fff;cursor:zoom-in}
+.cad-figwrap svg{display:block;width:100%;height:auto}
+/* 图题：塞进图框里、图的正下方 */
+.cad-figcap{margin-top:6px;padding-top:6px;border-top:1px dashed #e2e8f0;text-align:center;
+  font-size:12.5px;font-weight:600;color:#475569}
+.cad-figcap span{font-weight:500;color:#2563eb;font-family:ui-monospace,Consolas,monospace}
+/* 放大按钮（图右上角）+ 全屏查看 */
+.cad-zoom{position:absolute;top:5px;right:5px;z-index:2;width:26px;height:26px;padding:0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:rgba(255,255,255,.94);border:1px solid #e2e8f0;border-radius:7px;color:#64748b;
+  transition:color .15s,border-color .15s,background .15s}
+.cad-zoom:hover{color:#2563eb;border-color:#bfdbfe;background:#eff6ff}
+.cad-zoom-mask{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;
+  padding:18px;background:rgba(15,23,42,.72)}
+.cad-zoom-mask.open{display:flex}
+/* 面板宽度必须给死：`.cad-figwrap` 里是 width:100% 的 SVG，不给宽度会退化成
+   SVG 的默认尺寸（约 300px），"放大"就白做了。用 min() 同时卡住视口宽/高。 */
+.cad-zoom-panel{width:min(92vw,78vh,860px);background:#fff;border-radius:12px;padding:14px;
+  max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(15,23,42,.45)}
+.cad-zoom-body{width:100%}
+.cad-zoom-body .cad-figwrap{border:0;padding:0;cursor:default;width:100%}
+.cad-zoom-body .cad-figwrap .cad-zoom{display:none}
+.cad-zoom-close{position:fixed;top:14px;right:14px;width:34px;height:34px;padding:0;border-radius:50%;
+  background:#fff;border:1px solid #e2e8f0;color:#475569;font-size:15px;line-height:1;cursor:pointer;
+  box-shadow:0 2px 10px rgba(15,23,42,.22)}
+body.cad-zoom-open{overflow:hidden}
+/* 图例：一条一行（横着排太费劲） */
+.cad-legend{display:flex;flex-direction:column;gap:5px;margin-top:12px;font-size:12px;color:#94a3b8;line-height:1.5}
+.cad-legend .lg-item{display:flex;align-items:center;gap:8px}
+.cad-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.cad-note{font-size:12px;color:#64748b;margin-top:8px;line-height:1.85}
+.cad-note b{color:#0f172a;font-family:ui-monospace,Consolas,monospace}
+.cad-dim{color:#94a3b8}
+@media(max-width:680px){.cad-figs{grid-template-columns:1fr}}
+/* keyway：原页面那块"按档位烘焙的图"整块让位（脚本会把复制/打印按钮搬进新图块） */
+#dwgArea > *{display:none}
+#cadKwBlock .dwg-head{justify-content:center}
+</style>
+
+<script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');
+</script>
+<script>
+var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "键槽查询",
+  "description": "GB/T 1095-2003 平键键槽剖面尺寸在线查询工具，输入轴径即出尺寸公差，数据经 ISO 286 复核",
+  "url": "https://gongcha.cc/keyway/",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" }
+}
+</script>
+
+<style>
+h1 { font-size: 22px; margin-bottom: 6px; text-align: center; }
+.subtitle { color: #666; font-size: 13px; margin-bottom: 18px; text-align: center; }
+.subtitle a { color: #2563eb; text-decoration: none; }
+.subtitle a:hover { text-decoration: underline; }
+/* 数据依据：从顶部挪到页尾，做一条不抢视线的说明 */
+.verify-badge { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 9px 13px; margin: 18px 0 0; font-size: 11.5px; color: #166534; line-height: 1.7; }
+
+.input-row { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.input-group input { width: 140px; }
+.hint { font-size: 12px; color: #888; margin-top: 8px; }
+
+.fit-toggle { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.fit-btn { padding: 7px 14px; border: 1.5px solid #ddd; border-radius: 8px; background: #fff; color: #555; font-size: 13px; cursor: pointer; transition: all .15s; text-align: center; }
+.fit-btn:hover { border-color: #93b4f5; color: #2563eb; }
+.fit-btn.active { border-color: #2563eb; background: #2563eb; color: #fff; }
+.fit-btn small { display: block; font-size: 11px; opacity: .85; margin-top: 2px; }
+
+.result-highlight { display: flex; align-items: baseline; gap: 10px; margin: 4px 0 4px; padding: 16px 18px; background: linear-gradient(135deg,#eff6ff,#f0f9ff); border-radius: 10px; border-left: 4px solid #2563eb; flex-wrap: wrap; }
+.result-value { font-size: 34px; font-weight: 700; color: #1a1a1a; font-family: Consolas, monospace; line-height: 1; }
+.result-unit { font-size: 14px; color: #666; }
+.result-label { font-size: 13px; color: #888; }
+
+.group-title { font-size: 12px; color: #2563eb; font-weight: 600; margin: 14px 0 6px; letter-spacing: .5px; }
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.info-item { padding: 11px 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #f0f1f3; }
+.info-item .info-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+.info-item .info-value { font-size: 15px; color: #1a1a1a; font-weight: 600; font-family: Consolas, monospace; }
+.info-item .info-sub { font-size: 11px; color: #2563eb; margin-top: 2px; font-family: Consolas, monospace; }
+
+.action-row { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+.act-btn { padding: 9px 18px; border: 1.5px solid #d0d5dd; border-radius: 8px; background: #fff; color: #444; font-size: 13px; cursor: pointer; transition: all .15s; }
+.act-btn:hover { border-color: #2563eb; color: #2563eb; }
+.act-btn.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+.act-btn.primary:hover { background: #1d4ed8; color: #fff; }
+
+details { margin-top: 16px; border-top: 1px dashed #e5e7eb; padding-top: 12px; }
+details summary { cursor: pointer; font-size: 13px; color: #555; }
+details summary:hover { color: #2563eb; }
+
+.note-list { margin: 10px 0 0; padding-left: 18px; font-size: 12.5px; color: #666; line-height: 1.8; }
+.tip-box { margin-top: 14px; padding: 12px 14px; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; font-size: 12.5px; color: #78350f; line-height: 1.8; }
+.tip-box b { color: #92400e; }
+
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 13px; opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 100; }
+.toast.show { opacity: 1; }
+
+@media(max-width:680px){
+  .info-grid{grid-template-columns:1fr 1fr}
+  .input-row{flex-direction:column;align-items:stretch}
+  .input-group{width:100%}
+  .input-group input{width:100%;box-sizing:border-box}
+}
+@media(max-width:520px){
+  h1{font-size:18px}
+  .info-grid{grid-template-columns:1fr}
+  .result-value{font-size:26px}
+}
+/* 键槽断面图区块（CAD 渲染） */
+.dwg-block{margin-top:18px;border:1px solid #e2e8f0;border-radius:12px;padding:16px;background:#f8fafc}
+.dwg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:600;color:#0f172a}
+.dwg-tag{font-size:11px;font-weight:500;color:#2563eb;background:#eff6ff;border:1px solid #bfdbfe;border-radius:999px;padding:2px 9px}
+.dwg-fig{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:6px}
+.dwg-fig img{display:block;width:100%;max-width:620px;margin:0 auto;height:auto}
+.dwg-note{font-size:11.5px;color:#94a3b8;margin-top:9px;line-height:1.7}
+
+/* ==== 本页专属：左右布局（左＝查询，右＝断面图）====
+   全站默认容器 800px 放不下并排，本页单独放宽到 1140px。
+   左列压窄、右列加宽（0.82 : 1.18）+ 整体从 1140 放宽到 1240 ——
+   查询那几块本来就窄，省下的宽度全给断面图：图更大，右列起点也更靠左。
+   桌面：标题 / 查询+核心结果 / 补充参数 三块同在左列；图纸跨三行占右列。
+   窄屏（≤960px）：塌成单列，顺序＝ 输入+核心结果 → 断面图 → 补充参数 */
+body{max-width:1240px}
+.kw-layout{
+  display:grid;align-items:start;gap:0 18px;
+  grid-template-columns:minmax(0,0.82fr) minmax(0,1.18fr);
+  grid-template-areas:"h2 fig" "head fig" "detail fig";
+}
+.kw-h2{grid-area:h2}
+.kw-head{grid-area:head;min-width:0}
+.kw-fig{grid-area:fig;min-width:0}
+.kw-detail{grid-area:detail;min-width:0}
+
+/* 输入区：轴径一行；联结类型三个按钮已挪进下面的结果行（见 .result-highlight .fit-toggle） */
+/* 联结类型三按钮：放进"键尺寸 b×h"那块里、独占一行 —— 与它决定的结果同框，省掉原来的标签行 + 右侧重复徽标 */
+.result-highlight .fit-toggle{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0;width:100%}
+.result-highlight .fit-btn{flex:1 1 0;min-width:0;padding:6px 8px;font-size:12px;line-height:1.35}
+.result-highlight .fit-btn small{font-size:10.5px;margin-top:1px;white-space:nowrap}
+.fit-desc{font-size:12px;color:#888;margin:7px 0 0;line-height:1.6}
+
+/* 标注与使用说明：默认收起（重点是易错点，想看的再展开） */
+.notes-fold{margin:0;border:0;padding:0}
+.notes-fold>summary{display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;
+  font-size:16px;font-weight:600;color:#1a1a1a;margin:0}
+.notes-fold>summary::-webkit-details-marker{display:none}
+.notes-fold>summary::before{content:"▸";color:#2563eb;font-size:12px;line-height:1;transition:transform .18s}
+.notes-fold[open]>summary::before{transform:rotate(90deg)}
+.notes-fold .fold-hint{font-size:12px;font-weight:400;color:#9aa3af}
+.notes-fold .note-list{margin-top:12px}
+/* 说明里的重点词：标准/尺寸=蓝，易错/禁止=红，查表提示=棕，代号=等宽底纹 */
+.hl{color:#2563eb;font-weight:600}
+.hl-warn{color:#dc2626;font-weight:600}
+.hl-dim{color:#b45309;font-weight:600}
+.hl-code{font-family:Consolas,monospace;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;padding:0 4px;font-weight:600;color:#0f172a}
+/* 收紧纵向留白，让查询区 + 图纸尽量一屏放下 */
+.kw-h2{margin-bottom:10px;text-align:center}
+.kw-head .input-group label{text-align:center}
+.kw-head .result-highlight{padding:12px 14px;margin:4px 0 2px}
+/* 结果块：键尺寸 b×h 居中（联结类型按钮仍是整行三等分） */
+.kw-head .result-highlight{flex-direction:column;align-items:center;text-align:center;gap:0}
+/* 轴径输入：全页最主要的输入，放大一号（含右侧下拉箭头）
+   —— 必须给 input 加 flex:1，否则 .picker 变宽了输入框自己不长，还是 140px */
+.kw-head .picker{width:100%;max-width:420px;margin:0 auto}
+.kw-head .picker input{flex:1 1 auto;width:auto;min-width:0}
+.kw-head .dim-input{font-size:23px;font-weight:700;padding:15px 16px;text-align:center}
+.kw-head .picker .picker-toggle{width:56px;font-size:14px}
+.kw-head .hint{text-align:center}
+/* 标题区挪到查询卡之后：客户进来第一眼就是查询和图纸 */
+.intro-block{margin:22px 0 4px}
+.intro-block .breadcrumb{margin-bottom:8px;text-align:center}
+.intro-block h1{margin-bottom:4px}
+.intro-block .subtitle{margin-bottom:0}
+.kw-head .result-value{font-size:30px}
+.kw-head .group-title,.kw-detail .group-title{margin:8px 0 4px}
+.kw-head .info-item,.kw-detail .info-item{padding:8px 10px}
+/* 形位公差那组的文案最长（如 "GB/T 1184 8级 · 基准 A 轴线"），窄列里排 3 列会折行 → 单独给它 2 列 */
+.kw-detail .info-grid.info-grid-2{grid-template-columns:repeat(2,1fr)}
+.kw-fig .dwg-block{margin-top:0}
+.kw-fig .action-row{margin-top:14px}
+.kw-fig .act-btn{flex:1 1 0}
+
+@media(max-width:520px){
+  /* 手机上两行排（2 + 1），比三个全宽按钮省约 45px，让断面图落到首屏底 */
+  .result-highlight .fit-btn{flex:1 1 calc(50% - 3px);min-width:0}
+  /* 手机上参数项保持两列（全站默认在该断点会塌成一列，太长） */
+  .kw-head .info-grid,.kw-detail .info-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:960px){
+  .kw-layout{grid-template-columns:1fr;gap:0;
+    grid-template-areas:"h2" "head" "fig" "detail";}
+  .kw-fig .dwg-block{margin-top:16px}
+}
+
+/* 全档位速查表 */
+.ref-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ref-wrap table.data-table{font-family:Consolas,monospace;font-size:12.5px;min-width:800px}
+.ref-wrap table.data-table th{white-space:nowrap;font-size:11.5px}
+.ref-wrap table.data-table td{white-space:nowrap}
+.ref-wrap table.data-table tbody tr:hover{background:#f8fbff}
+.ref-wrap table.data-table tr.hit td{background:#dbeafe;font-weight:600;color:#1e40af}
+</style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="公差工具">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-name">公差工具站</a>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+    <a href="/roughness/">粗糙度</a>
+    <a href="/cylinder/">气缸选型</a>
+  </nav>
+</header>
+
+<div class="card">
+  <div class="kw-layout">
+    <h2 class="kw-h2">键槽尺寸查询</h2>
+
+    <div class="kw-head">
+      <div class="input-group">
+        <label>轴径 d (mm/毫米)</label>
+        <div class="picker">
+          <input type="number" id="diaInput" value="50" min="6" max="500" step="1" class="dim-input" placeholder="输入或点箭头选">
+          <button type="button" class="picker-toggle" aria-label="展开轴径列表">▼</button>
+          <div class="picker-list" id="diaList"></div>
+        </div>
+      </div>
+      <p class="hint">轴径点选即查（6~500mm（毫米））；下面的联结类型按钮决定键宽公差，切换即可对比。</p>
+      <div id="coreArea"></div>
+    </div>
+
+    <div class="kw-fig" id="kwFigCol">
+      <div id="dwgArea"></div>
+      <div class="dwg-block" id="cadKwBlock">
+        <div class="dwg-head"><span>键槽断面图</span></div>
+        <div class="cad-figs" id="cadKwFigs">
+<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 360 357.536526" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ 
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="fig1-figure_1">
+  <g id="fig1-patch_1">
+   <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="fig1-axes_1">
+   <g id="fig1-patch_2">
+    <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="fig1-PathCollection_1"/>
+   <g id="fig1-LineCollection_1">
+    <path d="M 78.171329 224.154423 
+L 184.805203 117.52055 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 203.28425 99.041503 
+L 204.301008 98.024745 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 75.384826 208.344673 
+L 166.208949 117.52055 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 75.220003 189.913241 
+L 153.58521 111.548034 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 79.804095 166.732894 
+L 146.869261 99.667729 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 168.357207 301.334836 
+L 281.496775 188.195268 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 152.54645 298.549339 
+L 278.702589 172.3932 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 138.621903 293.877631 
+L 274.025453 158.474081 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 126.209464 287.693815 
+L 267.842414 146.060865 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 115.108289 280.198736 
+L 260.351737 134.955288 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 105.217809 271.492962 
+L 251.650349 125.060422 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 96.508397 261.60612 
+L 241.764688 116.349828 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 89.013014 250.505248 
+L 230.660121 108.85814 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 82.834311 238.087696 
+L 218.235594 102.686413 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 209.961696 296.922856 
+L 277.068968 229.815584 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+    <path d="M 186.801884 301.486414 
+L 281.636658 206.651639 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000"/>
+   </g>
+   <g id="fig1-patch_3">
+    <path d="M 281.974396 198.28149 
+C 281.974396 255.464868 235.618109 301.821156 178.43473 301.821156 
+C 121.251351 301.821156 74.895063 255.464868 74.895063 198.28149 
+C 74.895063 141.098111 121.251351 94.741823 178.43473 94.741823 
+C 235.618109 94.741823 281.974396 141.098111 281.974396 198.28149 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig1-line2d_1">
+    <path d="M 153.58521 115.863915 
+L 153.58521 97.767989 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_4">
+    <path d="M 153.58521 115.863915 
+C 153.58521 116.778849 154.326911 117.52055 155.241845 117.52055 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="k1-b-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="147.172606" y="67.829511" transform="rotate(-0 147.172606 67.829511)">14</text>
+   </g>
+   <g id="k1-b-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="168.695105" y="67.829511" transform="rotate(-0 168.695105 67.829511)">±0</text>
+   </g>
+   <g id="k1-b-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="168.695105" y="55.50829" transform="rotate(-0 168.695105 55.50829)"> </text>
+   </g>
+   <g id="k1-b-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="176.305271" y="55.50829" transform="rotate(-0 176.305271 55.50829)">0</text>
+   </g>
+   <g id="k1-b-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="168.695105" y="67.829511" transform="rotate(-0 168.695105 67.829511)">-</text>
+   </g>
+   <g id="k1-b-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="176.305271" y="67.829511" transform="rotate(-0 176.305271 67.829511)">0.043</text>
+   </g>
+   <g id="k1-t-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="46.309012" y="207.379189" transform="rotate(-90 46.309012 207.379189)">5.5</text>
+   </g>
+   <g id="k1-t-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="46.309012" y="174.772687" transform="rotate(-90 46.309012 174.772687)">±0.2</text>
+   </g>
+   <g id="k1-t-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="33.987792" y="174.772687" transform="rotate(-90 33.987792 174.772687)">+</text>
+   </g>
+   <g id="k1-t-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="33.987792" y="166.249302" transform="rotate(-90 33.987792 166.249302)">0.2</text>
+   </g>
+   <g id="k1-t-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="46.309012" y="174.772687" transform="rotate(-90 46.309012 174.772687)"> </text>
+   </g>
+   <g id="k1-t-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="46.309012" y="166.249302" transform="rotate(-90 46.309012 166.249302)">0</text>
+   </g>
+   <g id="k1-dia-main" data-role="main">
+    <g id="fig1-patch_5">
+     <path d="M 277.910554 141.769003 
+L 333.240591 109.807019 
+L 324.249158 94.241769 
+L 268.919122 126.203753 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="302.963622" y="121.266411" transform="rotate(-30.013335 302.963622 121.266411)">d = Φ50</text>
+   </g>
+   <g id="fig1-line2d_2">
+    <path d="M 155.241845 117.52055 
+L 201.627615 117.52055 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_3">
+    <path d="M 203.28425 115.863915 
+L 203.28425 97.767989 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_6">
+    <path d="M 201.627615 117.52055 
+C 202.542549 117.52055 203.28425 116.778849 203.28425 115.863915 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig1-PathCollection_2"/>
+   <g id="fig1-LineCollection_2">
+    <path d="M 178.43473 84.387856 
+L 178.43473 150.135545 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 163.285082 
+L 178.43473 176.43462 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 189.584158 
+L 178.43473 255.331846 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 268.481383 
+L 178.43473 281.630921 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 294.780459 
+L 178.43473 312.175123 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig1-PathCollection_3"/>
+   <g id="fig1-LineCollection_3">
+    <path d="M 292.328363 198.28149 
+L 226.580675 198.28149 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 213.431137 198.28149 
+L 200.281599 198.28149 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 187.132062 198.28149 
+L 121.384374 198.28149 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 108.234836 198.28149 
+L 95.085298 198.28149 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 81.935761 198.28149 
+L 64.541097 198.28149 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig1-line2d_4">
+    <path d="M 203.28425 95.179497 
+L 203.28425 68.985704 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_5">
+    <path d="M 153.58521 95.179497 
+L 153.58521 68.985704 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_6">
+    <path d="M 192.930283 74.162687 
+L 163.939177 74.162687 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_7">
+    <path d="M 192.930283 72.437026 
+L 192.930283 75.888348 
+L 203.28425 74.162687 
+z
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-patch_8">
+    <path d="M 163.939177 72.437026 
+L 163.939177 75.888348 
+L 153.58521 74.162687 
+z
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-line2d_7">
+    <path d="M 175.846238 94.741823 
+L 47.465205 94.741823 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_8">
+    <path d="M 152.653353 117.52055 
+L 47.465205 117.52055 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_9">
+    <path d="M 52.642189 84.387856 
+L 52.642189 74.03389 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_10">
+    <path d="M 52.642189 127.874516 
+L 52.642189 216.721411 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_11">
+    <path d="M 52.642189 94.741823 
+L 52.642189 117.52055 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_9">
+    <path d="M 50.916528 84.387856 
+L 54.36785 84.387856 
+L 52.642189 94.741823 
+z
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-patch_10">
+    <path d="M 50.916528 127.874516 
+L 54.36785 127.874516 
+L 52.642189 117.52055 
+z
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-patch_11">
+    <path d="M 80.676385 256.745526 
+L 78.950028 253.756995 
+L 88.7788 250.072191 
+z
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-line2d_12">
+    <path d="M 88.7788 250.072191 
+L 268.09066 146.490788 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_13">
+    <path d="M 324.305677 114.017586 
+L 277.056253 141.311718 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_14">
+    <path d="M 79.813207 255.251261 
+L 70.847614 260.430331 
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_12">
+    <path d="M 276.193075 139.817453 
+L 277.919431 142.805984 
+L 268.09066 146.490788 
+z
+" clip-path="url(#fig1-p83ea2b6405)" style="fill: #2563eb"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="fig1-p83ea2b6405">
+   <rect x="0" y="0" width="360" height="357.536526"/>
+  </clipPath>
+ </defs>
+</svg><div class="cad-figcap">轴键槽 <span id="cadCapK1"></span></div></div></div>
+<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 360 357.536526" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ 
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="fig2-figure_1">
+  <g id="fig2-patch_1">
+   <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="fig2-axes_1">
+   <g id="fig2-patch_2">
+    <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="fig2-PathCollection_1"/>
+   <g id="fig2-LineCollection_1">
+    <path d="M 186.076303 342.098292 
+L 231.714736 296.459858 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 298.814507 229.360087 
+L 344.460063 183.714532 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 169.958021 339.620319 
+L 208.553444 301.024896 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 303.383666 206.194674 
+L 341.982091 167.59625 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 155.291276 335.69081 
+L 190.108087 300.873999 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 303.24447 187.737616 
+L 338.052581 152.929505 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 141.832621 330.55321 
+L 174.296879 298.088953 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 300.450735 171.935096 
+L 332.914982 139.47085 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 129.42595 324.363626 
+L 160.371986 293.41759 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 295.773944 158.015633 
+L 326.725398 127.064179 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 117.969802 317.22352 
+L 147.959258 287.234064 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 289.591193 145.602129 
+L 319.585291 115.608031 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 107.40034 309.196728 
+L 136.857823 279.739244 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 282.100776 134.496292 
+L 311.558499 105.038568 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 97.682252 300.318561 
+L 126.967096 271.033717 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 273.399635 124.601179 
+L 302.680333 95.320481 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 88.804228 290.600331 
+L 118.257437 261.147122 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 263.514221 115.890338 
+L 292.962102 86.442457 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 80.777583 280.030721 
+L 110.761793 250.046511 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 252.409917 108.398388 
+L 282.392493 78.415812 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 73.637632 268.574418 
+L 104.5828 237.62925 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 239.98568 102.22637 
+L 270.936189 71.275861 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 67.448217 256.167579 
+L 99.919473 223.696323 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 226.051437 97.564359 
+L 258.52935 65.086445 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 62.310807 242.708734 
+L 97.132523 207.887018 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 225.031602 79.987939 
+L 245.070505 59.949036 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 58.38152 228.041766 
+L 96.967016 189.456271 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 207.880672 78.542615 
+L 230.403537 56.019749 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 55.903822 211.92321 
+L 101.549622 166.27741 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 168.622298 99.204734 
+L 175.332562 92.49447 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 189.284417 78.542615 
+L 214.284981 53.542051 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 295.72134 306.838273 
+L 309.200044 293.359569 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 249.960714 334.002644 
+L 336.364415 247.598943 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 224.647111 340.719993 
+L 343.081764 222.28534 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 204.045492 342.725357 
+L 345.087129 201.683721 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 55.27712 193.953658 
+L 196.315429 52.915348 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 57.283046 173.351477 
+L 175.713249 54.921275 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 64.001568 148.0367 
+L 150.398472 61.639797 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+    <path d="M 91.18669 102.255325 
+L 104.617096 88.824918 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000"/>
+   </g>
+   <g id="fig2-patch_3">
+    <path d="M 175.332562 97.306809 
+C 124.519744 109.869043 91.07422 158.378085 97.401741 210.336863 
+C 103.729262 262.295641 147.83944 301.359977 200.182082 301.359977 
+C 252.524723 301.359977 296.634901 262.295641 302.962422 210.336863 
+C 309.289943 158.378085 275.844419 109.869043 225.031602 97.306809 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig2-line2d_1">
+    <path d="M 175.332562 97.306809 
+L 175.332562 80.199249 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_4">
+    <path d="M 176.989196 78.542615 
+C 176.54983 78.542615 176.128458 78.717152 175.817779 79.027832 
+C 175.5071 79.338511 175.332562 79.759883 175.332562 80.199249 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="k2-b-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="164.785101" y="37.22879" transform="rotate(-0 164.785101 37.22879)">14</text>
+   </g>
+   <g id="k2-b-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="186.307601" y="37.22879" transform="rotate(-0 186.307601 37.22879)">±0.0215</text>
+   </g>
+   <g id="k2-b-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="186.307601" y="24.90757" transform="rotate(-0 186.307601 24.90757)">+</text>
+   </g>
+   <g id="k2-b-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="194.830986" y="24.90757" transform="rotate(-0 194.830986 24.90757)">0.0215</text>
+   </g>
+   <g id="k2-b-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="186.307601" y="37.22879" transform="rotate(-0 186.307601 37.22879)">-</text>
+   </g>
+   <g id="k2-b-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="194.830986" y="37.22879" transform="rotate(-0 194.830986 37.22879)">0.0215</text>
+   </g>
+   <g id="k2-t-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="37.330493" y="206.959061" transform="rotate(-90 37.330493 206.959061)">3.8</text>
+   </g>
+   <g id="k2-t-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="37.330493" y="174.270456" transform="rotate(-90 37.330493 174.270456)">±0.2</text>
+   </g>
+   <g id="k2-t-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="25.009273" y="174.270456" transform="rotate(-90 25.009273 174.270456)">+</text>
+   </g>
+   <g id="k2-t-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="25.009273" y="165.747071" transform="rotate(-90 25.009273 165.747071)">0.2</text>
+   </g>
+   <g id="k2-t-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="37.330493" y="174.270456" transform="rotate(-90 37.330493 174.270456)"> </text>
+   </g>
+   <g id="k2-t-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="37.330493" y="165.747071" transform="rotate(-90 37.330493 165.747071)">0</text>
+   </g>
+   <g id="k2-dia-main" data-role="main">
+    <g id="fig2-patch_5">
+     <path d="M 201.862299 198.391042 
+L 257.192336 166.429058 
+L 248.200904 150.863808 
+L 192.870867 182.825792 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="226.915367" y="177.888449" transform="rotate(-30.013335 226.915367 177.888449)">d = Φ50</text>
+   </g>
+   <g id="fig2-line2d_2">
+    <path d="M 225.031602 97.306809 
+L 225.031602 80.199249 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_6">
+    <path d="M 225.031602 80.199249 
+C 225.031602 79.284315 224.289901 78.542615 223.374967 78.542615 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig2-PathCollection_2"/>
+   <g id="fig2-LineCollection_2">
+    <path d="M 200.182082 83.926677 
+L 200.182082 149.674366 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 162.823903 
+L 200.182082 175.973441 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 189.122978 
+L 200.182082 254.870667 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 268.020204 
+L 200.182082 281.169742 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 294.31928 
+L 200.182082 311.713943 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig2-PathCollection_3"/>
+   <g id="fig2-LineCollection_3">
+    <path d="M 314.075715 197.82031 
+L 248.328027 197.82031 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 235.178489 197.82031 
+L 222.028951 197.82031 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 208.879414 197.82031 
+L 143.131725 197.82031 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 129.982188 197.82031 
+L 116.83265 197.82031 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 103.683113 197.82031 
+L 86.288449 197.82031 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig2-line2d_3">
+    <path d="M 176.989196 78.542615 
+L 223.374967 78.542615 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-PathCollection_4"/>
+   <g id="fig2-LineCollection_4">
+    <path d="M 225.031602 97.306809 
+L 221.9632 96.597552 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 221.9632 96.597552 
+L 218.879683 95.982862 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 218.879683 95.982862 
+L 215.78321 95.46274 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 215.78321 95.46274 
+L 215.281434 95.394019 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 212.819463 95.056842 
+L 212.67594 95.037185 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 212.67594 95.037185 
+L 209.560033 94.706199 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 209.560033 94.706199 
+L 206.437648 94.469779 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 206.437648 94.469779 
+L 203.310945 94.327928 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 203.310945 94.327928 
+L 202.910725 94.32188 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 200.426057 94.284331 
+L 200.182082 94.280644 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 200.182082 94.280644 
+L 197.053219 94.327928 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 197.053219 94.327928 
+L 193.926515 94.469779 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 193.926515 94.469779 
+L 190.80413 94.706199 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 190.80413 94.706199 
+L 190.500496 94.738452 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 188.029446 95.000939 
+L 187.688223 95.037185 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 187.688223 95.037185 
+L 184.580954 95.46274 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 184.580954 95.46274 
+L 181.484481 95.982862 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 181.484481 95.982862 
+L 178.400963 96.597552 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 178.400963 96.597552 
+L 178.229144 96.637268 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 175.80803 97.196905 
+L 175.332562 97.306809 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #ff00ff"/>
+   </g>
+   <g id="fig2-line2d_4">
+    <path d="M 225.031602 94.718318 
+L 225.031602 38.384983 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_5">
+    <path d="M 175.332562 94.718318 
+L 175.332562 38.384983 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_6">
+    <path d="M 214.677635 43.561966 
+L 185.686528 43.561966 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_7">
+    <path d="M 214.677635 41.836305 
+L 214.677635 45.287627 
+L 225.031602 43.561966 
+z
+" clip-path="url(#fig2-pee686f351a)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-patch_8">
+    <path d="M 185.686528 41.836305 
+L 185.686528 45.287627 
+L 175.332562 43.561966 
+z
+" clip-path="url(#fig2-pee686f351a)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-line2d_7">
+    <path d="M 197.59359 78.542615 
+L 38.486686 78.542615 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_8">
+    <path d="M 197.59359 94.280644 
+L 38.486686 94.280644 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_9">
+    <path d="M 43.663669 68.188648 
+L 43.663669 57.834681 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_10">
+    <path d="M 43.663669 104.634611 
+L 43.663669 216.260232 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_11">
+    <path d="M 43.663669 78.542615 
+L 43.663669 94.280644 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_9">
+    <path d="M 41.938008 68.188648 
+L 45.38933 68.188648 
+L 43.663669 78.542615 
+z
+" clip-path="url(#fig2-pee686f351a)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-patch_10">
+    <path d="M 41.938008 104.634611 
+L 45.38933 104.634611 
+L 43.663669 94.280644 
+z
+" clip-path="url(#fig2-pee686f351a)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-line2d_12">
+    <path d="M 280.872419 151.208679 
+L 119.491745 244.431941 
+" clip-path="url(#fig2-pee686f351a)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_11">
+    <path d="M 280.00924 149.714414 
+L 281.735597 152.702945 
+L 289.838012 146.029609 
+z
+" clip-path="url(#fig2-pee686f351a)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-patch_12">
+    <path d="M 118.628566 242.937676 
+L 120.354923 245.926207 
+L 110.526152 249.611012 
+z
+" clip-path="url(#fig2-pee686f351a)" style="fill: #2563eb"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="fig2-pee686f351a">
+   <rect x="0" y="0" width="360" height="357.536526"/>
+  </clipPath>
+ </defs>
+</svg><div class="cad-figcap">轮毂键槽 <span id="cadCapK2"></span></div></div></div>
+        </div>
+        <p class="dwg-note" id="cadKwNote"></p>
+        <p class="dwg-note" id="cadKwHint" style="display:none">请输入 6~500mm（毫米） 范围内的有效轴径。</p>
+        <p class="cad-legend" id="legend"></p>
+      </div>
+    </div>
+
+    <div class="kw-detail" id="detailArea"></div>
+  </div>
+</div>
+
+<!-- 标题区放在查询卡之后：进来的客户第一眼就是"轴径 + 结果 + 断面图"，
+     H1 / 副标题 / 面包屑仍留在 DOM 里（SEO 与结构化数据不受影响），只是往后排。 -->
+<div class="intro-block">
+  <div class="breadcrumb">
+    <a href="/">公差工具站</a><span>›</span>键槽查询
+  </div>
+  <h1><span class="demo-badge" style="margin:0 8px 0 0">DEMO</span>键槽查询 — GB/T 1095-2003</h1>
+  <p class="subtitle">平键 键槽的剖面尺寸 | 轴径 6~500mm（毫米） | 较松 / 一般 / 较紧 三种联结 | <a href="/fit/">公差配合查询 →</a></p>
+</div>
+
+<div class="card">
+  <details class="notes-fold">
+    <summary>标注与使用说明<span class="fold-hint">4 条标注规则 · 易错点已标色</span></summary>
+    <ul class="note-list" id="noteList"></ul>
+    <div class="tip-box" id="tipBox"></div>
+  </details>
+</div>
+
+<div class="card">
+  <h2>GB/T 1095 平键键槽尺寸速查表（全档位）</h2>
+  <div class="ref-wrap">
+    <table class="data-table" id="refTable"></table>
+  </div>
+  <p class="hint">轴径落在哪一段，就取该行的 键槽宽 b / 键高 h / 轴槽深 t₁ / 毂槽深 t₂；键宽 b 的极限偏差随联结类型变化（见上方查询结果）。表中 t₁、t₂ 为公称值，图上按 d−t₁、d+t₂ 标注。</p>
+</div>
+
+<div class="verify-badge">✓ 数据依据 GB/T 1095-2003《平键 键槽的剖面尺寸》；键宽公差按 GB/T 1800.2（ISO 286-2），N9 上偏差 ≤0（b≥3 时 ES=0）</div>
+
+<div class="site-footer">
+  <p>键槽查询工具 | GB/T 1095-2003 | 键宽公差按 GB/T 1800.2 (ISO 286-2)，N9/P9 孔公差带上下偏差均为负值</p>
+  <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/fit/">公差配合查询</a> · <a href="/form/">形状公差查询</a> · <a href="/roughness/">粗糙度查询</a></p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ 车间友好：轴径可输入 + 下拉候选（每 1mm） ============ */
+const DIAS = (function(){
+  var a = [];
+  for (var i = 6; i <= 500; i++) a.push(i);
+  return a;
+})();
+
+/* ============ 数据（GB/T 1095-2003 + ISO 286-2）============ */
+/* 键槽断面图的档位映射：[d1, d2, 代表图号]，与 GB/T 1095 档位一一对应 */
+var SHOT_ROWS=[[6,8,7],[8,10,9],[10,12,11],[12,17,14],[17,22,20],[22,30,26],[30,38,34],
+  [38,44,41],[44,50,47],[50,58,54],[58,65,62],[65,75,70],[75,85,80],[85,95,90],[95,110,102]];
+
+/* 按轴径找到对应的断面图（超出范围时取最近档） */
+function pickShotDia(d){
+  for(var i=0;i<SHOT_ROWS.length;i++){
+    if(d>=SHOT_ROWS[i][0] && d<=SHOT_ROWS[i][1]) return SHOT_ROWS[i][2];
+  }
+  return d<SHOT_ROWS[0][0] ? SHOT_ROWS[0][2] : SHOT_ROWS[SHOT_ROWS.length-1][2];
+}
+
+var KEYWAY=[
+  {d1:6,d2:8,b:2,h:2,t1:1.2,t2:1.0,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
+  {d1:8,d2:10,b:3,h:3,t1:1.8,t2:1.4,t1tol:0.1,t2tol:0.1,r1:0.08,r2:0.16},
+  {d1:10,d2:12,b:4,h:4,t1:2.5,t2:1.8,t1tol:0.1,t2tol:0.1,r1:0.16,r2:0.25},
+  {d1:12,d2:17,b:5,h:5,t1:3.0,t2:2.3,t1tol:0.1,t2tol:0.1,r1:0.16,r2:0.25},
+  {d1:17,d2:22,b:6,h:6,t1:3.5,t2:2.8,t1tol:0.1,t2tol:0.1,r1:0.16,r2:0.25},
+  {d1:22,d2:30,b:8,h:7,t1:4.0,t2:3.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:30,d2:38,b:10,h:8,t1:5.0,t2:3.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:38,d2:44,b:12,h:8,t1:5.0,t2:3.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:44,d2:50,b:14,h:9,t1:5.5,t2:3.8,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:50,d2:58,b:16,h:10,t1:6.0,t2:4.3,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:58,d2:65,b:18,h:11,t1:7.0,t2:4.4,t1tol:0.2,t2tol:0.2,r1:0.25,r2:0.40},
+  {d1:65,d2:75,b:20,h:12,t1:7.5,t2:4.9,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:75,d2:85,b:22,h:14,t1:9.0,t2:5.4,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:85,d2:95,b:25,h:14,t1:9.0,t2:5.4,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:95,d2:110,b:28,h:16,t1:10.0,t2:6.4,t1tol:0.2,t2tol:0.2,r1:0.40,r2:0.60},
+  {d1:110,d2:130,b:32,h:18,t1:11.0,t2:7.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:130,d2:150,b:36,h:20,t1:12.0,t2:8.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:150,d2:170,b:40,h:22,t1:13.0,t2:9.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:170,d2:200,b:45,h:25,t1:15.0,t2:10.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:200,d2:230,b:50,h:28,t1:17.0,t2:11.4,t1tol:0.3,t2tol:0.3,r1:0.70,r2:1.00},
+  {d1:230,d2:260,b:56,h:32,t1:20.0,t2:12.4,t1tol:0.3,t2tol:0.3,r1:1.20,r2:1.60},
+  {d1:260,d2:290,b:63,h:32,t1:20.0,t2:12.4,t1tol:0.3,t2tol:0.3,r1:1.20,r2:1.60},
+  {d1:290,d2:330,b:70,h:36,t1:22.0,t2:14.4,t1tol:0.3,t2tol:0.3,r1:1.20,r2:1.60},
+  {d1:330,d2:380,b:80,h:40,t1:25.0,t2:15.4,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50},
+  {d1:380,d2:440,b:90,h:45,t1:28.0,t2:17.4,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50},
+  {d1:440,d2:500,b:100,h:50,t1:31.0,t2:19.5,t1tol:0.3,t2tol:0.3,r1:2.00,r2:2.50}
+];
+
+/* 键宽 b 公差带极限偏差 [上偏差, 下偏差]（mm/毫米），按 ISO 286-2。
+   N9/P9 为孔公差带、上偏差为负（槽宽只能比公称尺寸小）。
+   N9 值按 ISO 286-2 标准表验证：IT9 及以上等级，K/M/N 基本偏差 ES→0（仅 b=2 在 0-3mm（毫米） 段 ES=-4μm）。H9/D10/JS9/P9 均已验证。 */
+var KEY_TOL={
+  2:{H9:[0,0.025],D10:[0.020,0.060],N9:[-0.004,-0.029],JS9:0.0125,P9:[-0.006,-0.031]},
+  3:{H9:[0,0.025],D10:[0.020,0.060],N9:[-0.004,-0.029],JS9:0.0125,P9:[-0.006,-0.031]},
+  4:{H9:[0,0.030],D10:[0.030,0.078],N9:[0,-0.030],JS9:0.015,P9:[-0.012,-0.042]},
+  5:{H9:[0,0.030],D10:[0.030,0.078],N9:[0,-0.030],JS9:0.015,P9:[-0.012,-0.042]},
+  6:{H9:[0,0.030],D10:[0.030,0.078],N9:[0,-0.030],JS9:0.015,P9:[-0.012,-0.042]},
+  8:{H9:[0,0.036],D10:[0.040,0.098],N9:[0,-0.036],JS9:0.018,P9:[-0.015,-0.051]},
+  10:{H9:[0,0.036],D10:[0.040,0.098],N9:[0,-0.036],JS9:0.018,P9:[-0.015,-0.051]},
+  12:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  14:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  16:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  18:{H9:[0,0.043],D10:[0.050,0.120],N9:[0,-0.043],JS9:0.0215,P9:[-0.018,-0.061]},
+  20:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  22:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  25:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  28:{H9:[0,0.052],D10:[0.065,0.149],N9:[0,-0.052],JS9:0.026,P9:[-0.022,-0.074]},
+  32:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  36:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  40:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  45:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  50:{H9:[0,0.062],D10:[0.080,0.180],N9:[0,-0.062],JS9:0.031,P9:[-0.026,-0.088]},
+  56:{H9:[0,0.074],D10:[0.100,0.220],N9:[0,-0.074],JS9:0.037,P9:[-0.032,-0.106]},
+  63:{H9:[0,0.074],D10:[0.100,0.220],N9:[0,-0.074],JS9:0.037,P9:[-0.032,-0.106]},
+  70:{H9:[0,0.074],D10:[0.100,0.220],N9:[0,-0.074],JS9:0.037,P9:[-0.032,-0.106]},
+  80:{H9:[0,0.087],D10:[0.120,0.260],N9:[0,-0.087],JS9:0.0435,P9:[-0.037,-0.124]},
+  90:{H9:[0,0.087],D10:[0.120,0.260],N9:[0,-0.087],JS9:0.0435,P9:[-0.037,-0.124]},
+  100:{H9:[0,0.087],D10:[0.120,0.260],N9:[0,-0.087],JS9:0.0435,P9:[-0.037,-0.124]}
+};
+
+var FIT_DEF={
+  loose:  {name:'较松联结', shaft:'H9',  hub:'D10', desc:'导向平键，轮毂可在轴上滑动；需频繁拆卸'},
+  normal: {name:'一般联结', shaft:'N9',  hub:'JS9', desc:'最常用，固定联结，普通载荷 / 单向传动'},
+  tight:  {name:'较紧联结', shaft:'P9',  hub:'P9',  desc:'重载 / 冲击载荷，正反转频繁'}
+};
+
+var NOTES=[
+  '轴槽深以 <b class="hl-code">d−t₁</b> 标注、极限偏差取<b class="hl-warn">负号</b>（<b class="hl-warn">槽只深不浅</b>，如 0 / −0.2）；轮毂槽深以 <b class="hl-code">d+t₂</b> 标注、极限偏差取<b class="hl-warn">正号</b>（<b class="hl-warn">只大不小</b>，如 +0.2 / 0）。这是 GB/T 1095 规定的正式标注尺寸——图上只需标 <b class="hl-code">d−t₁</b> 与 <b class="hl-code">d+t₂</b>，t₁、t₂ 仅为<b class="hl-dim">查表公称值</b>。',
+  '键宽 b 公差带：较松 <b class="hl-code">轴槽 H9 / 毂槽 D10</b>；一般 <b class="hl-code">轴槽 N9 / 毂槽 Js9</b>；较紧 <b class="hl-code">轴槽·毂槽 P9</b>。均与标准平键（h9）配合，属<b class="hl">基轴制</b>。N9 上偏差≤0、P9 上偏差为负——即<b class="hl">槽宽不大于公称尺寸</b>，与平键形成过渡 / 过盈配合，传扭时不松动。',
+  '键槽对称度按 GB/T 1184-1996 取 7 至 9 级（键槽一般取 <b class="hl-dim">8 级</b>），公差值随键宽 b 查取，<b class="hl-warn">基准 A 为轴线</b>——必须标在中心线上，<b class="hl-warn">不可标在端面或槽侧面</b>。',
+  'r 为槽底的<b class="hl">过渡圆角半径</b>（侧面与底面交接处），用于减小应力集中，随轴径增大而增大。平键轴槽长度公差为 <b class="hl-code">H14</b>；键本身为标准件（公差 <b class="hl-code">h9</b>）。'
+];
+
+var TIPS='<b>易错提示</b>：① 槽深公差方向不能标反——轴槽 d−t₁ 只许做小、毂槽 d+t₂ 只许做大；② 对称度基准必须是轴线（中心线），不能标在端面；③ 键槽尺寸不可标在虚线（不可见轮廓）上。';
+
+var curFit='normal';
+
+/* ============ 查询逻辑 ============ */
+function findKeyway(d){
+  for(var i=0;i<KEYWAY.length;i++){var r=KEYWAY[i];if(d>r.d1&&d<=r.d2) return r;}
+  if(d<=6) return KEYWAY[0];
+  return null;
+}
+
+function getTolValues(tol){
+  if(Array.isArray(tol)) return {upper:Math.max(tol[0],tol[1]),lower:Math.min(tol[0],tol[1]),symmetric:false};
+  return {upper:tol,lower:-tol,symmetric:true};
+}
+
+function fmtDev(v){ return v===0?'0':(Math.abs(v)<0.001?'0':v.toFixed(3)); }
+
+function fmtTol(tv){
+  if(tv.symmetric) return '±'+fmtDev(tv.upper);
+  return (tv.upper>=0?'+':'')+fmtDev(tv.upper)+' / '+(tv.lower>=0?'+':'')+fmtDev(tv.lower);
+}
+
+function symTol(b){
+  if(b<=10) return 0.020;
+  if(b<=18) return 0.025;
+  if(b<=30) return 0.030;
+  if(b<=50) return 0.040;
+  if(b<=80) return 0.050;
+  return 0.060;
+}
+
+/* ============ 渲染 ============ */
+/* 断面积图放右列；无效输入时给一个占位块，避免右列塌掉 */
+var FIG_PLACEHOLDER='<div class="dwg-block"><div class="dwg-head"><span>键槽断面图</span>'
+  +'<span class="dwg-tag">GB/T 1095 · CAD 渲染</span></div>'
+  +'<div class="dwg-fig" style="padding:34px 14px;text-align:center;color:#94a3b8;font-size:12.5px">'
+  +'输入 6~500mm（毫米） 范围内的有效轴径后，这里显示键槽断面图</div></div>';
+
+/* 全档位速查表（数据源同查询，命中行高亮） */
+function renderRefTable(hitRow){
+  var tb=document.getElementById('refTable');
+  if(!tb) return;
+  var buf='<thead><tr><th>轴径 d 范围 (mm/毫米)</th><th>键槽宽 b</th><th>键高 h</th><th>轴槽深 t₁</th><th>毂槽深 t₂</th>'
+    +'<th>轴槽深偏差</th><th>毂槽深偏差</th><th>槽底圆角 r</th></tr></thead><tbody>';
+  for(var i=0;i<KEYWAY.length;i++){
+    var r=KEYWAY[i];
+    var hit = hitRow && r.d1===hitRow.d1 && r.d2===hitRow.d2;
+    buf+='<tr'+(hit?' class="hit"':'')+'>'
+      +'<td>'+r.d1+' ~ '+r.d2+'</td>'
+      +'<td>'+r.b+'</td><td>'+r.h+'</td><td>'+r.t1+'</td><td>'+r.t2+'</td>'
+      +'<td>+'+r.t1tol+' / 0</td><td>+'+r.t2tol+' / 0</td>'
+      +'<td>'+r.r1+'~'+r.r2+'</td></tr>';
+  }
+  tb.innerHTML=buf+'</tbody>';
+}
+
+/* 联结类型三个按钮：跟着结果一起重画（挪进「键尺寸 b×h」那一行右侧） */
+function fitToggleHTML(){
+  var buf='<div class="fit-toggle">';
+  ['loose','normal','tight'].forEach(function(k){
+    var f=FIT_DEF[k];
+    buf+='<button type="button" class="fit-btn'+(k===curFit?' active':'')+'" data-fit="'+k+'">'
+      +f.name+'<small>轴槽 '+f.shaft+' · 毂槽 '+f.hub+'</small></button>';
+  });
+  return buf+'</div>';
+}
+
+function render(){
+  var core=document.getElementById('coreArea');
+  var det=document.getElementById('detailArea');
+  var fig=document.getElementById('dwgArea');
+  var d=parseFloat(document.getElementById('diaInput').value);
+  function fail(msg){
+    core.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">'+msg+'</p>';
+    det.innerHTML='';
+    fig.innerHTML=FIG_PLACEHOLDER;
+    renderRefTable(null);
+  }
+  if(isNaN(d)||d<6||d>500){ fail('请输入 6~500mm（毫米） 范围内的轴径。'); return; }
+  var row=findKeyway(d);
+  if(!row){ fail('该轴径超出 GB/T 1095-2003 范围（6~500mm（毫米））。'); return; }
+  var fit=FIT_DEF[curFit];
+  var tol=KEY_TOL[row.b];
+  var sTv=getTolValues(tol[fit.shaft]);
+  var hTv=getTolValues(tol[fit.hub]);
+
+  /* ---- 核心结果（左列上部：手机上也先看到这段）---- */
+  var html='';
+  html+='<div class="result-highlight">'
+    +'<div><div class="result-label">键尺寸 b × h</div>'
+    +'<div class="result-value">'+row.b+' × '+row.h+' <span class="result-unit">mm（毫米）</span></div>'
+    +'<div class="result-label">轴径 '+d+'mm（毫米） · 范围 '+row.d1+'~'+row.d2+'mm（毫米）</div></div>'
+    +fitToggleHTML()+'</div>';
+  html+='<p class="fit-desc">'+fit.name+'：'+fit.desc+'（轴槽 '+fit.shaft+' · 毂槽 '+fit.hub+'）</p>';
+
+  html+='<div class="group-title">轴槽参数</div>';
+  html+='<div class="info-grid">'
+    +infoItem('轴槽宽 b', row.b+' mm（毫米）', fit.shaft+'（'+fmtTol(sTv)+'）')
+    +infoItem('轴槽深 d−t₁', (d-row.t1).toFixed(1)+' mm（毫米）','0 / −'+row.t1tol)
+    +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm（毫米）')
+    +'</div>';
+  core.innerHTML=html;
+
+  /* ---- 补充参数（左列下部：手机上排在图之后）---- */
+  var dh='';
+  dh+='<div class="group-title">轮毂槽参数</div>';
+  dh+='<div class="info-grid">'
+    +infoItem('毂槽宽 b', row.b+' mm（毫米）', fit.hub+'（'+fmtTol(hTv)+'）')
+    +infoItem('毂槽深 d+t₂', (d+row.t2).toFixed(1)+' mm（毫米）','+'+row.t2tol+' / 0')
+    +infoItem('槽底圆角 r', row.r1+'~'+row.r2,'mm（毫米）')
+    +'</div>';
+
+  dh+='<div class="group-title">形位公差与标准件</div>';
+  dh+='<div class="info-grid info-grid-2">'
+    +infoItem('对称度', symTol(row.b).toFixed(3)+' mm（毫米）','GB/T 1184 8级 · 基准 A 轴线')
+    +infoItem('标准平键', row.b+'×'+row.h,'mm（毫米） · 公差 h9')
+    +infoItem('槽深公称 t₁/t₂', row.t1+' / '+row.t2,'mm（毫米） · 仅查表参考')
+    +'</div>';
+
+  // 说明：原先此处还有「查看 XX~XXmm 轴径段完整数据」的可展开表，
+  // 因页面底部新增的「全档位速查表」已覆盖同样字段并会高亮当前档位，故移除避免重复。
+  det.innerHTML=dh;
+
+  // ---- 右列：键槽断面图（CAD 渲染，按轴径档位切换）+ 操作按钮 ----
+  // 公差按 GB/T 4458.4 排版：下偏差与基本尺寸同底线、上下偏差小数点对齐、字号小一号
+  fig.innerHTML = '<div class="dwg-block">'
+        +   '<div class="dwg-head"><span>键槽断面图</span>'
+        +   '<span class="dwg-tag">GB/T 1095 · CAD 渲染</span></div>'
+        +   '<div class="dwg-fig"><img id="dwgImg" src="shots/d' + pickShotDia(d) + '.svg" alt="键槽断面图" loading="lazy"></div>'
+        +   '<div class="dwg-note">示意图 · 按 GB/T 1095 档位 d=' + row.d1 + '~' + row.d2 + 'mm（毫米） 渲染，图中轴径用档位代表值 Φ' + pickShotDia(d) + ' 表示；键槽 ' + row.b + '×' + row.h + '（宽×高），槽深 t₁=' + row.t1 + 'mm（毫米）</div>'
+        + '</div>'
+        + '<div class="action-row kw-fig-actions">'
+        +   '<button class="act-btn primary" id="btnCopy">复制全部数据</button>'
+        +   '<button class="act-btn" id="btnPrint">打印 / PDF</button>'
+        + '</div>';
+
+  renderRefTable(row);
+
+  document.getElementById('btnCopy').addEventListener('click',function(){copyData(row,d,fit,sTv,hTv);});
+  document.getElementById('btnPrint').addEventListener('click',function(){window.print();});
+}
+
+function infoItem(label,value,sub){
+  return '<div class="info-item"><div class="info-label">'+label+'</div><div class="info-value">'+value+'</div>'+(sub?'<div class="info-sub">'+sub+'</div>':'')+'</div>';
+}
+
+/* ============ 复制数据 ============ */
+function copyData(row,d,fit,sTv,hTv){
+  var text='GB/T 1095-2003 键槽尺寸（键宽公差按 ISO 286-2 / GB/T 1800.2）\n';
+  text+='轴径 d = '+d+' mm（毫米）\n';
+  text+='标准平键 b×h = '+row.b+'×'+row.h+' mm（毫米）（h9）\n';
+  text+='联结类型：'+fit.name+'（轴槽 '+fit.shaft+' / 毂槽 '+fit.hub+'）—— '+fit.desc+'\n';
+  text+='----------------------------------------\n';
+  text+='轴键槽：\n';
+  text+='  槽宽 b = '+row.b+' ('+fmtTol(sTv)+')\n';
+  text+='  d−t₁ = '+(d-row.t1).toFixed(1)+' (0 / −'+row.t1tol+')   [t₁='+row.t1+' 仅供参考]\n';
+  text+='  半径 r = '+row.r1+'~'+row.r2+'\n';
+  text+='轮毂键槽：\n';
+  text+='  槽宽 b = '+row.b+' ('+fmtTol(hTv)+')\n';
+  text+='  d+t₂ = '+(d+row.t2).toFixed(1)+' (+'+row.t2tol+' / 0)   [t₂='+row.t2+' 仅供参考]\n';
+  text+='  半径 r = '+row.r1+'~'+row.r2+'\n';
+  text+='对称度 = '+symTol(row.b).toFixed(3)+' mm（毫米）（GB/T 1184 8级，基准 A 为轴线）';
+
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){showToast('已复制到剪贴板');},function(){fallbackCopy(text);});
+  } else { fallbackCopy(text); }
+}
+
+function fallbackCopy(t){
+  var ta=document.createElement('textarea');
+  ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); showToast('已复制到剪贴板'); }
+  catch(e){ showToast('复制失败'); }
+  document.body.removeChild(ta);
+}
+
+function showToast(msg){
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); },1600);
+}
+
+/* ============ 轴径下拉（自定义实现，手机 / 微信内也能用） ============ */
+function setupPicker(inputId, listId, values) {
+  var inp = document.getElementById(inputId);
+  var list = document.getElementById(listId);
+  if (!inp || !list) return;
+  var toggle = list.parentNode.querySelector('.picker-toggle');
+  var buf = [];
+  for (var i = 0; i < values.length; i++) buf.push('<div class="picker-item" data-v="' + values[i] + '">' + values[i] + '</div>');
+  list.innerHTML = buf.join('');
+
+  function closeList() { list.classList.remove('open'); }
+  function closeOthers() {
+    var open = document.querySelectorAll('.picker-list.open');
+    for (var i = 0; i < open.length; i++) if (open[i] !== list) open[i].classList.remove('open');
+  }
+  function markSel() {
+    var items = list.querySelectorAll('.picker-item');
+    for (var i = 0; i < items.length; i++) items[i].classList.toggle('sel', items[i].dataset.v === inp.value);
+  }
+  function openList() {
+    closeOthers(); markSel(); list.classList.add('open');
+    var cur = list.querySelector('.picker-item.sel');
+    if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.clientHeight / 2 + cur.offsetHeight / 2);
+  }
+
+  toggle.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (list.classList.contains('open')) closeList(); else openList();
+  });
+  list.addEventListener('click', function (e) {
+    var it = e.target.closest ? e.target.closest('.picker-item') : null;
+    if (!it) return;
+    inp.value = it.dataset.v;
+    closeList();
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  document.addEventListener('click', function (e) {
+    if (!list.parentNode.contains(e.target)) closeList();
+  });
+}
+
+/* ============ 初始化 ============ */
+setupPicker('diaInput', 'diaList', DIAS);
+document.getElementById('diaInput').addEventListener('input',render);
+/* 联结类型按钮现在是每次 render 重画的（挪进了结果行），所以用事件委托 */
+document.getElementById('coreArea').addEventListener('click',function(e){
+  var btn=e.target.closest?e.target.closest('.fit-btn'):null;
+  if(!btn) return;
+  curFit=btn.dataset.fit;
+  render();
+});
+document.getElementById('noteList').innerHTML=NOTES.map(function(n){return '<li>'+n+'</li>';}).join('');
+document.getElementById('tipBox').innerHTML=TIPS;
+render();
+</script>
+<script src="/js/nav.js" defer></script>
+<!-- DEMO：移除 PWA（避免 Service Worker 缓存干扰预览） -->
+<script>window.CAD={"id":"site-keyway","title":"键槽断面 · 动态尺寸","subtitle":"GB/T 1095 平键键槽 ｜ ① 轴键槽 ② 轮毂键槽，尺寸由页面实时填","figures":[{"key":"k1","title":"轴键槽","slots":[{"slot":"k1-b","kind":"stack","label":"键宽","main":{"fmt":"int","prefix":"","suffix":"","from":"b"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k1bES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k1bEI"}},{"slot":"k1-t","kind":"stack","label":"轴槽深","main":{"fmt":"trim","prefix":"","suffix":"","from":"k1t"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k1tES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k1tEI"}},{"slot":"k1-dia","kind":"plain","label":"轴径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"}}]},{"key":"k2","title":"轮毂键槽","slots":[{"slot":"k2-b","kind":"stack","label":"键宽","main":{"fmt":"int","prefix":"","suffix":"","from":"b"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k2bES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k2bEI"}},{"slot":"k2-t","kind":"stack","label":"毂槽深","main":{"fmt":"trim","prefix":"","suffix":"","from":"k2t"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k2tES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k2tEI"}},{"slot":"k2-dia","kind":"plain","label":"轴径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"}}]}],"legend":[{"color":"#000000","text":"零件轮廓 / 剖面线 / 中心线"},{"color":"#2563eb","text":"尺寸线 · 尺寸界线 · 箭头"},{"color":"#dc2626","text":"正偏差"},{"color":"#1d4ed8","text":"负偏差"}],"initial":{"d":50,"b":14,"k1t":5.5,"k2t":3.8,"k1bES":0.0,"k1bEI":-0.043,"k2bES":0.0215,"k2bEI":-0.0215,"k1tES":0.2,"k1tEI":0.0,"k2tES":0.2,"k2tEI":0.0},"colors":{"pos":"#DC2626","neg":"#1D4ED8","zero":"#DC2626"}};</script>
+<script src="/js/cad-live.js"></script>
+<script>
+/* ===== DEMO hook（keyway）：跟随轴径 + 联结类型实时改图 =====
+   原页面右列那块图是按档位烘焙的 SVG（15 张），画的是"档位代表直径"；
+   这里换成 CAD 原图的动态版：几何是 Φ50 那一版，数字按 GB/T 1095 实时算。
+   页面的 render() 每次输入都会重建 #dwgArea 的 innerHTML，所以复制/打印按钮
+   会被重建 —— 按钮节点是"搬"过来的（保留事件），每次重建后搬一次最新的。 */
+(function () {
+  'use strict';
+  var DBG = window.CAD_DEBUG;
+  var block = document.getElementById('cadKwBlock');
+  var figs = document.getElementById('cadKwFigs');
+  var note = document.getElementById('cadKwNote');
+  var hint = document.getElementById('cadKwHint');
+  if (!DBG || !block || !figs) { return; }
+
+  function takeButtons() {
+    var area = document.getElementById('dwgArea');
+    var row = area ? area.querySelector('.action-row') : null;
+    var old = block.querySelector('.action-row');
+    if (old && old.parentNode) { old.parentNode.removeChild(old); }   // 旧按钮的数据是上一轮的，扔掉
+    if (row) { block.appendChild(row); }
+  }
+  function sync() {
+    takeButtons();
+    var d = parseFloat(document.getElementById('diaInput').value);
+    var row = (isNaN(d) || d < 6 || d > 500) ? null : window.findKeyway(d);
+    if (!row) {
+      figs.style.display = 'none';
+      if (hint) { hint.style.display = ''; }
+      note.textContent = '';
+      return;
+    }
+    figs.style.display = '';
+    if (hint) { hint.style.display = 'none'; }
+
+    var fit = window.FIT_DEF[window.curFit];                 // 页面当前联结类型
+    var tol = window.KEY_TOL[row.b];
+    var s = window.getTolValues(tol[fit.shaft]);             // 轴槽键宽公差带
+    var h = window.getTolValues(tol[fit.hub]);               // 毂槽键宽公差带
+    var P = DBG.params;
+    P.d = d;
+    P.b = row.b;
+    P.k1t = row.t1;   P.k2t = row.t2;
+    P.k1bES = s.upper;  P.k1bEI = s.lower;
+    P.k2bES = h.upper;  P.k2bEI = h.lower;
+    /* 槽深：图上标的是 t₁ / t₂ 本身，所以偏差写成 +t/0
+       —— 与页面里 d−t₁ 的 0/−t、d+t₂ 的 +t/0 是同一件事（t 变大 ⟺ d−t₁ 变小） */
+    P.k1tES = row.t1tol; P.k1tEI = 0;
+    P.k2tES = row.t2tol; P.k2tEI = 0;
+    DBG.paint();
+
+    note.innerHTML = '轴径 <b>Φ' + d + '</b>（GB/T 1095 档位 ' + row.d1 + '~' + row.d2 + '）· 键 <b>'
+      + row.b + '×' + row.h + '</b> · ' + fit.name + '（轴槽 ' + fit.shaft + ' / 毂槽 ' + fit.hub
+      + '）· 槽深 ① <b>' + row.t1 + '</b> ② <b>' + row.t2 + '</b> mm（毫米）';
+  }
+  function bind() {
+    document.getElementById('diaInput').addEventListener('input', sync);
+    /* 联结类型的三个按钮现在是页面在 #coreArea 里重画的 → 事件委托（页面自己的委托监听先注册，先跑） */
+    document.getElementById('coreArea').addEventListener('click', sync);
+    sync();
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', bind); }
+  else { bind(); }
+})();
+</script>
+<script>
+/* ===== 图纸放大（两个页面共用）=====
+   点右上角放大镜、或点图任意处 → 全屏看；
+   做法是把 `.cad-figwrap` **整个节点搬进遮罩**（不是克隆），所以放大期间
+   页面上的联动照旧 —— 改参数，放大图里的数字一样跟着变。关掉再搬回原位。 */
+(function () {
+  'use strict';
+  var figs = document.querySelectorAll('.cad-figwrap');
+  if (!figs.length) { return; }
+  var mask = document.createElement('div');
+  mask.className = 'cad-zoom-mask';
+  mask.innerHTML = '<div class="cad-zoom-panel"><div class="cad-zoom-body"></div></div>'
+    + '<button type="button" class="cad-zoom-close" aria-label="关闭放大视图">\u2715</button>';
+  document.body.appendChild(mask);
+  var body = mask.querySelector('.cad-zoom-body');
+  var anchor = null;                       // 记住搬走前的位置，关掉好放回去
+
+  function openFig(wrap) {
+    if (mask.classList.contains('open')) { return; }
+    anchor = {node: wrap, parent: wrap.parentNode, next: wrap.nextSibling};
+    body.appendChild(wrap);
+    mask.classList.add('open');
+    document.body.classList.add('cad-zoom-open');
+  }
+  function closeFig() {
+    if (!anchor) { return; }
+    if (anchor.next && anchor.next.parentNode === anchor.parent) {
+      anchor.parent.insertBefore(anchor.node, anchor.next);
+    } else {
+      anchor.parent.appendChild(anchor.node);
+    }
+    anchor = null;
+    mask.classList.remove('open');
+    document.body.classList.remove('cad-zoom-open');
+  }
+  mask.querySelector('.cad-zoom-close').addEventListener('click', closeFig);
+  mask.addEventListener('click', function (e) {
+    if (e.target === mask || e.target.classList.contains('cad-zoom-panel')) { closeFig(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.keyCode === 27) { closeFig(); }
+  });
+  Array.prototype.forEach.call(figs, function (wrap) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cad-zoom';
+    b.title = '放大查看';
+    b.setAttribute('aria-label', '放大查看图纸');
+    b.innerHTML = '<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">'
+      + '<circle cx="6.6" cy="6.6" r="4.7" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+      + '<line x1="10.3" y1="10.3" x2="14.2" y2="14.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+      + '<line x1="4.5" y1="6.6" x2="8.7" y2="6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>'
+      + '<line x1="6.6" y1="4.5" x2="6.6" y2="8.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    wrap.appendChild(b);
+    wrap.addEventListener('click', function () { openFig(wrap); });
+    b.addEventListener('click', function (e) { e.stopPropagation(); openFig(wrap); });
+  });
+})();
+</script>
+</body>
+</html>

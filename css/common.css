@@ -233,3 +233,67 @@ table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1
   .input-group select { width: 100%; }
   button { width: 100%; }
 }
+
+/* ============================================================================
+   移动端导航抽屉（≤720px）
+   —— 窄屏上横排导航要占两行（约 110px），把它收进右侧抽屉，header 只剩一行 ~44px。
+   渐进增强：只有 js/nav.js 跑起来（给 <html> 加 .has-drawer）才生效；
+   没有 JS 时导航保持原来的"横排 + 换行"，绝不会变成打不开的菜单。
+   !important 是给 /cylinder/ 准备的 —— 那个页面自带 CSS 覆盖了 .site-nav
+   （width:auto/background:transparent/padding:0 都带 !important），同属性 !important
+   之间比特异性，下面这些选择器都比它的 `header.site-header .site-nav` 更具体。
+   ========================================================================== */
+.nav-toggle { display: none; }
+.nav-mask { display: none; }
+/* 抽屉里才用的两个元素（关闭按钮、分组标题）—— 桌面宽度下必须收起来，
+   否则它们会跟着 .site-nav 一起横排在 header 里 */
+.nav-close, .nav-title { display: none; }
+
+@media (max-width: 720px) {
+  html.has-drawer body { padding: 12px; }
+  html.has-drawer .site-header {
+    position: sticky; top: 0; z-index: 45; flex-wrap: nowrap;
+    padding: 9px 14px; margin: -12px -12px 14px -12px;
+  }
+  html.has-drawer .site-header .site-name { font-size: 15px; }
+  html.has-drawer .nav-toggle {
+    display: inline-flex !important; align-items: center; justify-content: center;
+    width: 42px !important; min-width: 42px; height: 34px; padding: 0; margin-left: auto;
+    background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4);
+    border-radius: 9px; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  html.has-drawer .nav-toggle:active { background: rgba(255,255,255,.3); }
+  html.has-drawer .nav-toggle svg { display: block; }
+  html.has-drawer .nav-mask {
+    display: block; position: fixed; inset: 0; z-index: 55;
+    background: rgba(15,23,42,.45); opacity: 0; pointer-events: none; transition: opacity .22s;
+  }
+  html.has-drawer .nav-mask.open { opacity: 1; pointer-events: auto; }
+  html.has-drawer .site-header .site-nav {
+    position: fixed !important; top: 0; right: 0; bottom: 0; left: auto; z-index: 60;
+    width: min(78vw, 300px) !important; background: #fff !important;
+    flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 0;
+    padding: 52px 0 24px !important; margin: 0; border: none !important;
+    overflow-y: auto !important; overflow-x: hidden;
+    box-shadow: -10px 0 30px rgba(15,23,42,.22);
+    transform: translateX(103%); transition: transform .24s cubic-bezier(.16,1,.3,1);
+  }
+  html.has-drawer .site-header .site-nav.open { transform: none; }
+  html.has-drawer .site-header .site-nav a {
+    display: block; width: auto; padding: 14px 22px; font-size: 15px; font-weight: 400;
+    color: #334155 !important; border-bottom: 1px solid #f1f5f9; background: transparent !important;
+  }
+  html.has-drawer .site-header .site-nav a.active {
+    color: #2563eb !important; font-weight: 600; background: #eff6ff !important;
+  }
+  html.has-drawer .nav-title {
+    display: block; padding: 0 22px 10px; margin: 0; font-size: 11.5px; color: #94a3b8; letter-spacing: .6px;
+  }
+  html.has-drawer .nav-close {
+    display: flex; position: absolute; top: 10px; right: 10px; width: 30px !important; min-width: 30px; height: 30px;
+    padding: 0; align-items: center; justify-content: center;
+    background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; color: #475569;
+    font-size: 14px; line-height: 1; cursor: pointer;
+  }
+  body.nav-open { overflow: hidden; }
+}
