@@ -15,6 +15,57 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
+<!--CAD-CSS-START-->
+<style>
+/* ==== DEMO：CAD 动态尺寸图（由 gen_site_demo.py 注入，删掉这段即恢复原样）==== */
+.demo-badge{display:inline-block;vertical-align:middle;margin-left:8px;padding:2px 8px;border-radius:999px;
+  background:#fef3c7;border:1px solid #fcd34d;color:#92400e;font-size:11px;font-weight:600;letter-spacing:.5px;vertical-align:2px}
+.cad-intro{font-size:12.5px;color:#475569;line-height:1.85;margin-bottom:14px}
+.cad-intro b{color:#0f172a}
+.cad-figs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cad-figbox{min-width:0}
+.cad-figwrap{position:relative;border:1px solid #e2e8f0;border-radius:8px;padding:4px;background:#fff;cursor:zoom-in}
+.cad-figwrap svg{display:block;width:100%;height:auto}
+/* 图题：塞进图框里、图的正下方 */
+.cad-figcap{margin-top:6px;padding-top:6px;border-top:1px dashed #e2e8f0;text-align:center;
+  font-size:12.5px;font-weight:600;color:#475569}
+.cad-figcap span{font-weight:500;color:#2563eb;font-family:ui-monospace,Consolas,monospace}
+/* 放大按钮（图右上角）+ 全屏查看 */
+.cad-zoom{position:absolute;top:5px;right:5px;z-index:2;width:26px;height:26px;padding:0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:rgba(255,255,255,.94);border:1px solid #e2e8f0;border-radius:7px;color:#64748b;
+  transition:color .15s,border-color .15s,background .15s}
+.cad-zoom:hover{color:#2563eb;border-color:#bfdbfe;background:#eff6ff}
+.cad-zoom-mask{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;
+  padding:18px;background:rgba(15,23,42,.72)}
+.cad-zoom-mask.open{display:flex}
+/* 面板宽度必须给死：`.cad-figwrap` 里是 width:100% 的 SVG，不给宽度会退化成
+   SVG 的默认尺寸（约 300px），"放大"就白做了。用 min() 同时卡住视口宽/高。 */
+.cad-zoom-panel{width:min(92vw,78vh,860px);background:#fff;border-radius:12px;padding:14px;
+  max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(15,23,42,.45)}
+.cad-zoom-body{width:100%}
+.cad-zoom-body .cad-figwrap{border:0;padding:0;cursor:default;width:100%}
+.cad-zoom-body .cad-figwrap .cad-zoom{display:none}
+.cad-zoom-close{position:fixed;top:14px;right:14px;width:34px;height:34px;padding:0;border-radius:50%;
+  background:#fff;border:1px solid #e2e8f0;color:#475569;font-size:15px;line-height:1;cursor:pointer;
+  box-shadow:0 2px 10px rgba(15,23,42,.22)}
+body.cad-zoom-open{overflow:hidden}
+/* 图例：一条一行（横着排太费劲） */
+.cad-legend{display:flex;flex-direction:column;gap:5px;margin-top:12px;font-size:12px;color:#94a3b8;line-height:1.5}
+.cad-legend .lg-item{display:flex;align-items:center;gap:8px}
+.cad-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.cad-note{font-size:12px;color:#64748b;margin-top:8px;line-height:1.85}
+.cad-note b{color:#0f172a;font-family:ui-monospace,Consolas,monospace}
+.cad-dim{color:#94a3b8}
+@media(max-width:680px){.cad-figs{grid-template-columns:1fr}}
+/* keyway 页：断面图标题居中（这页的图块标题不加标签） */
+.kw-fig .dwg-head{justify-content:center}
+
+/* 落到真实 keyway 页：图块是静态的，宽度跟着右列走 */
+.kw-fig .dwg-block{margin-top:0}
+.kw-fig .cad-figs{margin-bottom:2px}
+</style>
+<!--CAD-CSS-END-->
 
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
@@ -226,7 +277,737 @@ body{max-width:1240px}
       <div id="coreArea"></div>
     </div>
 
-    <div class="kw-fig" id="dwgArea"></div>
+    <div class="kw-fig" id="dwgArea">
+      <div class="dwg-block">
+        <div class="dwg-head"><span>键槽断面图</span></div>
+        <!-- 两张断面图由 gen_site_demo.py 生成注入（CAD 原图几何 + 动态尺寸槽位）。
+             这一段是**静态**的：页面每次查询只改文字，不重建图 —— 所以图不会闪、也不需要重新挂事件。 -->
+        <div class="cad-figs" id="cadKwFigs">
+        <!--CAD-FIGS-START-->
+<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 360 357.536526" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ 
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="fig1-figure_1">
+  <g id="fig1-patch_1">
+   <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="fig1-axes_1">
+   <g id="fig1-patch_2">
+    <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="fig1-PathCollection_1"/>
+   <g id="fig1-LineCollection_1">
+    <path d="M 78.173562 224.163105 
+L 184.816118 117.52055 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 203.28425 99.052418 
+L 204.309685 98.026982 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 75.3858 208.354613 
+L 166.219863 117.52055 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 75.219049 189.92511 
+L 153.58521 111.558949 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 79.79895 166.748954 
+L 146.885294 99.66261 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 168.367158 301.3358 
+L 281.497742 188.205216 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 152.555128 298.551576 
+L 278.70483 172.401873 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 138.629607 293.880842 
+L 274.028666 158.481783 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 126.216351 287.697843 
+L 267.84644 146.067754 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 115.114444 280.203496 
+L 260.356494 134.961446 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 105.223268 271.498418 
+L 251.655803 125.065882 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 96.513159 261.612272 
+L 241.770841 116.35459 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 89.017041 250.512136 
+L 230.667013 108.862164 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 82.837519 238.095403 
+L 218.243305 102.689617 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 209.97774 296.917727 
+L 277.063854 229.831612 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+    <path d="M 186.813752 301.48546 
+L 281.635688 206.663525 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000"/>
+   </g>
+   <g id="fig1-patch_3">
+    <path d="M 281.974396 198.28149 
+C 281.974396 255.464868 235.618109 301.821156 178.43473 301.821156 
+C 121.251351 301.821156 74.895063 255.464868 74.895063 198.28149 
+C 74.895063 141.098111 121.251351 94.741823 178.43473 94.741823 
+C 235.618109 94.741823 281.974396 141.098111 281.974396 198.28149 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig1-line2d_1">
+    <path d="M 153.58521 115.863915 
+L 153.58521 97.767989 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_4">
+    <path d="M 153.58521 115.863915 
+C 153.58521 116.778849 154.326911 117.52055 155.241845 117.52055 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="k1-b-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="147.172606" y="67.829511" transform="rotate(-0 147.172606 67.829511)">14</text>
+   </g>
+   <g id="k1-b-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="168.695105" y="67.829511" transform="rotate(-0 168.695105 67.829511)">±0</text>
+   </g>
+   <g id="k1-b-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="168.695105" y="55.50829" transform="rotate(-0 168.695105 55.50829)"> </text>
+   </g>
+   <g id="k1-b-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="176.305271" y="55.50829" transform="rotate(-0 176.305271 55.50829)">0</text>
+   </g>
+   <g id="k1-b-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="168.695105" y="67.829511" transform="rotate(-0 168.695105 67.829511)">-</text>
+   </g>
+   <g id="k1-b-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="176.305271" y="67.829511" transform="rotate(-0 176.305271 67.829511)">0.043</text>
+   </g>
+   <g id="k1-t-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="46.309012" y="207.379189" transform="rotate(-90 46.309012 207.379189)">5.5</text>
+   </g>
+   <g id="k1-t-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="46.309012" y="174.772687" transform="rotate(-90 46.309012 174.772687)">±0.2</text>
+   </g>
+   <g id="k1-t-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="33.987792" y="174.772687" transform="rotate(-90 33.987792 174.772687)">+</text>
+   </g>
+   <g id="k1-t-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="33.987792" y="166.249302" transform="rotate(-90 33.987792 166.249302)">0.2</text>
+   </g>
+   <g id="k1-t-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="46.309012" y="174.772687" transform="rotate(-90 46.309012 174.772687)"> </text>
+   </g>
+   <g id="k1-t-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="46.309012" y="166.249302" transform="rotate(-90 46.309012 166.249302)">0</text>
+   </g>
+   <g id="k1-dia-main" data-role="main">
+    <g id="fig1-patch_5">
+     <path d="M 277.910554 141.769003 
+L 333.240591 109.807019 
+L 324.249158 94.241769 
+L 268.919122 126.203753 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="302.963622" y="121.266411" transform="rotate(-30.013335 302.963622 121.266411)">d = Φ50</text>
+   </g>
+   <g id="fig1-line2d_2">
+    <path d="M 155.241845 117.52055 
+L 201.627615 117.52055 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_3">
+    <path d="M 203.28425 115.863915 
+L 203.28425 97.767989 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_6">
+    <path d="M 201.627615 117.52055 
+C 202.542549 117.52055 203.28425 116.778849 203.28425 115.863915 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig1-PathCollection_2"/>
+   <g id="fig1-LineCollection_2">
+    <path d="M 178.43473 84.387856 
+L 178.43473 150.135545 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 163.285082 
+L 178.43473 176.43462 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 189.584158 
+L 178.43473 255.331846 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 268.481383 
+L 178.43473 281.630921 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 178.43473 294.780459 
+L 178.43473 312.175123 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig1-PathCollection_3"/>
+   <g id="fig1-LineCollection_3">
+    <path d="M 292.328363 198.28149 
+L 226.580675 198.28149 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 213.431137 198.28149 
+L 200.281599 198.28149 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 187.132062 198.28149 
+L 121.384374 198.28149 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 108.234836 198.28149 
+L 95.085298 198.28149 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 81.935761 198.28149 
+L 64.541097 198.28149 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig1-line2d_4">
+    <path d="M 203.28425 95.179497 
+L 203.28425 68.985704 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_5">
+    <path d="M 153.58521 95.179497 
+L 153.58521 68.985704 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_6">
+    <path d="M 192.930283 74.162687 
+L 163.939177 74.162687 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_7">
+    <path d="M 192.930283 72.437026 
+L 192.930283 75.888348 
+L 203.28425 74.162687 
+z
+" clip-path="url(#fig1-pe2141822c8)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-patch_8">
+    <path d="M 163.939177 72.437026 
+L 163.939177 75.888348 
+L 153.58521 74.162687 
+z
+" clip-path="url(#fig1-pe2141822c8)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-line2d_7">
+    <path d="M 175.846238 94.741823 
+L 47.465205 94.741823 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_8">
+    <path d="M 152.653353 117.52055 
+L 47.465205 117.52055 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_9">
+    <path d="M 52.642189 84.387856 
+L 52.642189 74.03389 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_10">
+    <path d="M 52.642189 127.874516 
+L 52.642189 216.721411 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_11">
+    <path d="M 52.642189 94.741823 
+L 52.642189 117.52055 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_9">
+    <path d="M 50.916528 84.387856 
+L 54.36785 84.387856 
+L 52.642189 94.741823 
+z
+" clip-path="url(#fig1-pe2141822c8)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-patch_10">
+    <path d="M 50.916528 127.874516 
+L 54.36785 127.874516 
+L 52.642189 117.52055 
+z
+" clip-path="url(#fig1-pe2141822c8)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-patch_11">
+    <path d="M 80.676385 256.745526 
+L 78.950028 253.756995 
+L 88.7788 250.072191 
+z
+" clip-path="url(#fig1-pe2141822c8)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig1-line2d_12">
+    <path d="M 88.7788 250.072191 
+L 268.09066 146.490788 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_13">
+    <path d="M 324.305677 114.017586 
+L 277.056253 141.311718 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-line2d_14">
+    <path d="M 79.813207 255.251261 
+L 70.847614 260.430331 
+" clip-path="url(#fig1-pe2141822c8)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig1-patch_12">
+    <path d="M 276.193075 139.817453 
+L 277.919431 142.805984 
+L 268.09066 146.490788 
+z
+" clip-path="url(#fig1-pe2141822c8)" style="fill: #2563eb"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="fig1-pe2141822c8">
+   <rect x="0" y="0" width="360" height="357.536526"/>
+  </clipPath>
+ </defs>
+</svg><div class="cad-figcap">轴键槽 <span id="cadCapK1"></span></div></div></div>
+<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 360 357.536526" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ 
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="fig2-figure_1">
+  <g id="fig2-patch_1">
+   <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="fig2-axes_1">
+   <g id="fig2-patch_2">
+    <path d="M 0 357.536526 
+L 360 357.536526 
+L 360 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="fig2-PathCollection_1"/>
+   <g id="fig2-LineCollection_1">
+    <path d="M 186.074293 342.098098 
+L 231.711497 296.460894 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 298.81554 229.356851 
+L 344.459869 183.712522 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 169.956203 339.619934 
+L 208.551048 301.025089 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 303.383862 206.192274 
+L 341.981705 167.594432 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 155.289613 335.690269 
+L 190.106078 300.873804 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 303.244274 187.735608 
+L 338.05204 152.927842 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 141.831091 330.552537 
+L 174.295127 298.088501 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 300.450283 171.933345 
+L 332.914308 139.469319 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 129.424538 324.362835 
+L 160.370431 293.416942 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 295.773295 158.014078 
+L 326.724606 127.062767 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 117.968498 317.22262 
+L 147.957868 287.233251 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 289.590381 145.600738 
+L 319.584392 115.606727 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 107.399138 309.195726 
+L 136.856581 279.738283 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 282.099815 134.495049 
+L 311.557497 105.037367 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 97.68115 300.31746 
+L 126.965994 271.032615 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 273.398534 124.600076 
+L 302.679231 95.319379 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 88.803226 290.599129 
+L 118.256475 261.14588 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 263.512979 115.889376 
+L 292.9609 86.441455 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 80.776683 280.029417 
+L 110.76098 250.045121 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 252.408525 108.397575 
+L 282.391189 78.414912 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 73.636841 268.573006 
+L 104.582153 237.627694 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 239.984123 102.225723 
+L 270.934777 71.275069 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 67.447543 256.166049 
+L 99.919022 223.69457 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 226.049685 97.563907 
+L 258.52782 65.085772 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 62.310266 242.707071 
+L 97.132326 207.885011 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 225.031602 79.985736 
+L 245.068842 59.948495 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 58.381135 228.039948 
+L 96.967209 189.453874 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 207.878468 78.542615 
+L 230.401719 56.019364 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 55.903628 211.9212 
+L 101.550661 166.274167 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 168.619061 99.205768 
+L 175.332562 92.492267 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 189.282214 78.542615 
+L 214.282971 53.541857 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 295.703435 306.853974 
+L 309.215745 293.341663 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 249.957241 334.003914 
+L 336.365685 247.595469 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 224.644456 340.720444 
+L 343.082215 222.282685 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 204.043229 342.725416 
+L 345.087188 201.681458 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 55.277179 193.951395 
+L 196.313166 52.915408 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 57.283497 173.348822 
+L 175.710593 54.921726 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 64.002839 148.033226 
+L 150.394997 61.641068 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+    <path d="M 91.202494 102.237316 
+L 104.599088 88.840723 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000"/>
+   </g>
+   <g id="fig2-patch_3">
+    <path d="M 175.332562 97.306809 
+C 124.519744 109.869043 91.07422 158.378085 97.401741 210.336863 
+C 103.729262 262.295641 147.83944 301.359977 200.182082 301.359977 
+C 252.524723 301.359977 296.634901 262.295641 302.962422 210.336863 
+C 309.289943 158.378085 275.844419 109.869043 225.031602 97.306809 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig2-line2d_1">
+    <path d="M 175.332562 97.306809 
+L 175.332562 80.199249 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_4">
+    <path d="M 176.989196 78.542615 
+C 176.54983 78.542615 176.128458 78.717152 175.817779 79.027832 
+C 175.5071 79.338511 175.332562 79.759883 175.332562 80.199249 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="k2-b-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="164.785101" y="37.22879" transform="rotate(-0 164.785101 37.22879)">14</text>
+   </g>
+   <g id="k2-b-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="186.307601" y="37.22879" transform="rotate(-0 186.307601 37.22879)">±0.0215</text>
+   </g>
+   <g id="k2-b-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="186.307601" y="24.90757" transform="rotate(-0 186.307601 24.90757)">+</text>
+   </g>
+   <g id="k2-b-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="194.830986" y="24.90757" transform="rotate(-0 194.830986 24.90757)">0.0215</text>
+   </g>
+   <g id="k2-b-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="186.307601" y="37.22879" transform="rotate(-0 186.307601 37.22879)">-</text>
+   </g>
+   <g id="k2-b-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1d4ed8" x="194.830986" y="37.22879" transform="rotate(-0 194.830986 37.22879)">0.0215</text>
+   </g>
+   <g id="k2-t-main" data-role="main">
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start" x="37.330493" y="206.959061" transform="rotate(-90 37.330493 206.959061)">3.8</text>
+   </g>
+   <g id="k2-t-pm" data-role="pm">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="37.330493" y="174.270456" transform="rotate(-90 37.330493 174.270456)">±0.2</text>
+   </g>
+   <g id="k2-t-up-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="25.009273" y="174.270456" transform="rotate(-90 25.009273 174.270456)">+</text>
+   </g>
+   <g id="k2-t-up-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="25.009273" y="165.747071" transform="rotate(-90 25.009273 165.747071)">0.2</text>
+   </g>
+   <g id="k2-t-low-s" data-role="sign">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="37.330493" y="174.270456" transform="rotate(-90 37.330493 174.270456)"> </text>
+   </g>
+   <g id="k2-t-low-v" data-role="val">
+    <text style="font-size: 10.146887px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #dc2626" x="37.330493" y="165.747071" transform="rotate(-90 37.330493 165.747071)">0</text>
+   </g>
+   <g id="k2-dia-main" data-role="main">
+    <g id="fig2-patch_5">
+     <path d="M 201.862299 198.391042 
+L 257.192336 166.429058 
+L 248.200904 150.863808 
+L 192.870867 182.825792 
+z
+" style="fill: #ffffff"/>
+    </g>
+    <text style="font-size: 14.495553px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="226.915367" y="177.888449" transform="rotate(-30.013335 226.915367 177.888449)">d = Φ50</text>
+   </g>
+   <g id="fig2-line2d_2">
+    <path d="M 225.031602 97.306809 
+L 225.031602 80.199249 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_6">
+    <path d="M 225.031602 80.199249 
+C 225.031602 79.284315 224.289901 78.542615 223.374967 78.542615 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="fig2-PathCollection_2"/>
+   <g id="fig2-LineCollection_2">
+    <path d="M 200.182082 83.926677 
+L 200.182082 149.674366 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 162.823903 
+L 200.182082 175.973441 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 189.122978 
+L 200.182082 254.870667 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 268.020204 
+L 200.182082 281.169742 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 200.182082 294.31928 
+L 200.182082 311.713943 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig2-PathCollection_3"/>
+   <g id="fig2-LineCollection_3">
+    <path d="M 314.075715 197.82031 
+L 248.328027 197.82031 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 235.178489 197.82031 
+L 222.028951 197.82031 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 208.879414 197.82031 
+L 143.131725 197.82031 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 129.982188 197.82031 
+L 116.83265 197.82031 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+    <path d="M 103.683113 197.82031 
+L 86.288449 197.82031 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff0000"/>
+   </g>
+   <g id="fig2-line2d_3">
+    <path d="M 176.989196 78.542615 
+L 223.374967 78.542615 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #000000; stroke-width: 1.4; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-PathCollection_4"/>
+   <g id="fig2-LineCollection_4">
+    <path d="M 225.031602 97.306809 
+L 221.9632 96.597552 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 221.9632 96.597552 
+L 218.879683 95.982862 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 218.879683 95.982862 
+L 215.78321 95.46274 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 215.78321 95.46274 
+L 215.281434 95.394019 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 212.819463 95.056842 
+L 212.67594 95.037185 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 212.67594 95.037185 
+L 209.560033 94.706199 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 209.560033 94.706199 
+L 206.437648 94.469779 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 206.437648 94.469779 
+L 203.310945 94.327928 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 203.310945 94.327928 
+L 202.910725 94.32188 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 200.426057 94.284331 
+L 200.182082 94.280644 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 200.182082 94.280644 
+L 197.053219 94.327928 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 197.053219 94.327928 
+L 193.926515 94.469779 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 193.926515 94.469779 
+L 190.80413 94.706199 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 190.80413 94.706199 
+L 190.500496 94.738452 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 188.029446 95.000939 
+L 187.688223 95.037185 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 187.688223 95.037185 
+L 184.580954 95.46274 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 184.580954 95.46274 
+L 181.484481 95.982862 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 181.484481 95.982862 
+L 178.400963 96.597552 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 178.400963 96.597552 
+L 178.229144 96.637268 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+    <path d="M 175.80803 97.196905 
+L 175.332562 97.306809 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #ff00ff"/>
+   </g>
+   <g id="fig2-line2d_4">
+    <path d="M 225.031602 94.718318 
+L 225.031602 38.384983 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_5">
+    <path d="M 175.332562 94.718318 
+L 175.332562 38.384983 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_6">
+    <path d="M 214.677635 43.561966 
+L 185.686528 43.561966 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_7">
+    <path d="M 214.677635 41.836305 
+L 214.677635 45.287627 
+L 225.031602 43.561966 
+z
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-patch_8">
+    <path d="M 185.686528 41.836305 
+L 185.686528 45.287627 
+L 175.332562 43.561966 
+z
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-line2d_7">
+    <path d="M 197.59359 78.542615 
+L 38.486686 78.542615 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_8">
+    <path d="M 197.59359 94.280644 
+L 38.486686 94.280644 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_9">
+    <path d="M 43.663669 68.188648 
+L 43.663669 57.834681 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_10">
+    <path d="M 43.663669 104.634611 
+L 43.663669 216.260232 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-line2d_11">
+    <path d="M 43.663669 78.542615 
+L 43.663669 94.280644 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_9">
+    <path d="M 41.938008 68.188648 
+L 45.38933 68.188648 
+L 43.663669 78.542615 
+z
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-patch_10">
+    <path d="M 41.938008 104.634611 
+L 45.38933 104.634611 
+L 43.663669 94.280644 
+z
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-line2d_12">
+    <path d="M 280.872419 151.208679 
+L 119.491745 244.431941 
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+   </g>
+   <g id="fig2-patch_11">
+    <path d="M 280.00924 149.714414 
+L 281.735597 152.702945 
+L 289.838012 146.029609 
+z
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: #2563eb"/>
+   </g>
+   <g id="fig2-patch_12">
+    <path d="M 118.628566 242.937676 
+L 120.354923 245.926207 
+L 110.526152 249.611012 
+z
+" clip-path="url(#fig2-pb7bea64d98)" style="fill: #2563eb"/>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="fig2-pb7bea64d98">
+   <rect x="0" y="0" width="360" height="357.536526"/>
+  </clipPath>
+ </defs>
+</svg><div class="cad-figcap">轮毂键槽 <span id="cadCapK2"></span></div></div></div>
+<!--CAD-FIGS-END-->
+        </div>
+        <div class="dwg-note" id="cadKwNote"></div>
+        <p class="dwg-note" id="cadKwHint" style="display:none">请输入 6~500mm（毫米） 范围内的有效轴径。</p>
+        <p class="cad-legend" id="legend"></p>
+      </div>
+      <div class="action-row kw-fig-actions">
+        <button type="button" class="act-btn primary" id="btnCopy">复制全部数据</button>
+        <button type="button" class="act-btn" id="btnPrint">打印 / PDF</button>
+      </div>
+    </div>
 
     <div class="kw-detail" id="detailArea"></div>
   </div>
@@ -365,6 +1146,7 @@ var NOTES=[
 var TIPS='<b>易错提示</b>：① 槽深公差方向不能标反——轴槽 d−t₁ 只许做小、毂槽 d+t₂ 只许做大；② 对称度基准必须是轴线（中心线），不能标在端面；③ 键槽尺寸不可标在虚线（不可见轮廓）上。';
 
 var curFit='normal';
+var LAST=null;            // 最近一次有效查询结果（复制/打印按钮读它，所以这两个按钮只需要挂一次事件）
 
 /* ============ 查询逻辑 ============ */
 function findKeyway(d){
@@ -395,7 +1177,9 @@ function symTol(b){
 }
 
 /* ============ 渲染 ============ */
-/* 断面积图放右列；无效输入时给一个占位块，避免右列塌掉 */
+/* 断面图放右列：现在是**静态**的 CAD 原图（几何不动、尺寸文字动态），
+   由 gen_site_demo.py 注入到 #cadKwFigs 里；轴径无效时用 setFigState(false) 收起并给提示。
+   下面这个占位块 + pickShotDia/SHOT_ROWS 是旧方案（按档位换烘焙图）留下的，保留备查、已不再使用。 */
 var FIG_PLACEHOLDER='<div class="dwg-block"><div class="dwg-head"><span>键槽断面图</span>'
   +'<span class="dwg-tag">GB/T 1095 · CAD 渲染</span></div>'
   +'<div class="dwg-fig" style="padding:34px 14px;text-align:center;color:#94a3b8;font-size:12.5px">'
@@ -433,12 +1217,11 @@ function fitToggleHTML(){
 function render(){
   var core=document.getElementById('coreArea');
   var det=document.getElementById('detailArea');
-  var fig=document.getElementById('dwgArea');
   var d=parseFloat(document.getElementById('diaInput').value);
   function fail(msg){
     core.innerHTML='<p class="hint" style="color:#dc2626;margin-top:12px">'+msg+'</p>';
     det.innerHTML='';
-    fig.innerHTML=FIG_PLACEHOLDER;
+    setFigState(false);
     renderRefTable(null);
   }
   if(isNaN(d)||d<6||d>500){ fail('请输入 6~500mm（毫米） 范围内的轴径。'); return; }
@@ -486,23 +1269,47 @@ function render(){
   // 因页面底部新增的「全档位速查表」已覆盖同样字段并会高亮当前档位，故移除避免重复。
   det.innerHTML=dh;
 
-  // ---- 右列：键槽断面图（CAD 渲染，按轴径档位切换）+ 操作按钮 ----
-  // 公差按 GB/T 4458.4 排版：下偏差与基本尺寸同底线、上下偏差小数点对齐、字号小一号
-  fig.innerHTML = '<div class="dwg-block">'
-        +   '<div class="dwg-head"><span>键槽断面图</span>'
-        +   '<span class="dwg-tag">GB/T 1095 · CAD 渲染</span></div>'
-        +   '<div class="dwg-fig"><img id="dwgImg" src="shots/d' + pickShotDia(d) + '.svg" alt="键槽断面图" loading="lazy"></div>'
-        +   '<div class="dwg-note">示意图 · 按 GB/T 1095 档位 d=' + row.d1 + '~' + row.d2 + 'mm（毫米） 渲染，图中轴径用档位代表值 Φ' + pickShotDia(d) + ' 表示；键槽 ' + row.b + '×' + row.h + '（宽×高），槽深 t₁=' + row.t1 + 'mm（毫米）</div>'
-        + '</div>'
-        + '<div class="action-row kw-fig-actions">'
-        +   '<button class="act-btn primary" id="btnCopy">复制全部数据</button>'
-        +   '<button class="act-btn" id="btnPrint">打印 / PDF</button>'
-        + '</div>';
+  // ---- 右列：键槽断面图（静态图 + 动态尺寸）----
+  // 图本身不动（CAD 原图几何，页面加载时就在 DOM 里），这里只做三件事：
+  //   ① 恢复图块显示 ② 更新图下那行说明 ③ 把当前尺寸/公差写进图上预留的槽位
+  // 旧的「按档位换烘焙图」方案（<img src="shots/dNN.svg">）已停用，随即换图会闪、且档位≠实际轴径。
+  setFigState(true);
+  document.getElementById('cadKwNote').innerHTML =
+      '轴径 <b>Φ' + d + '</b>（GB/T 1095 档位 ' + row.d1 + '~' + row.d2 + 'mm（毫米））· 键 <b>'
+      + row.b + '×' + row.h + '</b> · ' + fit.name + '（轴槽 ' + fit.shaft + ' / 毂槽 ' + fit.hub
+      + '）· 槽深 ① <b>' + row.t1 + '</b> ② <b>' + row.t2 + '</b> mm（毫米）';
+  cadSync(d, row, fit);
 
+  LAST = {row:row, d:d, fit:fit, sTv:sTv, hTv:hTv};   // 供底部的复制/打印按钮读当前结果
   renderRefTable(row);
+}
 
-  document.getElementById('btnCopy').addEventListener('click',function(){copyData(row,d,fit,sTv,hTv);});
-  document.getElementById('btnPrint').addEventListener('click',function(){window.print();});
+/* 图块显示/隐藏：轴径无效时把图收起来、给一行提示，避免右侧塌掉 */
+function setFigState(ok){
+  var figs=document.getElementById('cadKwFigs');
+  var hint=document.getElementById('cadKwHint');
+  var note=document.getElementById('cadKwNote');
+  if(figs) figs.style.display = ok ? '' : 'none';
+  if(hint) hint.style.display = ok ? 'none' : '';
+  if(!ok && note) note.textContent='';
+}
+
+/* 把当前尺寸/公差写进断面图的槽位（图不动，只改文字） */
+function cadSync(d, row, fit){
+  var DBG=window.CAD_DEBUG;
+  if(!DBG) return;
+  var tol=KEY_TOL[row.b];
+  var s=getTolValues(tol[fit.shaft]);      // 轴槽键宽公差带
+  var h=getTolValues(tol[fit.hub]);        // 毂槽键宽公差带
+  var P=DBG.params;
+  P.d=d; P.b=row.b;
+  P.k1t=row.t1;  P.k2t=row.t2;
+  P.k1bES=s.upper; P.k1bEI=s.lower;
+  P.k2bES=h.upper; P.k2bEI=h.lower;
+  /* 图上标的是 t₁/t₂ 本身，所以槽深偏差写成 +t/0 —— 与左侧 d−t₁ 的 0/−t、d+t₂ 的 +t/0 是同一件事 */
+  P.k1tES=row.t1tol; P.k1tEI=0;
+  P.k2tES=row.t2tol; P.k2tEI=0;
+  DBG.paint();
 }
 
 function infoItem(label,value,sub){
@@ -597,11 +1404,82 @@ document.getElementById('coreArea').addEventListener('click',function(e){
   curFit=btn.dataset.fit;
   render();
 });
+/* 复制/打印：按钮在静态 HTML 里，只挂一次；（图下面那行说明同理，每次只改文字） */
+document.getElementById('btnCopy').addEventListener('click',function(){
+  if(LAST) copyData(LAST.row, LAST.d, LAST.fit, LAST.sTv, LAST.hTv);
+});
+document.getElementById('btnPrint').addEventListener('click',function(){ window.print(); });
 document.getElementById('noteList').innerHTML=NOTES.map(function(n){return '<li>'+n+'</li>';}).join('');
 document.getElementById('tipBox').innerHTML=TIPS;
 render();
+/* cad-live.js（断面图运行时）是在本段脚本之后注入的，它要等 DOMContentLoaded 才算初始化完。
+   所以 load 时再按当前输入刷新一次图，保证一进页面上面的数字就和左边结果一致。 */
+window.addEventListener('load', function(){ render(); });
 </script>
 <script src="/js/nav.js" defer></script>
 <script src="/js/pwa.js" defer></script>
+<!--CAD-SCRIPTS-START-->
+<script>window.CAD={"id":"site-keyway","title":"键槽断面 · 动态尺寸","subtitle":"GB/T 1095 平键键槽 ｜ ① 轴键槽 ② 轮毂键槽，尺寸由页面实时填","figures":[{"key":"k1","title":"轴键槽","slots":[{"slot":"k1-b","kind":"stack","label":"键宽","main":{"fmt":"int","prefix":"","suffix":"","from":"b"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k1bES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k1bEI"}},{"slot":"k1-t","kind":"stack","label":"轴槽深","main":{"fmt":"trim","prefix":"","suffix":"","from":"k1t"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k1tES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k1tEI"}},{"slot":"k1-dia","kind":"plain","label":"轴径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"}}]},{"key":"k2","title":"轮毂键槽","slots":[{"slot":"k2-b","kind":"stack","label":"键宽","main":{"fmt":"int","prefix":"","suffix":"","from":"b"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k2bES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k2bEI"}},{"slot":"k2-t","kind":"stack","label":"毂槽深","main":{"fmt":"trim","prefix":"","suffix":"","from":"k2t"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"k2tES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"k2tEI"}},{"slot":"k2-dia","kind":"plain","label":"轴径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"}}]}],"legend":[{"color":"#000000","text":"零件轮廓 / 剖面线 / 中心线"},{"color":"#2563eb","text":"尺寸线 · 尺寸界线 · 箭头"},{"color":"#dc2626","text":"正偏差"},{"color":"#1d4ed8","text":"负偏差"}],"initial":{"d":50,"b":14,"k1t":5.5,"k2t":3.8,"k1bES":0.0,"k1bEI":-0.043,"k2bES":0.0215,"k2bEI":-0.0215,"k1tES":0.2,"k1tEI":0.0,"k2tES":0.2,"k2tEI":0.0},"colors":{"pos":"#DC2626","neg":"#1D4ED8","zero":"#DC2626"}};</script>
+<script src="/js/cad-live.js"></script>
+<script>
+/* ===== 图纸放大（两个页面共用）=====
+   点右上角放大镜、或点图任意处 → 全屏看；
+   做法是把 `.cad-figwrap` **整个节点搬进遮罩**（不是克隆），所以放大期间
+   页面上的联动照旧 —— 改参数，放大图里的数字一样跟着变。关掉再搬回原位。 */
+(function () {
+  'use strict';
+  var figs = document.querySelectorAll('.cad-figwrap');
+  if (!figs.length) { return; }
+  var mask = document.createElement('div');
+  mask.className = 'cad-zoom-mask';
+  mask.innerHTML = '<div class="cad-zoom-panel"><div class="cad-zoom-body"></div></div>'
+    + '<button type="button" class="cad-zoom-close" aria-label="关闭放大视图">\u2715</button>';
+  document.body.appendChild(mask);
+  var body = mask.querySelector('.cad-zoom-body');
+  var anchor = null;                       // 记住搬走前的位置，关掉好放回去
+
+  function openFig(wrap) {
+    if (mask.classList.contains('open')) { return; }
+    anchor = {node: wrap, parent: wrap.parentNode, next: wrap.nextSibling};
+    body.appendChild(wrap);
+    mask.classList.add('open');
+    document.body.classList.add('cad-zoom-open');
+  }
+  function closeFig() {
+    if (!anchor) { return; }
+    if (anchor.next && anchor.next.parentNode === anchor.parent) {
+      anchor.parent.insertBefore(anchor.node, anchor.next);
+    } else {
+      anchor.parent.appendChild(anchor.node);
+    }
+    anchor = null;
+    mask.classList.remove('open');
+    document.body.classList.remove('cad-zoom-open');
+  }
+  mask.querySelector('.cad-zoom-close').addEventListener('click', closeFig);
+  mask.addEventListener('click', function (e) {
+    if (e.target === mask || e.target.classList.contains('cad-zoom-panel')) { closeFig(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.keyCode === 27) { closeFig(); }
+  });
+  Array.prototype.forEach.call(figs, function (wrap) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cad-zoom';
+    b.title = '放大查看';
+    b.setAttribute('aria-label', '放大查看图纸');
+    b.innerHTML = '<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">'
+      + '<circle cx="6.6" cy="6.6" r="4.7" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+      + '<line x1="10.3" y1="10.3" x2="14.2" y2="14.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+      + '<line x1="4.5" y1="6.6" x2="8.7" y2="6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>'
+      + '<line x1="6.6" y1="4.5" x2="6.6" y2="8.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+    wrap.appendChild(b);
+    wrap.addEventListener('click', function () { openFig(wrap); });
+    b.addEventListener('click', function (e) { e.stopPropagation(); openFig(wrap); });
+  });
+})();
+</script>
+<!--CAD-SCRIPTS-END-->
 </body>
 </html>

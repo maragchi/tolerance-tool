@@ -208,7 +208,7 @@ table.data-table th, table.data-table td {
   border: 1px solid #e5e7eb;
   text-align: center;
 }
-table.data-table th { background: #f9fafb; color: #666; font-weight: 500; }
+table.data-table th { background: #e9eef5; color: #475569; font-weight: 600; border-bottom: 1px solid #cbd5e1; }
 table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1e40af; }
 
 /* Footer */
@@ -258,11 +258,14 @@ table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1
   html.has-drawer .site-header .site-name { font-size: 15px; }
   html.has-drawer .nav-toggle {
     display: inline-flex !important; align-items: center; justify-content: center;
-    width: 42px !important; min-width: 42px; height: 34px; padding: 0; margin-left: auto;
-    background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4);
-    border-radius: 9px; color: #fff; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    width: 42px !important; min-width: 42px; height: 36px; padding: 0; margin-left: auto;
+    /* 实心白底 + 深蓝图标/描边：手机上蓝底顶栏、白底顶栏（/fit/ 曾经是白底）都看得见；
+       半透明白那种做法在浅色顶栏上等于隐身（用户反馈"完全看不到"）。 */
+    background: #fff !important; border: 1.5px solid #1d4ed8; color: #1d4ed8;
+    border-radius: 9px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 1px 3px rgba(15,23,42,.18);
   }
-  html.has-drawer .nav-toggle:active { background: rgba(255,255,255,.3); }
+  html.has-drawer .nav-toggle:active { background: #eff6ff !important; }
   html.has-drawer .nav-toggle svg { display: block; }
   html.has-drawer .nav-mask {
     display: block; position: fixed; inset: 0; z-index: 55;
@@ -280,8 +283,9 @@ table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1
   }
   html.has-drawer .site-header .site-nav.open { transform: none; }
   html.has-drawer .site-header .site-nav a {
-    display: block; width: auto; padding: 14px 22px; font-size: 15px; font-weight: 400;
-    color: #334155 !important; border-bottom: 1px solid #f1f5f9; background: transparent !important;
+    display: block !important; width: auto !important;
+    padding: 14px 22px !important; font-size: 15px !important; line-height: 1.5 !important; font-weight: 400;
+    color: #334155 !important; border-bottom: 1px solid #f1f5f9 !important; background: transparent !important;
   }
   html.has-drawer .site-header .site-nav a.active {
     color: #2563eb !important; font-weight: 600; background: #eff6ff !important;

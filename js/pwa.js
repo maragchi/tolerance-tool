@@ -5,9 +5,11 @@
  */
 (function () {
   var KEY_HIDE = 'pwa_bar_hide_until';
+  var KEY_TRIED = 'pwa_tried';                 // 试过一次添加就不再自动弹（免得反复弹窗）
   var isStandalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
     window.navigator.standalone === true;
   var deferredPrompt = null;
+  var ua = navigator.userAgent;
 
   /* ---------- 注册 Service Worker ---------- */
   if ('serviceWorker' in navigator) {
@@ -96,6 +98,7 @@
 
   /* ---------- 安装 ---------- */
   function doInstall() {
+    try { localStorage.setItem(KEY_TRIED, '1'); } catch (e) {}
     if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(function (r) {
@@ -108,9 +111,9 @@
   }
 
   function platform() {
-    var ua = navigator.userAgent;
-    if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';
     if (/MicroMessenger/i.test(ua)) return 'wechat';
+    if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';
+    if (/MiuiBrowser|XiaoMi|HMSCore|HeyTapBrowser|OppoBrowser|VivoBrowser|Quark|UCBrowser|QQBrowser/i.test(ua)) return 'cn-android';
     if (/Android/i.test(ua)) return 'android';
     return 'desktop';
   }
@@ -119,6 +122,7 @@
     injectStyle();
     var p = platform();
     var steps;
+    var tip = '';
     if (p === 'ios') {
       steps = '<li>点屏幕底部中间的 <b>分享按钮</b>（方框带向上箭头 ⬆️）</li>' +
         '<li>在弹出的菜单里向下滑，选 <b>「添加到主屏幕」</b></li>' +
@@ -126,8 +130,15 @@
     } else if (p === 'wechat') {
       steps = '<li>点右上角 <b>「⋯」</b> 菜单</li>' +
         '<li>选择 <b>「在浏览器打开」</b></li>' +
-        '<li>打开后再点浏览器菜单里的 <b>「添加到主屏幕」</b></li>' +
-        '<div class="pwa-tip">微信内置浏览器不支持直接添加，需要先在浏览器中打开。</div>';
+        '<li>打开后再点浏览器菜单里的 <b>「添加到桌面」</b></li>';
+      tip = '微信内置浏览器不支持直接添加，需要先「在浏览器打开」。';
+    } else if (p === 'cn-android') {
+      /* 小米/华为/OPPO/vivo/QQ/UC 这些自带浏览器大多数不支持 PWA 安装，
+         菜单里一般只有「添加到桌面 / 收藏」。最省事的还是换 Chrome。 */
+      steps = '<li>在当前浏览器里点 <b>右上角或右下角的 ☰ / ⋮ 菜单</b></li>' +
+        '<li>找 <b>「添加到桌面」</b>（有些版本叫「收藏」→ 再选「桌面」）</li>' +
+        '<li>如果找不到这一项：用 <b>Chrome 浏览器</b>打开 gongcha.cc，<br>点 Chrome 的 <b>「⋮」→ 添加到主屏幕 / 安装应用</b>，<br>这样装出来的是独立应用（无地址栏），也可以加桌面</li>';
+      tip = '手机自带浏览器多半只能加个"网页快捷方式"；用 Chrome 才能装成独立应用。';
     } else if (p === 'android') {
       steps = '<li>点浏览器右上角的 <b>「⋮」</b> 菜单</li>' +
         '<li>选择 <b>「添加到主屏幕」</b> 或 <b>「安装应用」</b></li>' +
@@ -143,6 +154,7 @@
       '<div class="pwa-modal-inner" style="position:relative">' +
       '<button class="pwa-x" id="pwaMX" aria-label="关闭">×</button>' +
       '<h3>把「公差工具站」放到桌面</h3>' +
+      (tip ? '<div class="pwa-tip">' + tip + '</div>' : '') +
       '<ol>' + steps + '</ol>' +
       '<button class="pwa-ok" id="pwaMOK">知道了</button>' +
       '</div>';
@@ -201,11 +213,14 @@
     host.appendChild(b);
   }
 
-  // 没有 beforeinstallprompt 的浏览器（iOS/Safari/微信）：延迟显示引导条
+  // 没有 beforeinstallprompt 的浏览器（iOS/Safari/微信/国产浏览器）：延迟显示引导条
+  // —— 只弹一次：用户点过「添加」或关过之后就不再自动出现（否则手机上会连续弹好几个入口）
   window.addEventListener('load', function () {
     injectInstallEntry();
     setTimeout(function () {
-      if (!deferredPrompt && !isStandalone) showBar();
+      if (deferredPrompt || isStandalone) return;
+      try { if (localStorage.getItem(KEY_TRIED)) return; } catch (e) {}
+      showBar();
     }, 3500);
   });
 
