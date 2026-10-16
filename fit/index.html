@@ -201,8 +201,17 @@ h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
 /* ---- 单要素查询：标签与输入框同一行（省纵向空间；common.css 的 .input-group 是 column）---- */
 .ig-row{flex-direction:row;align-items:center;gap:10px}
 .ig-row label{margin:0;white-space:nowrap;flex:0 0 auto}
-.ig-row .picker{flex:1 1 auto;min-width:0}
-.ig-row .code-select{flex:1 1 auto;min-width:0}
+.ig-row .picker{flex:1 1 auto;min-width:0;display:flex;height:44px}
+.ig-row .picker input{height:100%}
+/* 两个框高度一致（上下对齐）；右侧三角也统一成"灰底分段 + ▼"
+   —— 原来数字框是自定义按钮、代号框是浏览器原生箭头，样式不一样（用户反馈） */
+.ig-row .code-select{
+  flex:1 1 auto;min-width:0;height:44px;
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='44'><rect width='40' height='44' fill='%23f1f5f9'/><line x1='0.5' y1='0' x2='0.5' y2='44' stroke='%23cbd5e1'/><path d='M14.5 19.4l5.5 6.2 5.5-6.2z' fill='%23475569'/></svg>");
+  background-repeat:no-repeat;background-position:right center;background-size:40px 100%;
+  padding-right:48px;border-radius:6px 0 0 6px;
+}
 /* 单要素只显示一张断面图（孔或轴），排在数字之前；图不用太大，留出视觉焦点。
    注意：克隆出来的是 .cad-figbox 本身（外面没有 .cad-figs 网格容器），所以要对 .cad-figbox 设上限 */
 .cad-single{margin:14px 0 2px}
@@ -339,108 +348,105 @@ z
    </g>
    <g id="fig1-PathCollection_1"/>
    <g id="fig1-LineCollection_1">
-    <path d="M 191.860464 111.576378 
-L 284.647473 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 171.029186 111.576378 
-L 263.816195 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 150.197908 111.576378 
-L 242.984917 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 129.366631 111.576378 
-L 222.15364 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 108.535353 111.576378 
-L 201.322362 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 87.704076 111.576378 
-L 180.491085 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 93.572288 
-L 159.659807 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 72.74101 
-L 138.828529 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 51.909733 
-L 117.997252 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 31.078455 
-L 97.165974 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 275.185574 111.576378 
-L 295.824465 90.937487 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 254.354297 111.576378 
-L 295.824465 70.10621 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 233.523019 111.576378 
-L 295.824465 49.274932 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 212.691741 111.576378 
-L 295.824465 28.443654 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 200.406374 436.33091 
-L 293.193383 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 179.575097 436.33091 
-L 272.362106 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 158.743819 436.33091 
-L 251.530828 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 137.912542 436.33091 
-L 230.699551 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 117.081264 436.33091 
-L 209.868273 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 96.249986 436.33091 
-L 189.036995 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 426.87273 
-L 168.205718 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 406.041452 
-L 147.37444 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 385.210175 
-L 126.543162 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 364.378897 
-L 105.711885 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 84.876888 343.547619 
-L 84.880607 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 283.731485 436.33091 
-L 295.824465 424.237929 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 262.900207 436.33091 
-L 295.824465 403.406652 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 242.06893 436.33091 
-L 295.824465 382.575374 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 221.237652 436.33091 
-L 295.824465 361.744096 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 191.855764 111.576378 
+L 284.642773 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 171.024486 111.576378 
+L 263.811495 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 150.193209 111.576378 
+L 242.980218 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 129.361931 111.576378 
+L 222.14894 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 108.530653 111.576378 
+L 201.317662 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 87.699376 111.576378 
+L 180.486385 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 93.567588 
+L 159.655107 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 72.736311 
+L 138.823829 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 51.905033 
+L 117.992552 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 31.073755 
+L 97.161274 18.789369 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 275.180874 111.576378 
+L 295.824465 90.932787 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 254.349597 111.576378 
+L 295.824465 70.10151 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 233.518319 111.576378 
+L 295.824465 49.270232 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 212.687042 111.576378 
+L 295.824465 28.438954 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 200.401675 436.33091 
+L 293.188684 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 179.570397 436.33091 
+L 272.357406 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 158.739119 436.33091 
+L 251.526128 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 137.907842 436.33091 
+L 230.694851 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 117.076564 436.33091 
+L 209.863573 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 96.245287 436.33091 
+L 189.032295 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 426.86803 
+L 168.201018 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 406.036753 
+L 147.36974 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 385.205475 
+L 126.538463 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 84.876888 364.374197 
+L 105.707185 343.543901 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 283.726785 436.33091 
+L 295.824465 424.233229 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 262.895508 436.33091 
+L 295.824465 403.401952 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 242.06423 436.33091 
+L 295.824465 382.570674 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 221.232952 436.33091 
+L 295.824465 361.739397 
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig1-line2d_1">
     <path d="M 84.876888 111.576378 
 L 295.824465 111.576378 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_2">
     <path d="M 295.824465 343.543901 
 L 84.876888 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_3">
     <path d="M 84.876888 18.789369 
 L 84.876888 436.33091 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="hole-dia-main" data-role="main">
     <text style="font-size: 17.397564px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1f2937" x="40.639619" y="303.961373" transform="rotate(-90 40.639619 303.961373)">d = Φ50</text>
@@ -463,56 +469,56 @@ L 84.876888 436.33091
    <g id="fig1-line2d_4">
     <path d="M 295.824465 436.33091 
 L 295.824465 18.789369 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig1-PathCollection_2"/>
    <g id="fig1-LineCollection_2">
     <path d="M 61.680136 227.560139 
 L 150.059762 227.560139 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #ff0000"/>
     <path d="M 164.7897 227.560139 
 L 179.519637 227.560139 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #ff0000"/>
     <path d="M 194.249575 227.560139 
 L 282.629201 227.560139 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #ff0000"/>
     <path d="M 297.359139 227.560139 
 L 312.089076 227.560139 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #ff0000"/>
    </g>
    <g id="fig1-line2d_5">
     <path d="M 81.977294 111.576378 
 L 41.962897 111.576378 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_6">
     <path d="M 81.977294 343.543901 
 L 41.962897 343.543901 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_7">
     <path d="M 47.762085 123.174754 
 L 47.762085 331.945525 
-" clip-path="url(#fig1-paba2c0c948)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig1-patch_3">
     <path d="M 45.829022 123.174754 
 L 49.695147 123.174754 
 L 47.762085 111.576378 
 z
-" clip-path="url(#fig1-paba2c0c948)" style="fill: #2563eb"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: #2563eb"/>
    </g>
    <g id="fig1-patch_4">
     <path d="M 45.829022 331.945525 
 L 49.695147 331.945525 
 L 47.762085 343.543901 
 z
-" clip-path="url(#fig1-paba2c0c948)" style="fill: #2563eb"/>
+" clip-path="url(#fig1-pd9d364de69)" style="fill: #2563eb"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="fig1-paba2c0c948">
+  <clipPath id="fig1-pd9d364de69">
    <rect x="0" y="0" width="331.2" height="455.120279"/>
   </clipPath>
  </defs>
@@ -543,22 +549,22 @@ z
    <g id="fig2-line2d_1">
     <path d="M 84.876888 328.605583 
 L 84.876888 124.474163 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_2">
     <path d="M 98.79494 110.556112 
 L 295.824467 110.556112 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_3">
     <path d="M 98.79494 342.523634 
 L 295.824467 342.523634 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_4">
     <path d="M 98.79494 342.523634 
 L 84.876888 328.605583 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="shaft-dia-main" data-role="main">
     <text style="font-size: 17.397564px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1f2937" x="40.639619" y="302.462062" transform="rotate(-90 40.639619 302.462062)">d = Φ50</text>
@@ -581,66 +587,66 @@ L 84.876888 328.605583
    <g id="fig2-line2d_5">
     <path d="M 98.79494 110.556112 
 L 84.876888 124.474163 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_6">
     <path d="M 98.79494 110.556112 
 L 98.79494 342.523634 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-PathCollection_1"/>
    <g id="fig2-LineCollection_1">
     <path d="M 61.680136 226.539873 
 L 150.059762 226.539873 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #ff0000"/>
     <path d="M 164.7897 226.539873 
 L 179.519637 226.539873 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #ff0000"/>
     <path d="M 194.249575 226.539873 
 L 282.629201 226.539873 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #ff0000"/>
     <path d="M 297.359139 226.539873 
 L 312.089076 226.539873 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #ff0000"/>
    </g>
    <g id="fig2-PathCollection_2"/>
    <g id="fig2-LineCollection_2">
-    <path d="M 292.091845 123.197829 
-L 295.824467 119.465208 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 295.868929 119.420745 
-L 297.873021 117.416654 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 285.758137 150.362815 
-L 295.824467 140.296485 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 295.974133 140.146819 
-L 302.402101 133.718851 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 284.310734 172.641496 
-L 295.824467 161.127763 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.083723 160.868507 
-L 305.985315 150.966915 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 286.542333 191.241174 
-L 295.824467 181.959041 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.20245 181.581058 
-L 307.405707 170.377801 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 290.485002 208.129783 
-L 295.824467 202.790318 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.340067 202.274718 
-L 304.547519 194.067266 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 295.151277 224.294785 
-L 295.824467 223.621596 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.53258 222.913483 
-L 297.250835 222.195228 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 292.091456 123.19919 
+L 295.824467 119.466179 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 295.868934 119.421712 
+L 297.873242 117.417404 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 285.757954 150.363969 
+L 295.824467 140.297457 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 295.974138 140.147786 
+L 302.402298 133.719626 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 284.310772 172.64243 
+L 295.824467 161.128734 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.083728 160.869473 
+L 305.985445 150.967757 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 286.542488 191.241991 
+L 295.824467 181.960012 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.202455 181.582023 
+L 307.405688 170.37879 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 290.485207 208.130549 
+L 295.824467 202.79129 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.340074 202.275682 
+L 304.547267 194.06849 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 295.151501 224.295533 
+L 295.824467 223.622567 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.532593 222.914441 
+L 297.250795 222.196239 
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig2-patch_3">
     <path d="M 295.824467 110.556112 
@@ -648,47 +654,47 @@ C 290.025279 129.886739 284.226091 149.217366 284.226091 168.547993
 C 284.226091 187.878619 290.025279 207.209246 295.824467 226.539873 
 C 301.623655 245.8705 307.422843 265.201127 307.422843 284.531754 
 C 307.422843 303.862381 301.623655 323.193007 295.824467 342.523634 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linejoin: miter"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linejoin: miter"/>
    </g>
    <g id="fig2-patch_4">
     <path d="M 295.824467 110.556112 
 C 301.623655 129.886739 307.422843 149.217366 307.422843 168.547993 
 C 307.422843 187.878619 301.623655 207.209246 295.824467 226.539873 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #1f2937; stroke-linejoin: miter"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #1f2937; stroke-linejoin: miter"/>
    </g>
    <g id="fig2-line2d_7">
     <path d="M 95.895346 110.556112 
 L 41.962897 110.556112 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_8">
     <path d="M 95.895346 342.523634 
 L 41.962897 342.523634 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_9">
     <path d="M 47.762085 122.154488 
 L 47.762085 330.925258 
-" clip-path="url(#fig2-p66d3416762)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig2-patch_5">
     <path d="M 45.829022 122.154488 
 L 49.695147 122.154488 
 L 47.762085 110.556112 
 z
-" clip-path="url(#fig2-p66d3416762)" style="fill: #2563eb"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: #2563eb"/>
    </g>
    <g id="fig2-patch_6">
     <path d="M 45.829022 330.925258 
 L 49.695147 330.925258 
 L 47.762085 342.523634 
 z
-" clip-path="url(#fig2-p66d3416762)" style="fill: #2563eb"/>
+" clip-path="url(#fig2-pd8350019a1)" style="fill: #2563eb"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="fig2-p66d3416762">
+  <clipPath id="fig2-pd8350019a1">
    <rect x="0" y="0" width="331.2" height="455.120279"/>
   </clipPath>
  </defs>
@@ -1121,12 +1127,12 @@ function singleFigClone(isHole) {
      （data-role 只管"哪一行"，up-v 和 low-v 都是 val，分不开） */
   var ids = clone.querySelectorAll('[id]');
   for (i = 0; i < ids.length; i++) { ids[i].id = 'single-' + ids[i].id; }
-  /* 这是张预览图：不要放大/旋转按钮（克隆不会带走事件监听，留着也是死按钮），
-     加 no-cad-tools 让运行时注入按钮时跳过它 */
-  var wrap = clone.querySelector('.cad-figwrap');
-  if (wrap) { wrap.className += ' no-cad-tools'; }
+  /* 克隆可能带着"原图上的"按钮（克隆不带走事件监听，留着就是死按钮）→ 先清干净，
+     插入 DOM 后再用 window.CAD_TOOLS() 现挂一套活的（含用户要的旋转按钮） */
   var btns = clone.querySelectorAll('.cad-zoom, .cad-rot');
   for (i = 0; i < btns.length; i++) { btns[i].parentNode.removeChild(btns[i]); }
+  var wrap = clone.querySelector('.cad-figwrap');
+  if (wrap) { wrap.removeAttribute('data-cad-tools'); }
   var rec = {node: clone, base: base};
   singleFigClones[key] = rec;
   return rec;
@@ -1151,6 +1157,8 @@ function showSingleFig(dim, code, result) {
     host.appendChild(rec.node);
   }
   host.hidden = false;
+  /* 现挂放大/旋转按钮（克隆是后插入的，运行时初始化时扫不到它） */
+  if (window.CAD_TOOLS) { window.CAD_TOOLS(rec.node.querySelector('.cad-figwrap')); }
   var node = rec.node, base = rec.base;
   /* 图题里的代号跟着走（原图那份由 cadFitSync 按 id 填，克隆里 id 加了前缀，得单独填） */
   var capSpan = node.querySelector('.cad-figcap span');
@@ -1264,14 +1272,13 @@ window.addEventListener('load', function () { querySingle(); queryFit(); });
 <script>window.CAD={"id":"site-fit","title":"轴孔配合 · 动态尺寸","subtitle":"孔 / 轴断面 ｜ 尺寸由页面「配合查询」实时填","figures":[{"key":"hole","title":"孔","slots":[{"slot":"hole-dia","kind":"stack","label":"孔径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"ES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"EI"}}]},{"key":"shaft","title":"轴","slots":[{"slot":"shaft-dia","kind":"stack","label":"轴直径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"es"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"ei"}}]}],"legend":[{"color":"#1F2937","text":"零件轮廓 / 剖面线 / 中心线"},{"color":"#2563eb","text":"尺寸线 · 尺寸界线 · 箭头"},{"color":"#dc2626","text":"正偏差"},{"color":"#1d4ed8","text":"负偏差"}],"initial":{"d":50,"ES":0.025,"EI":0.0,"es":-0.009,"ei":-0.025},"colors":{"pos":"#DC2626","neg":"#1D4ED8","zero":"#DC2626"}};</script>
 <script src="/js/cad-live.js"></script>
 <script>
-/* ===== 图纸放大（两个页面共用）=====
-   点右上角放大镜、或点图任意处 → 全屏看；
+/* ===== 图纸放大 / 旋转（两个页面共用）=====
+   点右上角放大镜、或点图任意处 → 全屏看；**放大后再点一下（点图或点面板）就收起来**，
+   不必去点右上角的 ✕（用户要求"点一下放大，再点一下缩小"）。
    做法是把 `.cad-figwrap` **整个节点搬进遮罩**（不是克隆），所以放大期间
    页面上的联动照旧 —— 改参数，放大图里的数字一样跟着变。关掉再搬回原位。 */
 (function () {
   'use strict';
-  var figs = document.querySelectorAll('.cad-figwrap:not(.no-cad-tools)');
-  if (!figs.length) { return; }
   var mask = document.createElement('div');
   mask.className = 'cad-zoom-mask';
   mask.innerHTML = '<div class="cad-zoom-panel"><div class="cad-zoom-body"></div></div>'
@@ -1298,14 +1305,17 @@ window.addEventListener('load', function () { querySingle(); queryFit(); });
     mask.classList.remove('open');
     document.body.classList.remove('cad-zoom-open');
   }
-  mask.querySelector('.cad-zoom-close').addEventListener('click', closeFig);
-  mask.addEventListener('click', function (e) {
-    if (e.target === mask || e.target.classList.contains('cad-zoom-panel')) { closeFig(); }
-  });
+  /* 点哪儿都收：✕、遮罩、面板、放大后的图本身（"再点一下缩小"） */
+  mask.addEventListener('click', function () { closeFig(); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' || e.keyCode === 27) { closeFig(); }
   });
-  Array.prototype.forEach.call(figs, function (wrap) {
+
+  /* 给一张图配按钮与点击放大。页面后插入的图（例如配合页单要素那张克隆图）也能用：
+     调 window.CAD_TOOLS(wrap) 即可，重复调用不会加出两套按钮。 */
+  function attach(wrap) {
+    if (!wrap || wrap.getAttribute('data-cad-tools') === '1') { return; }
+    wrap.setAttribute('data-cad-tools', '1');
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'cad-zoom';
@@ -1339,7 +1349,10 @@ window.addEventListener('load', function () { querySingle(); queryFit(); });
         r.classList.toggle('on', on);
       });
     }
-  });
+  }
+
+  window.CAD_TOOLS = attach;                       // 页面后插入的图（单要素克隆图）也能补按钮
+  Array.prototype.forEach.call(document.querySelectorAll('.cad-figwrap'), attach);
 })();
 </script>
 <!--CAD-SCRIPTS-END-->
