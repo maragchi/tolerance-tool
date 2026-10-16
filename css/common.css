@@ -19,10 +19,11 @@ body {
   color: #fff;
   margin: -20px -20px 20px -20px;
   padding: 12px 20px;
-  display: flex;
+  /* 三栏等宽网格：品牌在左、页面标题**真正居中**（flex 里居中会被左宽右窄挤偏，用户实测偏右）、
+     导航/☰ 在右。没有 page-name 的页面（首页、气缸选型）中间那栏宽度为 0，不受影响。 */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
   gap: 8px;
 }
 .site-header .site-name {
@@ -35,15 +36,15 @@ body {
 
 /* 顶栏：左「品牌 ›」，中间页面标题（居中），右侧导航（窄屏是 ☰ 抽屉按钮）
    页面标题是从正文里搬上来的（省掉一大块纵向空间），品牌小一号、标题大一号 */
-.site-header .brand { flex: 0 0 auto; display: flex; align-items: center; min-width: 0; }
+.site-header .brand { grid-column: 1; justify-self: start; display: flex; align-items: center; min-width: 0; }
 .site-header .brand .site-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.82); white-space: nowrap; }
 .site-header .brand .site-name::after { content: "›"; margin-left: 7px; color: rgba(255,255,255,.5); font-weight: 400; }
 .site-header .page-name {
-  flex: 1 1 auto; text-align: center; margin: 0;
+  grid-column: 2; justify-self: center; text-align: center; margin: 0;
   font-size: clamp(15px, 4.3vw, 20px); font-weight: 700; color: #fff;
   line-height: 1.25; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.site-nav { display: flex; gap: 16px; flex-wrap: wrap; }
+.site-nav { grid-column: 3; justify-self: end; display: flex; gap: 16px; flex-wrap: wrap; }
 .site-nav a {
   color: rgba(255,255,255,0.85);
   text-decoration: none;
@@ -261,6 +262,8 @@ table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1
    ========================================================================== */
 .nav-toggle { display: none; }
 .nav-mask { display: none; }
+/* 抽屉按钮在网格里的位置：最右一栏（窄屏时导航进抽屉，header 里右边只剩它） */
+.nav-toggle { grid-column: 3; justify-self: end; }
 /* 抽屉里才用的两个元素（关闭按钮、分组标题）—— 桌面宽度下必须收起来，
    否则它们会跟着 .site-nav 一起横排在 header 里 */
 .nav-close, .nav-title { display: none; }

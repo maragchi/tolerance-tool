@@ -131,6 +131,67 @@
     t.textContent = text;
     t.style.fill = color || '';
   }
+  /* ---------- 3b. 公差数字贴紧基本尺寸（按实测边界，不用渲染期定死的位置）----------
+     渲染期定死的槽位在"基本尺寸位数变了"的时候会离得很远：键宽 b=14 时刚好，
+     b=8 时中间空一大截（用户反馈"一位数就拉得有点太开了，有点离谱"）。
+     所以写完文字后按**实测屏幕边界**把整栈公差平移过去：
+       横排尺寸（rotate 0）→ 水平平移；竖排尺寸（rotate ±90，如 Φ50 那一列）→ 竖直平移。
+     只平移、不改字号与行内对齐，所以上下偏差的小数点对齐关系原样保留。 */
+  var STACK_GAP = 2.5;                      // 与基本尺寸之间的空隙（SVG 用户单位 = pt）
+  var STACK_ROWS = ['-pm', '-up-s', '-up-v', '-low-s', '-low-v'];
+
+  function rotAngle(t) {
+    var m = /rotate\(\s*(-?[\d.]+)/.exec(t.getAttribute('transform') || '');
+    return m ? Math.abs(parseFloat(m[1])) : 0;
+  }
+  function curTranslate(g) {
+    var m = /translate\(\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/.exec(g.getAttribute('transform') || '');
+    return m ? [parseFloat(m[1]), parseFloat(m[2])] : [0, 0];
+  }
+  function svgScale(el) {
+    var svg = el.ownerSVGElement;
+    if (!svg) { return 1; }
+    var r = svg.getBoundingClientRect();
+    var vb = svg.viewBox && svg.viewBox.baseVal;
+    return (r.width && vb && vb.width) ? (r.width / vb.width) : 1;
+  }
+  function alignStack(slot) {
+    var main = document.getElementById(slot + '-main');
+    var mt = main && main.querySelector('text');
+    if (!mt || !mt.textContent.trim()) { return; }
+    var groups = [], boxes = [], i, g, t, r;
+    for (i = 0; i < STACK_ROWS.length; i++) {
+      g = document.getElementById(slot + STACK_ROWS[i]);
+      if (!g) { continue; }
+      groups.push(g);
+      t = g.querySelector('text');
+      if (!t || !t.textContent.trim()) { continue; }   // 空格占位的行不参与定位
+      r = t.getBoundingClientRect();
+      if (r.width || r.height) { boxes.push(r); }
+    }
+    if (!groups.length || !boxes.length) { return; }
+    var sb = boxes[0];
+    for (i = 1; i < boxes.length; i++) {              // 取非空行的并集（屏幕坐标）
+      sb = { left: Math.min(sb.left, boxes[i].left), right: Math.max(sb.right, boxes[i].right),
+             top: Math.min(sb.top, boxes[i].top), bottom: Math.max(sb.bottom, boxes[i].bottom) };
+    }
+    var mr = mt.getBoundingClientRect();
+    if (!mr.width && !mr.height) { return; }
+    var sc = svgScale(mt) || 1;
+    /* 平移量必须**累加**：getBoundingClientRect 已经把上一次的 transform 算进去了，
+       如果直接用"目标位置 − 当前视觉位置"再覆盖 transform，就会把上次的位移丢掉（实测第二次改
+       轴径时间距从 2.5px 变成 10px，就是这个 bug）。 */
+    var t0 = curTranslate(groups[0]);
+    var dx = t0[0], dy = t0[1];
+    if (rotAngle(mt) > 45) {                          // 竖排：公差落到基本尺寸上方
+      dy += ((mr.top - STACK_GAP * sc) - sb.bottom) / sc;
+    } else {                                          // 横排：公差落到基本尺寸右侧
+      dx += ((mr.right + STACK_GAP * sc) - sb.left) / sc;
+    }
+    var tr = 'translate(' + dx.toFixed(2) + ',' + dy.toFixed(2) + ')';
+    for (i = 0; i < groups.length; i++) { groups[i].setAttribute('transform', tr); }
+  }
+
   function paint() {
     (CAD.figures || []).forEach(function (fig) {
       (fig.slots || []).forEach(function (s) {
@@ -144,18 +205,19 @@
         if (pm) {
           put(slot + '-up-s', ' '); put(slot + '-up-v', '');
           put(slot + '-low-s', ' '); put(slot + '-low-v', '');
-          return;
+        } else {
+          if (s.up) {
+            var u = splitDev(P[s.up.from]);
+            put(slot + '-up-s', u[0] || ' ', devColor(P[s.up.from]));
+            put(slot + '-up-v', u[1], devColor(P[s.up.from]));
+          }
+          if (s.low) {
+            var l = splitDev(P[s.low.from]);
+            put(slot + '-low-s', l[0] || ' ', devColor(P[s.low.from]));
+            put(slot + '-low-v', l[1], devColor(P[s.low.from]));
+          }
         }
-        if (s.up) {
-          var u = splitDev(P[s.up.from]);
-          put(slot + '-up-s', u[0] || ' ', devColor(P[s.up.from]));
-          put(slot + '-up-v', u[1], devColor(P[s.up.from]));
-        }
-        if (s.low) {
-          var l = splitDev(P[s.low.from]);
-          put(slot + '-low-s', l[0] || ' ', devColor(P[s.low.from]));
-          put(slot + '-low-v', l[1], devColor(P[s.low.from]));
-        }
+        alignStack(slot);            // 位数变了也要贴住基本尺寸
       });
     });
   }
