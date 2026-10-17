@@ -108,7 +108,9 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   border:1px solid #cbd5e1;border-radius:999px;background:#fff;color:#1a1a1a;text-align:center;min-width:0}
 .qf-field input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.16)}
 .qf-picker{position:relative;display:flex;align-items:stretch}
-.qf-picker input{padding-right:52px}
+.qf-picker{width:100%}
+/* 包了一层 flex 容器后，input 的宽度变成内容宽度了 → 让它弹性撑满整条胶囊 */
+.qf-picker input{flex:1 1 auto;width:100%;min-width:0;padding-right:52px}
 .qf-toggle{position:absolute;right:1px;top:1px;bottom:1px;width:44px;border:0;border-left:1px solid #e2e8f0;
   background:#f1f5f9;color:#475569;font-size:11px;cursor:pointer;border-radius:0 999px 999px 0}
 .qf-toggle:hover{background:#e2e8f0}
