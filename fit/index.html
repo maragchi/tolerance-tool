@@ -328,39 +328,6 @@ select.code-select{
 .single-body #singleResult .result-table{font-size:12.5px}
 @media(max-width:860px){.single-body{grid-template-columns:1fr}}
 
-/* ============================================================================
-   代号下拉：自定义（原生 select 的弹出列表由系统绘制，字对齐/圆角都改不动）
-   ========================================================================== */
-.csel{position:relative;min-width:0}
-.csel-btn{
-  display:flex;align-items:stretch;width:100%;height:44px;padding:0 0 0 16px;gap:0;
-  font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text-1);
-  background:var(--surface);border:1px solid var(--border-strong);border-radius:999px;
-  cursor:pointer;transition:border-color var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease)
-}
-.csel-btn:hover{border-color:#94a3b8}
-.csel-btn:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.16)}
-.csel-txt{flex:1 1 auto;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
-.csel-arr{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;border-left:1px solid #e2e8f0;background:#f1f5f9;border-radius:0 999px 999px 0;color:#475569;font-size:11px;line-height:1}
-.csel-list{
-  position:absolute;top:calc(100% + 4px);left:0;min-width:100%;max-height:min(440px,58vh);
-  overflow-y:auto;overscroll-behavior:contain;
-  background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:4px;
-  box-shadow:0 4px 16px rgba(15,23,42,.14);z-index:70;display:none
-}
-.csel-list.open{display:block}
-.csel-group{padding:8px 12px 4px;font-size:11.5px;font-weight:600;color:#94a3b8}
-.csel-item{
-  padding:9px 12px;text-align:center;font-family:var(--mono);font-size:14px;
-  border-radius:10px;cursor:pointer;white-space:nowrap
-}
-.csel-item:hover,.csel-item.hi{background:#eff6ff;color:#2563eb}
-.csel-item.sel{background:#2563eb;color:#fff;font-weight:600}
-select.csel-native{position:absolute;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden}
-.ig-row .csel{width:190px}
-.row-3 .csel{width:100%}
-@media(max-width:680px){ .ig-row .csel{width:100%} }
-
 /* ===== P0：配合查询左右分栏 + 复制按钮 + 公差带图字号 ===== */
 .fit-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,0.86fr);gap:20px;align-items:start}
 .fit-col-main{min-width:0}
@@ -537,93 +504,96 @@ z
    </g>
    <g id="fig1-PathCollection_1"/>
    <g id="fig1-LineCollection_1">
-    <path d="M 226.568449 46.393504 
-L 272.961953 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 205.737171 46.393504 
-L 252.130675 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 184.905893 46.393504 
-L 231.299398 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 164.074616 46.393504 
-L 210.46812 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 143.243338 46.393504 
-L 189.636843 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 122.412061 46.393504 
-L 168.805565 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 101.580783 46.393504 
-L 147.974287 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 80.749505 46.393504 
-L 127.14301 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 77.926114 28.385618 
-L 106.311732 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 77.926114 7.55434 
-L 85.480454 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 268.231004 46.393504 
-L 288.873691 25.750817 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 247.399726 46.393504 
-L 288.873691 4.919539 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 239.845309 324.754531 
-L 286.238813 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 219.014031 324.754531 
-L 265.407535 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 198.182753 324.754531 
-L 244.576258 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 177.351476 324.754531 
-L 223.74498 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 156.520198 324.754531 
-L 202.913703 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 135.68892 324.754531 
-L 182.082425 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 114.857643 324.754531 
-L 161.251147 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 94.026365 324.754531 
-L 140.41987 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 77.926114 320.023504 
-L 119.588592 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 77.926114 299.192227 
-L 98.757314 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 281.507864 324.754531 
-L 288.873691 317.388704 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 260.676586 324.754531 
-L 288.873691 296.557426 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 226.568682 46.393504 
+L 272.962187 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 205.737404 46.393504 
+L 252.130909 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 184.906127 46.393504 
+L 231.299631 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 164.074849 46.393504 
+L 210.468354 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 143.243572 46.393504 
+L 189.637076 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 122.412294 46.393504 
+L 168.805798 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 101.581016 46.393504 
+L 147.974521 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 80.749739 46.393504 
+L 127.143243 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 77.926114 28.385851 
+L 106.311966 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 77.926114 7.554573 
+L 85.480688 0 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 268.231237 46.393504 
+L 288.873691 25.75105 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 247.39996 46.393504 
+L 288.873691 4.919773 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 239.845542 324.754531 
+L 286.239046 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 219.014264 324.754531 
+L 265.407769 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 198.182987 324.754531 
+L 244.576491 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 177.351709 324.754531 
+L 223.745214 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 156.520431 324.754531 
+L 202.913936 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 135.689154 324.754531 
+L 182.082658 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 114.857876 324.754531 
+L 161.251381 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 94.026599 324.754531 
+L 140.420103 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 77.926114 320.023738 
+L 119.588825 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 77.926114 299.19246 
+L 98.757548 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 77.926114 278.361183 
+L 77.92627 278.361027 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 281.508097 324.754531 
+L 288.873691 317.388937 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 260.67682 324.754531 
+L 288.873691 296.557659 
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig1-line2d_1">
     <path d="M 77.926114 46.393504 
 L 288.873691 46.393504 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_2">
     <path d="M 288.873691 278.361027 
 L 77.926114 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_3">
     <path d="M 77.926114 0 
 L 77.926114 324.754531 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="hole-dia-main" data-role="main">
     <text style="font-size: 17.397564px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1f2937" x="33.688845" y="239.271203" transform="rotate(-90 33.688845 239.271203)">D = Φ50</text>
@@ -646,56 +616,56 @@ L 77.926114 324.754531
    <g id="fig1-line2d_4">
     <path d="M 288.873691 324.754531 
 L 288.873691 0 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig1-PathCollection_2"/>
    <g id="fig1-LineCollection_2">
     <path d="M 54.729362 162.377266 
 L 143.108988 162.377266 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #ff0000"/>
     <path d="M 157.838926 162.377266 
 L 172.568864 162.377266 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #ff0000"/>
     <path d="M 187.298801 162.377266 
 L 275.678427 162.377266 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #ff0000"/>
     <path d="M 290.408365 162.377266 
 L 305.138303 162.377266 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #ff0000"/>
    </g>
    <g id="fig1-line2d_5">
     <path d="M 75.02652 46.393504 
 L 35.012123 46.393504 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_6">
     <path d="M 75.02652 278.361027 
 L 35.012123 278.361027 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig1-line2d_7">
     <path d="M 40.811311 57.991881 
 L 40.811311 266.762651 
-" clip-path="url(#fig1-p2bebc92852)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig1-patch_3">
     <path d="M 38.878248 57.991881 
 L 42.744374 57.991881 
 L 40.811311 46.393504 
 z
-" clip-path="url(#fig1-p2bebc92852)" style="fill: #2563eb"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: #2563eb"/>
    </g>
    <g id="fig1-patch_4">
     <path d="M 38.878248 266.762651 
 L 42.744374 266.762651 
 L 40.811311 278.361027 
 z
-" clip-path="url(#fig1-p2bebc92852)" style="fill: #2563eb"/>
+" clip-path="url(#fig1-p29bb2e2878)" style="fill: #2563eb"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="fig1-p2bebc92852">
+  <clipPath id="fig1-p29bb2e2878">
    <rect x="0" y="0" width="331.2" height="324.754531"/>
   </clipPath>
  </defs>
@@ -726,22 +696,22 @@ z
    <g id="fig2-line2d_1">
     <path d="M 84.876888 263.422709 
 L 84.876888 59.291289 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_2">
     <path d="M 98.79494 45.373238 
 L 295.824467 45.373238 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_3">
     <path d="M 98.79494 277.340761 
 L 295.824467 277.340761 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_4">
     <path d="M 98.79494 277.340761 
 L 84.876888 263.422709 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="shaft-dia-main" data-role="main">
     <text style="font-size: 17.397564px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: start; fill: #1f2937" x="40.639619" y="237.279188" transform="rotate(-90 40.639619 237.279188)">d = Φ50</text>
@@ -764,66 +734,66 @@ L 84.876888 263.422709
    <g id="fig2-line2d_5">
     <path d="M 98.79494 45.373238 
 L 84.876888 59.291289 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_6">
     <path d="M 98.79494 45.373238 
 L 98.79494 277.340761 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linecap: square"/>
    </g>
    <g id="fig2-PathCollection_1"/>
    <g id="fig2-LineCollection_1">
     <path d="M 61.680136 161.356999 
 L 150.059762 161.356999 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #ff0000"/>
     <path d="M 164.7897 161.356999 
 L 179.519637 161.356999 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #ff0000"/>
     <path d="M 194.249575 161.356999 
 L 282.629201 161.356999 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #ff0000"/>
     <path d="M 297.359139 161.356999 
 L 312.089076 161.356999 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #ff0000"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #ff0000"/>
    </g>
    <g id="fig2-PathCollection_2"/>
    <g id="fig2-LineCollection_2">
-    <path d="M 292.093274 58.009961 
-L 295.824467 54.278768 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 295.868912 54.234323 
-L 297.872207 52.231028 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 285.75881 85.175703 
-L 295.824467 75.110046 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 295.974115 74.960398 
-L 302.40138 68.533133 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 284.310594 107.455196 
-L 295.824467 95.941323 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.083703 95.682087 
-L 305.984838 85.780952 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 286.541767 126.055301 
-L 295.824467 116.772601 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.202428 116.39464 
-L 307.405774 105.191293 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 290.484247 142.944098 
-L 295.824467 137.603878 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.340041 137.088305 
-L 304.548446 128.879899 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 295.150455 159.109168 
-L 295.824467 158.435156 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
-    <path d="M 296.532534 157.727089 
-L 297.250983 157.00864 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 292.090338 58.020226 
+L 295.824467 54.286096 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 295.868948 54.241615 
+L 297.87388 52.236684 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 285.757428 85.184412 
+L 295.824467 75.117374 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 295.974152 74.967689 
+L 302.402862 68.538978 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 284.310881 107.462237 
+L 295.824467 95.948652 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.083743 95.689375 
+L 305.985818 85.787301 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 286.542931 126.061465 
+L 295.824467 116.779929 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.202472 116.401924 
+L 307.405635 105.198761 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 290.485798 142.949876 
+L 295.824467 137.611207 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.340095 137.095579 
+L 304.546541 128.889133 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 295.152145 159.114807 
+L 295.824467 158.442484 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
+    <path d="M 296.532629 157.734323 
+L 297.25068 157.016272 
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig2-patch_3">
     <path d="M 295.824467 45.373238 
@@ -831,47 +801,47 @@ C 290.025279 64.703865 284.226091 84.034492 284.226091 103.365119
 C 284.226091 122.695746 290.025279 142.026372 295.824467 161.356999 
 C 301.623655 180.687626 307.422843 200.018253 307.422843 219.34888 
 C 307.422843 238.679507 301.623655 258.010134 295.824467 277.340761 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linejoin: miter"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-width: 1.4; stroke-linejoin: miter"/>
    </g>
    <g id="fig2-patch_4">
     <path d="M 295.824467 45.373238 
 C 301.623655 64.703865 307.422843 84.034492 307.422843 103.365119 
 C 307.422843 122.695746 301.623655 142.026372 295.824467 161.356999 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #1f2937; stroke-linejoin: miter"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #1f2937; stroke-linejoin: miter"/>
    </g>
    <g id="fig2-line2d_7">
     <path d="M 95.895346 45.373238 
 L 41.962897 45.373238 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_8">
     <path d="M 95.895346 277.340761 
 L 41.962897 277.340761 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig2-line2d_9">
     <path d="M 47.762085 56.971614 
 L 47.762085 265.742384 
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: none; stroke: #2563eb; stroke-linecap: square"/>
    </g>
    <g id="fig2-patch_5">
     <path d="M 45.829022 56.971614 
 L 49.695147 56.971614 
 L 47.762085 45.373238 
 z
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: #2563eb"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: #2563eb"/>
    </g>
    <g id="fig2-patch_6">
     <path d="M 45.829022 265.742384 
 L 49.695147 265.742384 
 L 47.762085 277.340761 
 z
-" clip-path="url(#fig2-p35a8aab7a2)" style="fill: #2563eb"/>
+" clip-path="url(#fig2-pa7b3f155aa)" style="fill: #2563eb"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="fig2-p35a8aab7a2">
+  <clipPath id="fig2-pa7b3f155aa">
    <rect x="0" y="0" width="331.2" height="324.754531"/>
   </clipPath>
  </defs>
@@ -1719,129 +1689,7 @@ window.addEventListener('load', function () { querySingle(); queryFit(); });
   });
 })();
 </script>
-<script>
-/* ===== 代号下拉：自定义下拉（原生 select 隐藏，保留 .value / change 语义）===== */
-(function () {
-  'use strict';
-  var ARROW = '\u25BC';   /* 与数字框的 ▼ 一致 */
-  var sels = Array.prototype.slice.call(document.querySelectorAll('select.code-select'));
-  if (!sels.length) { return; }
-  var states = [];
-
-  function addItem(st, o) {
-    var d = document.createElement('div');
-    d.className = 'csel-item' + (o.value === st.sel.value ? ' sel' : '');
-    d.setAttribute('data-v', o.value);
-    d.textContent = o.textContent;
-    st.list.appendChild(d);
-  }
-  function build(st) {
-    st.list.innerHTML = '';
-    Array.prototype.forEach.call(st.sel.children, function (node) {
-      if (node.tagName === 'OPTGROUP') {
-        var h = document.createElement('div');
-        h.className = 'csel-group';
-        h.textContent = node.label;
-        st.list.appendChild(h);
-        Array.prototype.forEach.call(node.children, function (o) { addItem(st, o); });
-      } else if (node.tagName === 'OPTION') {
-        addItem(st, node);
-      }
-    });
-  }
-  function sync(st) {
-    var o = st.sel.options[st.sel.selectedIndex];
-    st.btn.innerHTML = '<span class="csel-txt">' + (o ? o.textContent : '') + '</span>'
-      + '<span class="csel-arr">' + ARROW + '</span>';
-  }
-  function close(st) { st.list.classList.remove('open'); st.btn.setAttribute('aria-expanded', 'false'); }
-  function closeAll(except) { states.forEach(function (st) { if (st !== except) { close(st); } }); }
-  function open(st) {
-    build(st); sync(st); closeAll(st);
-    st.list.classList.add('open');
-    st.btn.setAttribute('aria-expanded', 'true');
-    var sel = st.list.querySelector('.csel-item.sel') || st.list.querySelector('.csel-item');
-    if (sel) { sel.classList.add('hi'); }
-  }
-  function choose(st, v) {
-    st.sel.value = v;
-    st.sel.dispatchEvent(new Event('change', { bubbles: true }));
-    sync(st);
-    close(st);
-  }
-
-  sels.forEach(function (sel) {
-    var wrap = document.createElement('div');
-    wrap.className = 'csel';
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'csel-btn';
-    btn.setAttribute('aria-haspopup', 'listbox');
-    btn.setAttribute('aria-expanded', 'false');
-    var list = document.createElement('div');
-    list.className = 'csel-list';
-    list.setAttribute('role', 'listbox');
-    sel.parentNode.insertBefore(wrap, sel);
-    wrap.appendChild(sel);
-    wrap.appendChild(btn);
-    wrap.appendChild(list);
-    sel.classList.add('csel-native');
-
-    var st = { sel: sel, btn: btn, list: list };
-    states.push(st);
-    sync(st);
-
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (list.classList.contains('open')) { close(st); } else { open(st); }
-    });
-    list.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var it = e.target.closest ? e.target.closest('.csel-item') : null;
-      if (it) { choose(st, it.getAttribute('data-v')); }
-    });
-    btn.addEventListener('keydown', function (e) {
-      var items = list.querySelectorAll('.csel-item');
-      if (!items.length) { return; }
-      var idx = Array.prototype.indexOf.call(items, list.querySelector('.csel-item.hi'));
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (!list.classList.contains('open')) {
-          open(st);
-          items = list.querySelectorAll('.csel-item');
-          idx = Array.prototype.indexOf.call(items, list.querySelector('.csel-item.hi'));
-        }
-        if (idx >= 0) { items[idx].classList.remove('hi'); }
-        idx = e.key === 'ArrowDown' ? Math.min(idx + 1, items.length - 1) : Math.max(idx - 1, 0);
-        items[idx].classList.add('hi');
-        items[idx].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        if (!list.classList.contains('open')) { open(st); return; }
-        var hi = list.querySelector('.csel-item.hi');
-        if (hi) { choose(st, hi.getAttribute('data-v')); }
-      } else if (e.key === 'Escape') {
-        close(st);
-      }
-    });
-  });
-
-  document.addEventListener('click', function () {
-    closeAll(null);
-    states.forEach(sync);      /* 常用代号/常用配合按钮直接改 .value，这里补一次同步 */
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeAll(null); }
-  });
-  sels.forEach(function (sel) {
-    sel.addEventListener('change', function () {
-      var st = states.filter(function (x) { return x.sel === sel; })[0];
-      if (st) { sync(st); }
-    });
-  });
-  window.addEventListener('load', function () { states.forEach(sync); });
-})();
-</script>
+<script src="/js/code-select.js" defer></script>
 <script src="/js/pwa.js" defer></script>
 <!--CAD-SCRIPTS-START-->
 <script>window.CAD={"id":"site-fit","title":"轴孔配合 · 动态尺寸","subtitle":"孔 / 轴断面 ｜ 尺寸由页面「配合查询」实时填","figures":[{"key":"hole","title":"孔","slots":[{"slot":"hole-dia","kind":"stack","label":"孔径","main":{"fmt":"int","prefix":"D = Φ","suffix":"","from":"d"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"ES"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"EI"}}]},{"key":"shaft","title":"轴","slots":[{"slot":"shaft-dia","kind":"stack","label":"轴直径","main":{"fmt":"int","prefix":"d = Φ","suffix":"","from":"d"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"es"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"ei"}}]}],"legend":[{"color":"#1F2937","text":"零件轮廓 / 剖面线 / 中心线"},{"color":"#2563eb","text":"尺寸线 · 尺寸界线 · 箭头"},{"color":"#dc2626","text":"正偏差"},{"color":"#1d4ed8","text":"负偏差"}],"initial":{"d":50,"ES":0.025,"EI":0.0,"es":-0.009,"ei":-0.025},"colors":{"pos":"#DC2626","neg":"#1D4ED8","zero":"#DC2626"}};</script>

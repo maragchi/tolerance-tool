@@ -338,3 +338,39 @@ html.has-drawer:not(.nav-ready) .nav-mask { transition: none !important; }
   }
   body.nav-open { overflow: hidden; }
 }
+
+/* ===== 代号下拉：自定义（原生 select 的弹出列表由系统绘制，字对齐/圆角都改不动）=====
+   /fit/ 与首页共用；由 js/code-select.js 增强 select.code-select ===== */
+/* ============================================================================
+   代号下拉：自定义（原生 select 的弹出列表由系统绘制，字对齐/圆角都改不动）
+   ========================================================================== */
+.csel{position:relative;min-width:0}
+.csel-btn{
+  display:flex;align-items:stretch;width:100%;height:44px;padding:0 0 0 16px;gap:0;
+  font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text-1);
+  background:var(--surface);border:1px solid var(--border-strong);border-radius:999px;
+  cursor:pointer;transition:border-color var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease)
+}
+.csel-btn:hover{border-color:#94a3b8}
+.csel-btn:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.16)}
+.csel-txt{flex:1 1 auto;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+.csel-arr{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;border-left:1px solid #e2e8f0;background:#f1f5f9;border-radius:0 999px 999px 0;color:#475569;font-size:11px;line-height:1}
+.csel-list{
+  position:absolute;top:calc(100% + 4px);left:0;min-width:100%;max-height:min(440px,58vh);
+  overflow-y:auto;overscroll-behavior:contain;
+  background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:4px;
+  box-shadow:0 4px 16px rgba(15,23,42,.14);z-index:70;display:none
+}
+.csel-list.open{display:block}
+.csel-group{padding:8px 12px 4px;font-size:11.5px;font-weight:600;color:#94a3b8}
+.csel-item{
+  padding:9px 12px;text-align:center;font-family:var(--mono);font-size:14px;
+  border-radius:10px;cursor:pointer;white-space:nowrap
+}
+.csel-item:hover,.csel-item.hi{background:#eff6ff;color:#2563eb}
+.csel-item.sel{background:#2563eb;color:#fff;font-weight:600}
+select.csel-native{position:absolute;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden}
+.ig-row .csel{width:190px}
+.row-3 .csel{width:100%}
+@media(max-width:680px){ .ig-row .csel{width:100%} }
+
