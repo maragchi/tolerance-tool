@@ -120,7 +120,7 @@
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape' || e.keyCode === 27){ closeNav(); }
     });
-    var mq = window.matchMedia('(max-width: 720px)');   // 转回桌面宽度时复位
+    var mq = window.matchMedia('(max-width: 900px)');   // 转回桌面宽度时复位
     if(mq.addEventListener){ mq.addEventListener('change', closeNav); }
     else if(mq.addListener){ mq.addListener(closeNav); }
   }

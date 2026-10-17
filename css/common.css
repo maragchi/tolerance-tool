@@ -33,6 +33,9 @@ body {
   color: #fff;
 }
 .site-header .site-name:hover { opacity: 0.9; }
+/* 站点 logo（首页顶栏用 /icons/favicon-32.png，22px 显示） */
+.site-header .site-name .logo { width: 22px; height: 22px; border-radius: 6px; margin-right: 8px; vertical-align: -5px; display: inline-block; }
+
 
 /* 顶栏：左「品牌 ›」，中间页面标题（居中），右侧导航（窄屏是 ☰ 抽屉按钮）
    页面标题是从正文里搬上来的（省掉一大块纵向空间），品牌小一号、标题大一号 */
@@ -255,7 +258,7 @@ table.data-table td.highlight { background: #dbeafe; font-weight: 600; color: #1
 }
 
 /* ============================================================================
-   移动端导航抽屉（≤720px）
+   移动端导航抽屉（≤900px —— 720 时桌面导航还会折行）
    —— 窄屏上横排导航要占两行（约 110px），把它收进右侧抽屉，header 只剩一行 ~44px。
    渐进增强：只有 js/nav.js 跑起来（给 <html> 加 .has-drawer）才生效；
    没有 JS 时导航保持原来的"横排 + 换行"，绝不会变成打不开的菜单。
@@ -276,7 +279,7 @@ html.has-drawer:not(.nav-ready) .nav-mask { transition: none !important; }
    否则它们会跟着 .site-nav 一起横排在 header 里 */
 .nav-close, .nav-title { display: none; }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   html.has-drawer body { padding: 12px; }
   html.has-drawer .site-header {
     position: sticky; top: 0; z-index: 45; flex-wrap: nowrap;
