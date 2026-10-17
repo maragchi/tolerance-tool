@@ -43,6 +43,12 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 .hero p { color: #666; font-size: 15px; line-height: 1.6; }
 .hero .tagline { color: #888; font-size: 13px; margin-top: 4px; }
 .tool-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
+/* 桌面两列：第一张（公差配合）通栏，其余 2×2，页面短一半 */
+@media(min-width:900px){
+  .tool-grid{grid-template-columns:1fr 1fr;gap:18px}
+  .tool-card:first-of-type{grid-column:1 / -1}
+  .tool-card:last-of-type{grid-column:1 / -1}
+}
 .tool-card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid #2563eb; }
 .tool-card h2 { font-size: 18px; margin-bottom: 8px; color: #1a1a1a; }
 .tool-card p { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
@@ -63,6 +69,47 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   .hero h1{font-size:22px}
   .hero{padding:24px 0 20px}
   .tool-card{padding:16px}
+}
+
+/* ===== 首页：卡片图标 / 主题色 / hover 层次 / 标题权重 / 快速查询 ===== */
+.hero h1{font-size:31px;letter-spacing:-.4px}
+.hero{padding-bottom:18px}
+.tool-card{position:relative;transition:box-shadow .18s ease,transform .18s ease}
+.tool-card:hover{box-shadow:0 8px 22px rgba(15,23,42,.10);transform:translateY(-2px)}
+.tool-ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.tool-ico svg{width:25px;height:25px}
+.tool-card:nth-of-type(1){border-left-color:#2563eb}
+.tool-card:nth-of-type(1) .tool-ico{background:#eff6ff;color:#2563eb}
+.tool-card:nth-of-type(2){border-left-color:#7c3aed}
+.tool-card:nth-of-type(2) .tool-ico{background:#f5f3ff;color:#7c3aed}
+.tool-card:nth-of-type(3){border-left-color:#0d9488}
+.tool-card:nth-of-type(3) .tool-ico{background:#ecfdf5;color:#0d9488}
+.tool-card:nth-of-type(4){border-left-color:#d97706}
+.tool-card:nth-of-type(4) .tool-ico{background:#fffbeb;color:#d97706}
+.tool-card:nth-of-type(5){border-left-color:#e11d48}
+.tool-card:nth-of-type(5) .tool-ico{background:#fff1f2;color:#e11d48}
+.tool-card h2{font-size:17.5px}
+
+/* 快速查询 */
+.quick-fit{background:#fff;border-radius:10px;padding:18px 20px;margin-bottom:20px;
+  box-shadow:0 1px 3px rgba(0,0,0,.1);border-top:3px solid #2563eb}
+.quick-fit .qf-title{font-size:14.5px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.quick-fit .qf-sub{font-size:12.5px;color:#888;margin-bottom:14px}
+.quick-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end}
+.qf-field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.qf-field label{font-size:12.5px;color:#555}
+.qf-field input{height:44px;padding:0 14px;font:inherit;font-size:15px;font-weight:600;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  border:1px solid #cbd5e1;border-radius:999px;background:#fff;color:#1a1a1a;text-align:center;min-width:0}
+.qf-field input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.16)}
+.qf-go{height:44px;padding:0 26px;font:inherit;font-size:14.5px;font-weight:600;color:#fff;
+  background:#2563eb;border:0;border-radius:999px;cursor:pointer;transition:background .16s ease;white-space:nowrap}
+.qf-go:hover{background:#1d4ed8}
+.qf-hint{font-size:12.5px;color:#888;margin-top:12px;line-height:1.6}
+.qf-hint a{color:#2563eb;text-decoration:none}
+@media(max-width:640px){
+  .quick-form{grid-template-columns:1fr 1fr}
+  .qf-go{grid-column:1 / -1}
 }
 </style>
 <script type="application/ld+json">
@@ -140,6 +187,54 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
         "@type": "Answer",
         "text": "公差等级与加工方法密切相关，不同的加工方法能够经济地达到的精度等级不同。IT1~IT4 级需要研磨、超精加工、坐标磨削等精密加工方法，用于量具、精密仪器零件；IT5~IT6 级可通过精磨、精车、精铣实现，用于精密机械、重要配合件；IT7~IT8 级是常用精度等级，普通车削、铣削、刨削即可达到，广泛用于一般机械的配合面；IT9~IT10 级通过粗车、粗铣等工序可达，用于非精密配合；IT11~IT12 级为粗加工精度，通过气割、锯切等即可达到。选择加工方法时应在满足公差要求的前提下，优先选择最经济的加工方法。"
       }
+    },
+    {
+      "@type": "Question",
+      "name": "φ20H7 的公差是多少？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "φ20 落在「大于 18 至 30 mm」这一档，IT7 的公差值为 0.021 mm（毫米）。基孔制 H 的下偏差 EI = 0， 所以 H7 的极限偏差是 +0.021 / 0，极限尺寸为 20.000 ~ 20.021 mm（毫米）。 同档位轴 g6 的上偏差 es = −0.007、下偏差 ei = −0.020，φ20 H7/g6 的最小间隙 0.007、最大间隙 0.041。 直接换成别的尺寸/代号，用公差配合查询即时算。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "H7/g6 和 H7/h6 有什么区别？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "两者都是间隙配合，区别在「有没有保证的最小间隙」。h6 的上偏差 es = 0（基轴制的基本偏差）， 所以 H7/h6 的最小间隙正好为 0，最紧的时候孔轴刚好贴合 —— 定位精度高、能反复拆装， 常用于定位销、法兰对中、皮带轮；g6 的上偏差为负，所以 H7/g6 总留有正间隙（φ50 时最小 0.009）， 适合需要相对运动或经常拆装的场合。一句话：要「准」选 h6，要「能转」选 g6。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "公差等级 IT6 和 IT7 该选哪个？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "IT7 是一般机械配合的常用等级，普通精车、精铣、磨削都能稳定达到，成本适中； IT6 比 IT7 紧一档，通常需要精磨或精铰，用于精密机械的重要配合面（如精密轴承位、精密导轨）。 选择原则：先看功能是否真的需要更紧的公差，再算成本差 —— 从 IT7 提到 IT6 往往意味着多一道工序甚至换设备， 而配合性质主要由基本偏差代号（H/g/k/p…）决定，等级只影响松紧的程度。拿不准时先在 公差配合查询里把两种等级都算出来比间隙。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "键槽宽度 b 的公差怎么定？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "键宽 b（以及槽宽）的极限偏差随联结类型变化，GB/T 1095-2003 规定三档：较松联结（轴槽 H9、毂槽 D10）、 一般联结（轴槽 N9、毂槽 JS9）、较紧联结（轴、毂槽均 P9）。同一个 b 值在三种联结下的上下偏差完全不同， 所以查表时要先定联结类型。本站键槽查询会按轴径自动查 b×h 与 t₁、t₂， 切换联结类型后槽宽偏差与剖面图会一起更新，页面下方还给了 6~500mm 全档位速查表。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ra3.2 算粗糙还是光滑？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ra3.2 μm 属于中等偏细：精车、精铣、精镗可以稳定达到，是机械图上最常见的标注之一。 量级参考：Ra12.5/6.3 是粗加工面；Ra3.2 一般是普通配合面、定位面、非动密封的接合面； Ra1.6 以下才开始用于动密封、滑动轴承、精密配合；Ra0.8 以下属于精磨/研磨范畴。 按场景查推荐值可以看表面粗糙度查询，里面还有 19 种加工方法的可达 Ra 对照。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "公差代号里大写 H 和小写 h 有什么区别？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "这是 ISO 286 / GB/T 1800 的记法约定：大写字母表示孔（内尺寸），小写字母表示轴（外尺寸）。 H 表示孔的基本偏差为零（下偏差 EI = 0，即基孔制）；h 表示轴的基本偏差为零（上偏差 es = 0，即基轴制）。 所以 H7/h6 是「基孔制 + 基轴」的混合写法，实际工程中更常见的是 H7/g6、H7/k6、H7/p6 这类基孔制配合 —— 因为加工孔用的刀具（钻头、铰刀、镗刀）尺寸固定，让孔取基准更经济。"
+      }
     }
   ]
 }
@@ -170,8 +265,38 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <p class="tagline">数据依据 GB/T 1800 · GB/T 1184 · GB/T 1095 · GB/T 1031 国家标准</p>
 </section>
 
+<section class="quick-fit" aria-labelledby="qfTitle">
+  <div class="qf-title" id="qfTitle">快速查配合</div>
+  <div class="qf-sub">填基本尺寸和孔/轴公差代号，直接出结果 —— 等同「<a href="/fit/" style="color:#2563eb;text-decoration:none">公差配合查询</a>」</div>
+  <form class="quick-form" onsubmit="return quickGo(event)" autocomplete="off">
+    <div class="qf-field">
+      <label for="qDim">基本尺寸 (mm/毫米)</label>
+      <input type="number" id="qDim" value="48" min="1" max="1000" step="1" inputmode="decimal">
+    </div>
+    <div class="qf-field">
+      <label for="qHole">孔公差（大写）</label>
+      <input id="qHole" value="H7" list="qfCodes" spellcheck="false">
+    </div>
+    <div class="qf-field">
+      <label for="qShaft">轴公差（小写）</label>
+      <input id="qShaft" value="g6" list="qfCodes" spellcheck="false">
+    </div>
+    <button type="submit" class="qf-go">查询</button>
+  </form>
+  <datalist id="qfCodes">
+    <option value="H7"><option value="H8"><option value="H9"><option value="H11"><option value="H12">
+    <option value="G7"><option value="F8"><option value="JS7"><option value="K7"><option value="M7">
+    <option value="N7"><option value="P7"><option value="R7"><option value="S7"><option value="U7">
+    <option value="h6"><option value="h7"><option value="h8"><option value="h9"><option value="g6">
+    <option value="f7"><option value="js6"><option value="k6"><option value="m6"><option value="n6">
+    <option value="p6"><option value="r6"><option value="s6"><option value="u6">
+  </datalist>
+  <p class="qf-hint">常用：H7/g6（滑动）、H7/h6（定位可拆）、H7/k6（过渡）、H7/p6（过盈压装）。不知道选什么？看<a href="/fit/#fitRef">常用配合推荐</a>。</p>
+</section>
+
 <section class="tool-grid">
   <div class="tool-card">
+    <div class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="12" r="6.2"/><circle cx="13.6" cy="12" r="3.2"/><path d="M2 12h3.6M17.8 12H22" stroke-dasharray="2.4 2.2"/></svg></div>
     <h2>公差配合查询</h2>
     <p>ISO 286 / GB/T 1800 公差配合计算器。输入基本尺寸和公差代号，即时计算上下偏差、极限尺寸和配合类型。</p>
     <ul>
@@ -184,6 +309,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   </div>
 
   <div class="tool-card">
+    <div class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 15.5h18"/><path d="M3 8.2c3 0 3.2-2.6 6-2.6s3 2.6 6 2.6 3-2.6 6-2.6"/></svg></div>
     <h2>形状公差查询</h2>
     <p>GB/T 1184-1996 直线度和平面度公差值查询。输入长度和公差等级，获取公差值、推荐加工方法和测量方法。</p>
     <ul>
@@ -196,6 +322,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   </div>
 
   <div class="tool-card">
+    <div class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="13.2" r="6.6"/><path d="M9.2 6.9h5.6v3.2h-5.6z"/></svg></div>
     <h2>键槽查询</h2>
     <p>GB/T 1095-2003 键槽尺寸查询。输入轴径即出键宽 b、键高 h、轴槽深 t₁、毂槽深 t₂，支持三种配合类型切换。</p>
     <ul>
@@ -208,6 +335,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   </div>
 
   <div class="tool-card">
+    <div class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M2.5 16.5l3-7 2.6 4 2.8-8 2.8 9 2.6-5 3.2 7"/></svg></div>
     <h2>表面粗糙度查询</h2>
     <p>GB/T 1031-2009 表面粗糙度 Ra/Rz 查询。按应用场景推荐 Ra 值，对照加工方法可达精度，附 GB/T 131 标注符号规范。</p>
     <ul>
@@ -219,6 +347,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
     <a href="/roughness/" class="tool-link">开始查询 →</a>
   </div>
   <div class="tool-card">
+    <div class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="7.5" width="12.5" height="9" rx="1.6"/><path d="M15.5 12H21"/><path d="M6.5 7.5v9"/></svg></div>
     <h2>气缸选型计算</h2>
     <p>气动执行元件选型计算器。按负载与负载率计算缸径行程，估算耗气量，支持回转气缸转矩校核、气爪夹持力与选型报告导出。</p>
     <ul>
@@ -275,6 +404,68 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
       <p>公差等级与加工方法密切相关，不同的加工方法能够经济地达到的精度等级不同。IT1~IT4 级需要研磨、超精加工、坐标磨削等精密加工方法，用于量具、精密仪器零件；IT5~IT6 级可通过精磨、精车、精铣实现，用于精密机械、重要配合件；IT7~IT8 级是常用精度等级，普通车削、铣削、刨削即可达到，广泛用于一般机械的配合面；IT9~IT10 级通过粗车、粗铣等工序可达，用于非精密配合；IT11~IT12 级为粗加工精度，通过气割、锯切等即可达到。选择加工方法时应在满足公差要求的前提下，优先选择最经济的加工方法。</p>
     </div>
   </details>
+
+  <details class="faq-item">
+    <summary>φ20H7 的公差是多少？</summary>
+    <div class="faq-answer">
+      <p>φ20 落在「大于 18 至 30 mm」这一档，IT7 的公差值为 <b>0.021 mm（毫米）</b>。基孔制 H 的下偏差 EI = 0，
+      所以 H7 的极限偏差是 <b>+0.021 / 0</b>，极限尺寸为 <b>20.000 ~ 20.021 mm（毫米）</b>。
+      同档位轴 g6 的上偏差 es = −0.007、下偏差 ei = −0.020，φ20 H7/g6 的最小间隙 0.007、最大间隙 0.041。
+      直接换成别的尺寸/代号，用<a href="/fit/">公差配合查询</a>即时算。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>H7/g6 和 H7/h6 有什么区别？</summary>
+    <div class="faq-answer">
+      <p>两者都是间隙配合，区别在「有没有保证的最小间隙」。h6 的上偏差 es = 0（基轴制的基本偏差），
+      所以 H7/h6 的最小间隙正好为 <b>0</b>，最紧的时候孔轴刚好贴合 —— 定位精度高、能反复拆装，
+      常用于定位销、法兰对中、皮带轮；g6 的上偏差为负，所以 H7/g6 <b>总留有正间隙</b>（φ50 时最小 0.009），
+      适合需要相对运动或经常拆装的场合。一句话：要「准」选 h6，要「能转」选 g6。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>公差等级 IT6 和 IT7 该选哪个？</summary>
+    <div class="faq-answer">
+      <p>IT7 是一般机械配合的常用等级，普通精车、精铣、磨削都能稳定达到，成本适中；
+      IT6 比 IT7 紧一档，通常需要精磨或精铰，用于精密机械的重要配合面（如精密轴承位、精密导轨）。
+      选择原则：先看功能是否真的需要更紧的公差，再算成本差 —— 从 IT7 提到 IT6 往往意味着多一道工序甚至换设备，
+      而配合性质主要由<b>基本偏差代号</b>（H/g/k/p…）决定，等级只影响松紧的程度。拿不准时先在
+      <a href="/fit/">公差配合查询</a>里把两种等级都算出来比间隙。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>键槽宽度 b 的公差怎么定？</summary>
+    <div class="faq-answer">
+      <p>键宽 b（以及槽宽）的极限偏差随<b>联结类型</b>变化，GB/T 1095-2003 规定三档：较松联结（轴槽 H9、毂槽 D10）、
+      一般联结（轴槽 N9、毂槽 JS9）、较紧联结（轴、毂槽均 P9）。同一个 b 值在三种联结下的上下偏差完全不同，
+      所以查表时要先定联结类型。本站<a href="/keyway/">键槽查询</a>会按轴径自动查 b×h 与 t₁、t₂，
+      切换联结类型后槽宽偏差与剖面图会一起更新，页面下方还给了 6~500mm 全档位速查表。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>Ra3.2 算粗糙还是光滑？</summary>
+    <div class="faq-answer">
+      <p>Ra3.2 μm 属于<b>中等偏细</b>：精车、精铣、精镗可以稳定达到，是机械图上最常见的标注之一。
+      量级参考：Ra12.5/6.3 是粗加工面；<b>Ra3.2 一般是普通配合面、定位面、非动密封的接合面</b>；
+      Ra1.6 以下才开始用于动密封、滑动轴承、精密配合；Ra0.8 以下属于精磨/研磨范畴。
+      按场景查推荐值可以看<a href="/roughness/">表面粗糙度查询</a>，里面还有 19 种加工方法的可达 Ra 对照。</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary>公差代号里大写 H 和小写 h 有什么区别？</summary>
+    <div class="faq-answer">
+      <p>这是 ISO 286 / GB/T 1800 的记法约定：<b>大写字母表示孔</b>（内尺寸），<b>小写字母表示轴</b>（外尺寸）。
+      H 表示孔的基本偏差为零（下偏差 EI = 0，即基孔制）；h 表示轴的基本偏差为零（上偏差 es = 0，即基轴制）。
+      所以 H7/h6 是「基孔制 + 基轴」的混合写法，实际工程中更常见的是 <b>H7/g6、H7/k6、H7/p6</b> 这类基孔制配合 ——
+      因为加工孔用的刀具（钻头、铰刀、镗刀）尺寸固定，让孔取基准更经济。</p>
+    </div>
+  </details>
+
 </section>
 
 <div class="site-footer">
@@ -284,5 +475,21 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 
 <script src="/js/nav.js"></script>
 <script src="/js/pwa.js" defer></script>
+<script>
+/* 首页快速查询：把三个参数带到 /fit/，那边落地即出结果（不改 URL 结构，可正常收录/分享） */
+function quickGo(e) {
+  if (e) { e.preventDefault(); }
+  var d = (document.getElementById('qDim').value || '').trim();
+  var h = (document.getElementById('qHole').value || 'H7').trim();
+  var s = (document.getElementById('qShaft').value || 'g6').trim();
+  if (!d || isNaN(parseFloat(d))) {
+    document.getElementById('qDim').focus();
+    return false;
+  }
+  location.href = '/fit/?d=' + encodeURIComponent(d)
+    + '&h=' + encodeURIComponent(h) + '&s=' + encodeURIComponent(s);
+  return false;
+}
+</script>
 </body>
 </html>
