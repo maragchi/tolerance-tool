@@ -3,6 +3,21 @@
 /* Reset */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* 共享变量：.csel（代号下拉）/ .picker-item（尺寸下拉项）等公共组件依赖。
+   之前这些变量只在 fit 页自己的 style 里定义过，common.css 里根本没有 —— 键槽页/首页用共用组件时会掉样式。 */
+:root{
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Microsoft YaHei", monospace;
+  --text-1: #333;
+  --text-2: #555;
+  --surface: #fff;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --primary: #2563eb;
+  --dur-fast: .16s;
+  --ease: cubic-bezier(.4, 0, .2, 1);
+}
+
+
 /* Base */
 body {
   font-family: -apple-system, "Microsoft YaHei", "Segoe UI", sans-serif;
@@ -219,7 +234,7 @@ button:hover { background: #1d4ed8; }
   background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; box-shadow: 0 4px 16px rgba(15,23,42,.14);
   z-index: 60; display: none; -webkit-overflow-scrolling: touch; }
 .picker-list.open { display: block; }
-.picker-item { padding: 10px 16px; font-family: Consolas, ui-monospace, monospace; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.picker-item { padding: 10px 16px; text-align: center; font-family: var(--mono); font-size: 14px; cursor: pointer; white-space: nowrap; }
 .picker-item:hover, .picker-item.hi { background: #eff6ff; color: #2563eb; }
 .picker-item.sel { background: #2563eb; color: #fff; font-weight: 600; }
 @media (max-width: 640px) { .picker { width: 100%; } .picker input { flex: 1 1 auto; width: auto !important; } .picker-list { min-width: 140px; } }
