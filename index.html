@@ -47,9 +47,10 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 .tool-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 32px; }
 /* 桌面两列：第一张（公差配合）通栏，其余 2×2，页面短一半 */
 @media(min-width:900px){
-  .tool-grid{grid-template-columns:1fr 1fr;gap:18px}
-  .tool-card:first-of-type{grid-column:1 / -1}
-  .tool-card:last-of-type{grid-column:1 / -1}
+  /* 五张卡全部等宽：不再让首/末张通栏（用户："有长有短，改成一样的宽度"） */
+  .tool-grid{grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
+  .tool-card{display:flex;flex-direction:column}
+  .tool-card .tool-link{margin-top:auto;align-self:flex-start}
 }
 .tool-card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid #2563eb; }
 .tool-card h2 { font-size: 18px; margin-bottom: 8px; color: #1a1a1a; }
