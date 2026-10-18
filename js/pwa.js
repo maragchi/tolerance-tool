@@ -21,6 +21,10 @@
   // 返回手势处理：已安装(standalone)时也必须生效，所以放在 return 之前
   setupBackExit();
 
+  /* 无条件暴露给页面：原来只在文件末尾赋值，若上面提前 return（standalone）就永远没定义，
+     页面上内联 onclick="pwaInstall()" 的按钮点了会报错 —— 表现就是"点了没用" */
+  window.pwaInstall = doInstall;
+
   if (isStandalone) return; // 已经是独立应用，不再显示安装提示
 
   /* ---------- 样式 ---------- */
@@ -99,15 +103,24 @@
   /* ---------- 安装 ---------- */
   function doInstall() {
     try { localStorage.setItem(KEY_TRIED, '1'); } catch (e) {}
+    var prompted = false;
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function (r) {
-        if (r && r.outcome === 'accepted') hideBar(true);
-        deferredPrompt = null;
-      });
-    } else {
-      showGuide();
+      try {
+        deferredPrompt.prompt();
+        prompted = true;
+        deferredPrompt.userChoice.then(function (r) {
+          if (r && r.outcome === 'accepted') hideBar(true);
+          deferredPrompt = null;
+        });
+      } catch (err) {
+        prompted = false;   /* prompt 失效（已经装过 / 浏览器拒绝）→ 退到文字引导 */
+      }
     }
+    try {
+      console.info('[pwa] doInstall | deferredPrompt=' + (prompted ? 'yes' : 'no')
+        + ' | standalone=' + isStandalone + ' | platform=' + platform());
+    } catch (e) {}
+    if (!prompted) { showGuide(); }   /* 关键：永不静默失败 */
   }
 
   function platform() {
@@ -147,6 +160,7 @@
       steps = '<li>看浏览器<b>地址栏右侧</b>，有个方框带箭头的 <b>安装图标 ⧉</b>，点它</li>' +
         '<li>或点右上角 <b>「⋮」/「⋯」</b> 菜单 → <b>「安装公差工具站」</b></li>' +
         '<li>确认后桌面（或开始菜单）就有快捷方式了</li>';
+      tip = '如果地址栏右侧<b>没有</b>安装图标、菜单里也没有「安装」：说明浏览器当前不允许安装（例如刚打开没多久、或已经装过）。可以改用更省事的办法——<b>Ctrl + D 收藏</b>，或者把地址栏里的网址直接拖到桌面。';
     }
     var modal = document.createElement('div');
     modal.className = 'pwa-modal';
