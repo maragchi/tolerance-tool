@@ -112,6 +112,8 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 <div class="tabs">
   <div class="tab active" data-tab="straightness">直线度 ⏤</div>
   <div class="tab" data-tab="flatness">平面度 ⏥</div>
+  <div class="tab" data-tab="roundness">圆度 / 圆柱度 ◯</div>
+  <div class="tab" data-tab="orientation">平行度 / 垂直度 / 倾斜度 ∥</div>
 </div>
 
 <div class="card">
@@ -122,7 +124,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
   </div>
   <div id="gradeMode">
     <div class="input-row">
-      <div class="input-group">
+      <div class="input-group" id="lenGroup">
         <label>主参数长度 L (mm/毫米)</label>
         <div class="picker">
           <input type="number" id="lengthInput" value="100" min="0" max="10000" step="1" class="dim-input" placeholder="输入或点箭头选">
@@ -134,8 +136,8 @@ h1 { font-size: 22px; margin-bottom: 2px; }
         <label>公差等级</label>
         <select id="gradeSelect"></select>
       </div>
-      <div class="input-group">
-        <label>直径 d (mm/毫米)<span style="font-weight:400;color:#94a3b8;font-size:12px"> 查圆度/圆柱度</span></label>
+      <div class="input-group" id="diaGroup" style="display:none">
+        <label>直径 d (mm/毫米)<span style="font-weight:400;color:#94a3b8;font-size:12px"> 圆度/圆柱度</span></label>
         <input type="number" id="diamInput" value="50" min="0" max="10000" step="1" class="dim-input" placeholder="输入直径">
       </div>
     </div>
@@ -329,6 +331,29 @@ const MEAS_METHODS = [
 
 let currentTab = 'straightness';
 
+/* 每个标签的类型元数据：名称 / 符号 / 主参数（L 长度 或 d 直径）/ 场景列表 */
+const TYPE_INFO = {
+  straightness: { name: '直线度', sym: '⏤', param: 'L', appsKey: 'straightness' },
+  flatness:     { name: '平面度', sym: '⏥', param: 'L', appsKey: 'flatness' },
+  roundness:    { name: '圆度 / 圆柱度', sym: '◯', param: 'd', appsKey: null },
+  orientation:  { name: '平行度 / 垂直度 / 倾斜度', sym: '∥', param: 'L', appsKey: null }
+};
+function typeInfo() { return TYPE_INFO[currentTab] || TYPE_INFO.straightness; }
+
+/* 切换标签时：长度/直径输入框、按场景模式是否可用 */
+function syncTypeUI() {
+  const ti = typeInfo();
+  const lenGroup = document.getElementById('lenGroup');
+  const diaGroup = document.getElementById('diaGroup');
+  if (lenGroup) lenGroup.style.display = ti.param === 'L' ? '' : 'none';
+  if (diaGroup) diaGroup.style.display = ti.param === 'd' ? '' : 'none';
+  const scenBtn = document.querySelector('.mode-btn[data-mode="scenario"]');
+  if (scenBtn) scenBtn.style.display = ti.appsKey ? '' : 'none';
+  if (!ti.appsKey && document.getElementById('gradeMode').classList.contains('hidden')) {
+    document.querySelector('.mode-btn[data-mode="grade"]').click();
+  }
+}
+
 function init() {
   const sel = document.getElementById('gradeSelect');
   for (let i = 1; i <= 12; i++) {
@@ -341,9 +366,9 @@ function init() {
     t.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
       t.classList.add('active');
-      currentTab = t.dataset.tab;
+      currentTab = t.dataset.tab; syncTypeUI();
       populateScenarios();
-      document.getElementById('resultArea').innerHTML = '';
+      document.getElementById('resultArea').innerHTML = ''; queryByGrade();  /* 切标签立即按新类型出结果 */
     });
   });
 
@@ -370,6 +395,7 @@ document.getElementById('diamInput').addEventListener('input', queryByGrade);
   document.getElementById('gradeSelect').addEventListener('change', function(){ queryByGrade(); });
   document.getElementById('scenarioSelect').addEventListener('change', function(){ if (this.value !== '') queryByScenario(); });
 
+  syncTypeUI();
   queryByGrade();
 }
 
@@ -433,37 +459,49 @@ function queryByGrade() {
   const tol = getTolerance(length, grade);
   const mfg = getMfgMethod(grade);
   const meas = getMeasMethod(grade);
-  const apps = currentTab === 'straightness' ? STRAIGHTNESS_APPS : FLATNESS_APPS;
+  const ti = typeInfo();
+  const apps = ti.appsKey === 'straightness' ? STRAIGHTNESS_APPS
+             : ti.appsKey === 'flatness' ? FLATNESS_APPS : [];
   const matchedApps = apps.filter(a => grade >= a.grades[0] && grade <= a.grades[1]);
 
-  const param = currentTab === 'straightness' ? '直线度' : '平面度';
-  const symbol = currentTab === 'straightness' ? '⏤' : '⏥';
+  /* 圆度/圆柱度：主参数是直径 d，走表 B4 */
+  if (ti.param === 'd') {
+    const dia = parseFloat(document.getElementById('diamInput').value);
+    const prevB = [0, 3, 6, 10, 18, 30, 50, 80, 120, 180, 250, 315, 400];
+    const rd = roundnessOf(dia, grade);
+    if (!rd) {
+      area.innerHTML = '<p class="error">请输入直径 d（0~500mm）</p>';
+      return;
+    }
+    const shown = rd.value != null
+      ? '<span class="result-value">' + rd.value + ' <span class="result-unit">μm</span></span>'
+      : '<span class="result-value" style="color:#b45309">—</span>';
+    let h = '<div class="result-highlight"><div><div class="result-label">' + ti.sym + ' ' + ti.name + '公差值</div>'
+      + shown + '<div class="result-label">Φ' + dia + '（' + prevB[rd.idx] + '~' + ROUNDNESS_BINS[rd.idx] + ' 档）· ' + grade + ' 级</div></div></div>'
+      + '<div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">' + (mfg ? mfg.methods : '-') + '</div></div>'
+      + '<div class="info-item"><div class="info-label">测量方法</div><div class="info-value">' + (meas ? meas.methods : '-') + '</div></div></div>';
+    if (rd.value == null) {
+      h += '<p class="hint">该等级暂无数据 —— 圆心度/圆柱度目前收录 0~8 级（9~12 级为粗加工面，标准表待补）。</p>';
+    }
+    h += '<p class="hint">依据 GB/T 1184-1996 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</p>';
+    area.innerHTML = h;
+    return;
+  }
+
+  const param = ti.name;
+  const symbol = ti.sym;
 
   let html = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+param+'公差值</div><div class="result-value">'+tol+' <span class="result-unit">μm</span></div><div class="result-label">长度范围 '+range.label+' · '+grade+' 级</div></div></div><div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
 
-  /* 圆度 / 圆柱度：主参数是直径 d，与长度分开输入 */
-  const dia = parseFloat(document.getElementById('diamInput').value);
-  const rd = roundnessOf(dia, grade);
-  if (rd) {
-    const shown = rd.value != null
-      ? '<b>' + rd.value + ' μm</b>'
-      : '<b style="color:#b45309">—</b> <span style="font-size:12px;color:#888">（该等级暂无数据，当前只收录 0~8 级）</span>';
-    const binText = ROUNDNESS_BINS[rd.idx];
-    const prev = rd.idx > 0 ? ROUNDNESS_BINS[rd.idx - 1] : 0;
-    html += '<div class="info-item" style="margin-top:12px">'
-      + '<div class="info-label">圆度 / 圆柱度</div>'
-      + '<div class="info-value">Φ' + dia + '（' + prev + '~' + binText + ' 档）· ' + grade + ' 级 → ' + shown
-      + '<div style="font-size:12px;color:#888;margin-top:4px">'
-      + '依据 GB/T 1184 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</div></div></div>';
-  }
-
-  /* 定向公差：GB/T 1184 表 B2 与表 B1 数值同系列（主参数同为被测长度 L），直接给同值 */
+  /* 定向公差：只在「平行度/垂直度/倾斜度」标签下显示（表 B2 与 B1 同系列，主参数同为 L） */
+  if (currentTab === 'orientation') {
   html += '<div class="info-item" style="margin-top:12px">'
     + '<div class="info-label">同类定向公差（同值）</div>'
     + '<div class="info-value">平行度 / 垂直度 / 倾斜度 —— 同为 ' + tol + ' μm'
     + '<div style="font-size:12px;color:#888;margin-top:4px">'
     + '依据 GB/T 1184 表 B2：这三项的公差值与直线度/平面度同系列，主参数取「被测要素的长度 L」；'
     + '若被测要素是整条直线或整个平面，用上面的长度即可。</div></div></div>';
+  }
 
   if (matchedApps.length > 0) {
     html += '<div class="info-item" style="margin-top:12px"><div class="info-label">适用场景</div><div class="info-value">'+matchedApps.map(a => a.name).join('、')+'</div></div>';
