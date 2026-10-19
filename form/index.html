@@ -412,6 +412,14 @@ function queryByGrade() {
 
   let html = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+param+'公差值</div><div class="result-value">'+tol+' <span class="result-unit">μm</span></div><div class="result-label">长度范围 '+range.label+' · '+grade+' 级</div></div></div><div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
 
+  /* 定向公差：GB/T 1184 表 B2 与表 B1 数值同系列（主参数同为被测长度 L），直接给同值 */
+  html += '<div class="info-item" style="margin-top:12px">'
+    + '<div class="info-label">同类定向公差（同值）</div>'
+    + '<div class="info-value">平行度 / 垂直度 / 倾斜度 —— 同为 ' + tol + ' μm'
+    + '<div style="font-size:12px;color:#888;margin-top:4px">'
+    + '依据 GB/T 1184 表 B2：这三项的公差值与直线度/平面度同系列，主参数取「被测要素的长度 L」；'
+    + '若被测要素是整条直线或整个平面，用上面的长度即可。</div></div></div>';
+
   if (matchedApps.length > 0) {
     html += '<div class="info-item" style="margin-top:12px"><div class="info-label">适用场景</div><div class="info-value">'+matchedApps.map(a => a.name).join('、')+'</div></div>';
   }
