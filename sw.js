@@ -2,7 +2,7 @@
  * 策略：缓存优先 + 后台更新（stale-while-revalidate）
  * 版本号变更可强制刷新全部缓存
  */
-const CACHE = 'gongcha-v46';
+const CACHE = 'gongcha-v47';
 const CORE = [
   '/',
   '/fit/',
