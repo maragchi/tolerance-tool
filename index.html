@@ -115,7 +115,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 .qf-toggle{position:absolute;right:1px;top:1px;bottom:1px;width:44px;border:0;border-left:1px solid #e2e8f0;
   background:#f1f5f9;color:#475569;font-size:11px;cursor:pointer;border-radius:0 999px 999px 0}
 .qf-toggle:hover{background:#e2e8f0}
-.qf-list{position:absolute;top:calc(100% + 6px);left:0;width:100%;max-height:300px;overflow-y:auto;
+.qf-list{position:absolute;top:calc(100% + 6px);left:0;width:100%;max-height:300px;overflow-y:auto;overscroll-behavior:contain;   /* 列表内部滚到底后，别把整页一起带走（用户反馈） */
   background:#fff;border:1px solid #cbd5e1;border-radius:14px;box-shadow:0 8px 22px rgba(15,23,42,.14);
   z-index:80;display:none;padding:4px}
 .qf-list.open{display:block}
