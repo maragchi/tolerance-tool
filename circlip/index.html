@@ -1735,7 +1735,7 @@ z
 <!--CAD-FIGS-END-->
   </div>
   <p class="hint" style="margin-top:10px">
-    上图是 CAD 原图渲出的断面：几何是静态底图，<b>尺寸数字随上面选择实时填</b>，不重新渲染、不发请求。
+    上图是 CAD 原图渲出的两张断面：<b>左=孔用槽、右=轴用槽</b>，几何是静态底图，<b>两侧尺寸数字都随上面选择的直径实时填</b>（孔用按当前 A/B 型、轴用按 GB/T 894.1-1986 同规格），不重新渲染、不发请求。
   </p>
 </div>
 
@@ -1926,6 +1926,13 @@ z
     for (var i = 0; i < r.length; i++) { if (+r[i].size === +v) return r[i]; }
     return null;
   }
+
+  /* 在指定类型里按规格查行（用于另一侧那张图） */
+  function findIn(key, v) {
+    var r = (D[key] && D[key].rows) || [];
+    for (var i = 0; i < r.length; i++) { if (+r[i].size === +v) return r[i]; }
+    return null;
+  }
   function t(v) {
     if (v === null || v === undefined || isNaN(v)) return '—';
     return (Math.round(v * 1000) / 1000).toString();
@@ -1980,20 +1987,35 @@ z
       + '</table>';
     area.innerHTML = html;
 
+    /* 两张图都显示、都填数：孔用取当前类型（A/B）的行，轴用取同规格的 894.1-1986 行 */
+    var holeRow = hole ? row : findIn('holeA', row.size);
+    var shaftRow = hole ? findIn('shaft', row.size) : row;
+
     var DBG = window.CAD_DEBUG;
     if (DBG) {
       var P = DBG.params;
-      if (hole) {
-        P.ch_d1 = row.size; P.ch_d2 = row.d2; P.ch_m = row.m; P.ch_n = row.n;
-      } else {
-        P.cs_d0 = row.size; P.cs_d2 = row.d2; P.cs_m = row.m; P.cs_n = row.n;
-      }
+      if (holeRow) { P.ch_d1 = holeRow.size; P.ch_d2 = holeRow.d2; P.ch_m = holeRow.m; P.ch_n = holeRow.n; }
+      if (shaftRow) { P.cs_d0 = shaftRow.size; P.cs_d2 = shaftRow.d2; P.cs_m = shaftRow.m; P.cs_n = shaftRow.n; }
       DBG.paint();
     }
-    var boxes = figs ? figs.querySelectorAll('.cad-figbox') : [];
-    for (var i = 0; i < boxes.length; i++) {
-      boxes[i].classList.toggle('clip-hide', hole ? i !== 0 : i !== 1);
+
+    var capCh = document.getElementById('cadCapCh');
+    var capCs = document.getElementById('cadCapCs');
+    if (capCh) {
+      capCh.textContent = holeRow
+        ? ' · ' + (hole ? D[cur].std + ' ' + (cur === 'holeB' ? 'B 型' : 'A 型') : 'GB/T 893-2017 A 型')
+          + ' Φ' + t(holeRow.size)
+        : ' · 该规格孔用表无此项';
     }
+    if (capCs) {
+      capCs.textContent = shaftRow
+        ? ' · ' + (hole ? 'GB/T 894.1-1986' : D[cur].std) + ' Φ' + t(shaftRow.size)
+        : ' · 该规格轴用表无此项';
+    }
+
+    /* 两张都显示，不再隐藏 */
+    var boxes = figs ? figs.querySelectorAll('.cad-figbox') : [];
+    for (var i = 0; i < boxes.length; i++) boxes[i].classList.remove('clip-hide');
   }
 
   function buildRef() {
