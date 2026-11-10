@@ -24,24 +24,24 @@
    "dims": [
     {
      "block": "*D7",
-     "slot": "ch_d0",
+     "slot": "ch_d1",
      "kind": "plain",
      "label": "孔径",
      "main": {
-      "from": "ch_d0",
+      "from": "ch_d1",
       "fmt": "int",
-      "prefix": "d0:Φ"
+      "prefix": "d1:Φ"
      }
     },
     {
      "block": "*D11",
-     "slot": "ch_d0b",
+     "slot": "ch_d1b",
      "kind": "plain",
      "label": "孔径(右)",
      "main": {
-      "from": "ch_d0",
+      "from": "ch_d1",
       "fmt": "int",
-      "prefix": "d0:Φ"
+      "prefix": "d1:Φ"
      }
     },
     {
