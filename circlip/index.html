@@ -1740,6 +1740,32 @@ z
 </div>
 
 <div class="card">
+  <h2>载荷校核 <span class="c-tag">GB/T 893-2017 第 5 章</span></h2>
+  <p class="hint" style="margin-bottom:12px">
+    按当前选中的规格，用表里的沟槽承载能力 F<sub>N</sub> 与挡圈承载能力 F<sub>R</sub> 校核轴向载荷。
+    表值不含安全系数 —— 标准明确"静载荷下抗断裂安全水平至少 2 倍"，所以许用值按下限的一半算。
+  </p>
+  <div class="input-row">
+    <div class="input-group">
+      <label>轴向载荷 F (kN)</label>
+      <input type="number" id="loadF" value="10" step="0.5" min="0"
+             style="height:40px;width:190px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:ui-monospace,Consolas,monospace">
+    </div>
+    <div class="input-group">
+      <label>材料下屈服强度 R<sub>eL</sub> (MPa)</label>
+      <input type="number" id="loadRel" value="200" step="10" min="100"
+             style="height:40px;width:190px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:ui-monospace,Consolas,monospace">
+    </div>
+    <div class="input-group">
+      <label>实际槽深 t′ (mm，留空=标准值)</label>
+      <input type="number" id="loadT" step="0.05" min="0" placeholder="用表值"
+             style="height:40px;width:190px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;font-family:ui-monospace,Consolas,monospace">
+    </div>
+  </div>
+  <div id="loadResult" style="margin-top:14px"></div>
+</div>
+
+<div class="card">
   <h2>尺寸怎么用（先看这一条）</h2>
   <div class="hint" style="line-height:1.9">
     <p><b>孔用挡圈</b>：在孔壁上车一圈槽，槽径 d2 比孔径 d0 <b>大</b>；挡圈外径 D 也大于孔径，
@@ -1989,6 +2015,7 @@ z
     buildSelect();
     render();
     buildRef();
+    if (typeof loadCheck === 'function') loadCheck();
   }
 
   document.querySelectorAll('[data-type]').forEach(function (b) {
@@ -1999,7 +2026,7 @@ z
       sync();
     });
   });
-  sel.addEventListener('change', render);
+  sel.addEventListener('change', function () { render(); loadCheck(); });
 
   document.getElementById('copyBtn').addEventListener('click', function () {
     var row = find(sel.value); if (!row) return;
@@ -2027,7 +2054,71 @@ z
     } else { fb(txt); }
   });
 
-  sync();
+  /* ---------- 载荷校核（2017 第 5 章） ---------- */
+  function fmt(v, d) {
+    if (v === null || v === undefined || isNaN(v)) return '—';
+    return v.toFixed(d === undefined ? 2 : d);
+  }
+  function loadCheck() {
+    var box = document.getElementById('loadResult');
+    if (!box) return;
+    var row = find(sel.value);
+    var F = parseFloat(document.getElementById('loadF').value);
+    var rel = parseFloat(document.getElementById('loadRel').value) || 200;
+    var tRaw = parseFloat(document.getElementById('loadT').value);
+    if (!row) { box.innerHTML = ''; return; }
+    if (!row.FN || !row.FR) {
+      box.innerHTML = '<p class="hint">该类型没有承载能力数据（2017 版表 1/表 2 才有 F<sub>N</sub>、F<sub>R</sub>；'
+        + '轴用目前用的是 1986 表，不含此项）。</p>';
+      return;
+    }
+    var tStd = row.t || 0;
+    var tUse = (isNaN(tRaw) || tRaw <= 0) ? tStd : tRaw;
+    var kT = tStd > 0 ? tUse / tStd : 1;
+    var kR = rel / 200;
+    var FNp = row.FN * kT * kR;
+    var FRp = row.FR;
+    var allow = Math.min(FNp, FRp) / 2;
+    var ok = !isNaN(F) && F > 0 && F <= allow;
+    var n = (!isNaN(F) && F > 0) ? allow / F : null;
+
+    var html = ''
+      + '<div class="result-highlight" style="' + (ok ? '' : 'background:#fff7ed;border-left-color:#ea580c') + '">'
+      + '<div class="result-label">' + D[cur].name + ' Φ' + t(row.size) + '（' + D[cur].std + '）</div>'
+      + '<div class="result-value" style="' + (ok ? '' : 'color:#c2410c') + '">'
+      + (ok ? '通过' : (isNaN(F) || F <= 0 ? '请输入载荷' : '不通过'))
+      + ' <span class="result-unit">许用静载 ≈ ' + fmt(allow, 1) + ' kN</span></div>'
+      + '<div class="result-label">'
+      + (n !== null ? '安全系数（许用/实际）= ' + fmt(n, 2) : '') + '</div>'
+      + '</div>'
+      + '<table class="data-table clip-table" style="margin-top:12px">'
+      + '<tr><th>项目</th><th>数值</th><th>怎么来的</th></tr>'
+      + '<tr><td>沟槽承载 F<sub>N</sub>（表值）</td><td>' + fmt(row.FN, 2) + ' kN</td>'
+      + '<td>对应 R<sub>eL</sub>=200 MPa、槽深 t=' + fmt(tStd, 2) + '</td></tr>'
+      + '<tr><td>沟槽承载 F′<sub>N</sub>（修正）</td><td><b>' + fmt(FNp, 2) + ' kN</b></td>'
+      + '<td>式(1)：F<sub>N</sub>×(t′/t)×(R′<sub>eL</sub>/200)，这里 t′=' + fmt(tUse, 2)
+      + '、R′<sub>eL</sub>=' + fmt(rel, 0) + ' → ×' + fmt(kT * kR, 3) + '</td></tr>'
+      + '<tr><td>挡圈承载 F<sub>R</sub>（表值）</td><td><b>' + fmt(FRp, 2) + ' kN</b></td>'
+      + '<td>直角接触、E=210 GPa；表值不随 t′ 变</td></tr>'
+      + '<tr><td>许用静载</td><td><b>' + fmt(allow, 1) + ' kN</b></td>'
+      + '<td>min(F′<sub>N</sub>, F<sub>R</sub>)/2（标准要求静载抗断裂 ≥2 倍）</td></tr>'
+      + '<tr><td>你的载荷 F</td><td>' + (isNaN(F) ? '—' : fmt(F, 1) + ' kN') + '</td>'
+      + '<td>' + (ok ? '低于许用值，可用' : '高于许用值，放大一档或加支承环') + '</td></tr>'
+      + '</table>'
+      + '<p class="hint" style="margin-top:8px">注：表中值不含疲劳安全系数；动载工况需另行校核。'
+      + '零件倒角大于 <i>g</i> 时按式(2) F′<sub>Rg</sub>=F<sub>Rg</sub>·(g/g′) 折减，'
+      + '且 F′<sub>Rg</sub> 大于 F<sub>R</sub> 时取 F<sub>R</sub>（本页未做倒角修正）。</p>';
+    box.innerHTML = html;
+  }
+
+  ['loadF', 'loadRel', 'loadT'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', loadCheck);
+  });
+
+  try { sync(); } catch (e) { window.__syncErr = String(e); }
+  try { loadCheck(); } catch (e) { window.__lcErr = String(e); }
+  window.__LC = loadCheck;
 })();
 </script>
 <script src="/js/pwa.js" defer></script>
