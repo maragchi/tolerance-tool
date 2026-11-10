@@ -30,7 +30,7 @@
      "main": {
       "from": "ch_d1",
       "fmt": "int",
-      "prefix": "d1:Φ"
+      "prefix": "Φ"
      }
     },
     {
@@ -41,7 +41,7 @@
      "main": {
       "from": "ch_d1",
       "fmt": "int",
-      "prefix": "d1:Φ"
+      "prefix": "Φ"
      }
     },
     {
@@ -52,7 +52,7 @@
      "main": {
       "from": "ch_d2",
       "fmt": "trim",
-      "prefix": "d2:Φ"
+      "prefix": "Φ"
      }
     },
     {
@@ -63,7 +63,7 @@
      "main": {
       "from": "ch_m",
       "fmt": "trim",
-      "prefix": "m:"
+      "prefix": ""
      }
     },
     {
@@ -74,7 +74,7 @@
      "main": {
       "from": "ch_n",
       "fmt": "trim",
-      "prefix": "n:"
+      "prefix": ""
      }
     }
    ]
@@ -103,7 +103,7 @@
      "main": {
       "from": "cs_d0",
       "fmt": "int",
-      "prefix": "d0:Φ"
+      "prefix": "Φ"
      }
     },
     {
@@ -114,7 +114,7 @@
      "main": {
       "from": "cs_d0",
       "fmt": "int",
-      "prefix": "d0:Φ"
+      "prefix": "Φ"
      }
     },
     {
@@ -125,7 +125,7 @@
      "main": {
       "from": "cs_d2",
       "fmt": "trim",
-      "prefix": "d2:Φ"
+      "prefix": "Φ"
      }
     },
     {
@@ -136,8 +136,9 @@
      "main": {
       "from": "cs_m",
       "fmt": "trim",
-      "prefix": "m:"
-     }
+      "prefix": ""
+     },
+     "pop": null
     },
     {
      "block": "*D17",
@@ -147,7 +148,7 @@
      "main": {
       "from": "cs_n",
       "fmt": "trim",
-      "prefix": "n:"
+      "prefix": ""
      }
     }
    ]
