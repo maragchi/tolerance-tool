@@ -1,0 +1,156 @@
+{
+ "_comment": "卡簧槽（挡圈槽）断面 · 动态尺寸。① 孔用挡圈槽（GB/T 893.1）② 轴用挡圈槽（GB/T 894.1）。参数名 ch_* / cs_* 由 circlip/index.html 按标准表查表后填入。源图 卡簧孔2.dxf 里有 4 个视图，这里用 extent 分别截出第 3、4 个视图（前两个是 Ø50 的轴/孔基本视图，不用）。",
+ "id": "site-circlip",
+ "title": "卡簧槽断面 · 动态尺寸",
+ "subtitle": "孔用 GB/T 893.1 ｜ 轴用 GB/T 894.1 —— 槽径/槽宽/槽边距由页面实时填",
+ "palette": "A",
+ "tight": true,
+ "figures": [
+  {
+   "key": "ch",
+   "title": "孔用挡圈槽",
+   "dxf": "F:/AI/tolerance-tool/data/dxf/卡簧孔2.dxf",
+   "figsize": [
+    5.2,
+    5.2
+   ],
+   "extent": [
+    146.0,
+    228.0,
+    -13.0,
+    73.0
+   ],
+   "text_scale": 1.35,
+   "dims": [
+    {
+     "block": "*D7",
+     "slot": "ch_d0",
+     "kind": "plain",
+     "label": "孔径",
+     "main": {
+      "from": "ch_d0",
+      "fmt": "int",
+      "prefix": "d0:Φ"
+     }
+    },
+    {
+     "block": "*D11",
+     "slot": "ch_d0b",
+     "kind": "plain",
+     "label": "孔径(右)",
+     "main": {
+      "from": "ch_d0",
+      "fmt": "int",
+      "prefix": "d0:Φ"
+     }
+    },
+    {
+     "block": "*D10",
+     "slot": "ch_d2",
+     "kind": "plain",
+     "label": "槽径",
+     "main": {
+      "from": "ch_d2",
+      "fmt": "trim",
+      "prefix": "d2:Φ"
+     }
+    },
+    {
+     "block": "*D8",
+     "slot": "ch_m",
+     "kind": "plain",
+     "label": "槽宽",
+     "main": {
+      "from": "ch_m",
+      "fmt": "trim",
+      "prefix": "m:"
+     }
+    },
+    {
+     "block": "*D9",
+     "slot": "ch_n",
+     "kind": "plain",
+     "label": "槽边距端面",
+     "main": {
+      "from": "ch_n",
+      "fmt": "trim",
+      "prefix": "n:"
+     }
+    }
+   ]
+  },
+  {
+   "key": "cs",
+   "title": "轴用挡圈槽",
+   "dxf": "F:/AI/tolerance-tool/data/dxf/卡簧孔2.dxf",
+   "figsize": [
+    5.2,
+    5.2
+   ],
+   "extent": [
+    234.0,
+    318.0,
+    -4.0,
+    73.0
+   ],
+   "text_scale": 1.35,
+   "dims": [
+    {
+     "block": "*D13",
+     "slot": "cs_d0",
+     "kind": "plain",
+     "label": "轴径",
+     "main": {
+      "from": "cs_d0",
+      "fmt": "int",
+      "prefix": "d0:Φ"
+     }
+    },
+    {
+     "block": "*D16",
+     "slot": "cs_d0b",
+     "kind": "plain",
+     "label": "轴径(左)",
+     "main": {
+      "from": "cs_d0",
+      "fmt": "int",
+      "prefix": "d0:Φ"
+     }
+    },
+    {
+     "block": "*D15",
+     "slot": "cs_d2",
+     "kind": "plain",
+     "label": "槽径",
+     "main": {
+      "from": "cs_d2",
+      "fmt": "trim",
+      "prefix": "d2:Φ"
+     }
+    },
+    {
+     "block": "*D14",
+     "slot": "cs_m",
+     "kind": "plain",
+     "label": "槽宽",
+     "main": {
+      "from": "cs_m",
+      "fmt": "trim",
+      "prefix": "m:"
+     }
+    },
+    {
+     "block": "*D17",
+     "slot": "cs_n",
+     "kind": "plain",
+     "label": "槽边距端面",
+     "main": {
+      "from": "cs_n",
+      "fmt": "trim",
+      "prefix": "n:"
+     }
+    }
+   ]
+  }
+ ]
+}
