@@ -18,7 +18,7 @@
     146.0,
     228.0,
     -13.0,
-    73.0
+    86.0
    ],
    "text_scale": 1.35,
    "dims": [
@@ -58,13 +58,25 @@
     {
      "block": "*D8",
      "slot": "ch_m",
-     "kind": "plain",
+     "kind": "stack",
      "label": "槽宽",
      "main": {
       "from": "ch_m",
       "fmt": "trim",
       "prefix": ""
-     }
+     },
+     "up": {
+      "from": "ch_mUP",
+      "fmt": "dev"
+     },
+     "low": {
+      "from": "ch_mLO",
+      "fmt": "dev"
+     },
+     "at": [
+      205.0,
+      68.0
+     ]
     },
     {
      "block": "*D9",
@@ -91,7 +103,7 @@
     234.0,
     318.0,
     -4.0,
-    73.0
+    84.0
    ],
    "text_scale": 1.35,
    "dims": [
@@ -120,25 +132,45 @@
     {
      "block": "*D15",
      "slot": "cs_d2",
-     "kind": "plain",
+     "kind": "stack",
      "label": "槽径",
      "main": {
       "from": "cs_d2",
       "fmt": "trim",
       "prefix": "Φ"
+     },
+     "up": {
+      "from": "cs_d2UP",
+      "fmt": "dev"
+     },
+     "low": {
+      "from": "cs_d2LO",
+      "fmt": "dev"
      }
     },
     {
      "block": "*D14",
      "slot": "cs_m",
-     "kind": "plain",
+     "kind": "stack",
      "label": "槽宽",
      "main": {
       "from": "cs_m",
       "fmt": "trim",
       "prefix": ""
      },
-     "pop": null
+     "pop": null,
+     "up": {
+      "from": "cs_mUP",
+      "fmt": "dev"
+     },
+     "low": {
+      "from": "cs_mLO",
+      "fmt": "dev"
+     },
+     "at": [
+      286.0,
+      58.0
+     ]
     },
     {
      "block": "*D17",
