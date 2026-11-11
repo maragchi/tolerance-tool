@@ -150,7 +150,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   "name": "公差查询工具",
   "itemListElement": [
     { "@type": "WebApplication", "name": "公差配合查询", "url": "https://gongcha.cc/fit/", "description": "ISO 286 / GB/T 1800 公差配合在线计算器", "applicationCategory": "DesignApplication", "operatingSystem": "Any" },
-    { "@type": "WebApplication", "name": "形状公差查询", "url": "https://gongcha.cc/form/", "description": "GB/T 1184 直线度和平面度公差在线查询", "applicationCategory": "DesignApplication", "operatingSystem": "Any" },
+    { "@type": "WebApplication", "name": "形状公差查询", "url": "https://gongcha.cc/form/", "description": "GB/T 1184 直线度、平面度及定向公差在线查询，圆度、圆柱度部分规格待补", "applicationCategory": "DesignApplication", "operatingSystem": "Any" },
     { "@type": "WebApplication", "name": "键槽查询", "url": "https://gongcha.cc/keyway/", "description": "GB/T 1095 键槽尺寸在线查询，含工程剖面图", "applicationCategory": "DesignApplication", "operatingSystem": "Any" },
     { "@type": "WebApplication", "name": "表面粗糙度查询", "url": "https://gongcha.cc/roughness/", "description": "GB/T 1031 表面粗糙度 Ra/Rz 查询，场景推荐与加工方法对照", "applicationCategory": "DesignApplication", "operatingSystem": "Any" }
   ]
@@ -294,7 +294,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
     <div class="qf-field">
       <label for="qDim">基本尺寸 (mm/毫米)</label>
       <div class="qf-picker">
-        <input type="number" id="qDim" value="48" min="1" max="1000" step="1" inputmode="decimal">
+        <input type="number" id="qDim" value="48" min="1" max="500" step="1" inputmode="decimal">
         <button type="button" class="qf-toggle" id="qDimToggle" aria-label="常用尺寸列表">▼</button>
         <div class="qf-list" id="qDimList" role="listbox"></div>
       </div>
@@ -305,7 +305,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
     </div>
     <div class="qf-field">
       <label for="qShaft">轴公差（小写）</label>
-      <select id="qShaft" class="code-select"><option value="h6">h6</option><option value="h7">h7</option><option value="h8">h8</option><option value="h9">h9</option><option value="g6" selected>g6</option><option value="f7">f7</option><option value="js6">js6</option><option value="k6">k6</option><option value="m6">m6</option><option value="n6">n6</option><option value="p6">p6</option><option value="r6">r6</option><option value="s6">s6</option><option value="u6">u6</option></select>
+      <select id="qShaft" class="code-select"><option value="h6">h6</option><option value="h7">h7</option><option value="h9">h9</option><option value="g6" selected>g6</option><option value="f7">f7</option><option value="js6">js6</option><option value="k6">k6</option><option value="m6">m6</option><option value="n6">n6</option><option value="p6">p6</option><option value="r6">r6</option><option value="s6">s6</option><option value="u6">u6</option></select>
     </div>
     <button type="submit" class="qf-go">查询</button>
   </form>
@@ -329,9 +329,10 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <div class="tool-card">
     <div class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 15.5h18"/><path d="M3 8.2c3 0 3.2-2.6 6-2.6s3 2.6 6 2.6 3-2.6 6-2.6"/></svg></div>
     <h2>形状公差查询</h2>
-    <p>GB/T 1184-1996 直线度和平面度公差值查询。输入长度和公差等级，获取公差值、推荐加工方法和测量方法。</p>
+    <p>输入长度或直径，查询直线度、平面度及定向公差（1~12级），圆度、圆柱度（已收录0~8级，部分规格待补），另有场景推荐和未注公差参考。</p>
     <ul>
-      <li>直线度 + 平面度公差查询（16段 R5 优先数系，1~12 级）</li>
+      <li>直线度、平面度及定向公差：1~12级</li>
+      <li>圆度、圆柱度：已收录0~8级，部分规格待补</li>
       <li>按应用场景反向查询推荐等级</li>
       <li>未注公差（一般公差 H/K/L 级）参考表</li>
     </ul>
@@ -505,10 +506,11 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 
 <div class="site-footer">
   <p>公差工具站 | 数据依据国家标准，已与标准原文核对</p>
-  <p style="margin-top:4px">如发现数据有误请反馈 · 工具持续更新中</p>
+  <p style="margin-top:4px"><a href="mailto:2430496069@qq.com?subject=%E5%85%AC%E5%B7%AE%E5%B7%A5%E5%85%B7%E5%8F%8D%E9%A6%88%EF%BC%9A%E9%97%AE%E9%A2%98%20%2F%20%E5%BB%BA%E8%AE%AE">反馈问题 / 建议</a> · 工具持续更新中</p>
 </div>
 
 <script src="/js/nav.js"></script>
+<script src="/js/usage-events.js"></script>
 <script src="/js/pwa.js" defer></script>
 <script>
 /* 首页快速查询：把三个参数带到 /fit/，那边落地即出结果（不改 URL 结构，可正常收录/分享） */
@@ -517,12 +519,14 @@ function quickGo(e) {
   var d = (document.getElementById('qDim').value || '').trim();
   var h = (document.getElementById('qHole').value || 'H7').trim();
   var s = (document.getElementById('qShaft').value || 'g6').trim();
-  if (!d || isNaN(parseFloat(d))) {
+  var num = Number(d);
+  if (!d || !isFinite(num) || num < 1 || num > 500) {
     document.getElementById('qDim').focus();
     return false;
   }
+  if (window.ToolUsage) { window.ToolUsage.home(); }
   location.href = '/fit/?d=' + encodeURIComponent(d)
-    + '&h=' + encodeURIComponent(h) + '&s=' + encodeURIComponent(s);
+    + '&h=' + encodeURIComponent(h) + '&s=' + encodeURIComponent(s) + '#fitQuery';
   return false;
 }
 </script>

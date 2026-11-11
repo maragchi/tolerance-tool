@@ -78,6 +78,14 @@ body.cad-zoom-open{overflow:hidden}
 @media(max-width:680px){.cad-figs{grid-template-columns:1fr}}
 /* keyway 页：断面图标题居中（这页的图块标题不加标签） */
 .kw-fig .dwg-head{justify-content:center}
+/* 原生代号框由自定义下拉接管，避免其宽度/内边距撑出页面。 */
+.card .input-group select.code-select.csel-native {
+  width:0;min-width:0;max-width:0;height:0;min-height:0;padding:0;border:0;
+}
+@media(max-width:680px){
+  .fit-head-row .ig-row{width:100%;min-width:0;max-width:100%}
+  .fit-head-row .ig-row .picker{width:auto;flex:1 1 0;min-width:0}
+}
 </style>
 <!--CAD-CSS-END-->
 
@@ -461,6 +469,10 @@ select.code-select{
 @media(max-width:980px){
   .member-grid{grid-template-columns:1fr}
 }
+/* 配合查询卡片锚点定位，避免窄屏 sticky header 遮住标题 */
+#fitQuery, #fitRef {
+  scroll-margin-top: 80px;
+}
 
 /* ===== 配合页 2026-10-17 调整 ===== */
 /* 顶部一行居中 */
@@ -608,7 +620,7 @@ select.code-select{
   </div>
 </div>
 
-<div class="card">
+<div class="card" id="fitQuery">
   <!-- 一行搞定：标题 + ? + 基本尺寸（标签与胶囊同排）+ 常用配合，整行居中 -->
   <div class="fit-head-row">
     <h2>配合查询</h2>
@@ -1053,7 +1065,7 @@ z
   </div>
 </div>
 
-<details class="card fit-ref">
+<details class="card fit-ref" id="fitRef">
   <summary>配合代号怎么读？常用配合怎么选 <span style="font-size:12.5px;font-weight:400;color:#94a3b8">点开查看</span></summary>
   <div class="fit-ref-body">
   <h3>配合代号怎么读</h3>
@@ -1138,6 +1150,7 @@ z
 </div>
 
 <script src="/js/nav.js"></script>
+<script src="/js/usage-events.js"></script>
 <script>
 // === 车间友好：密集尺寸下拉 + 公差代号下拉 + 快捷点选 ===
 const DIMS = (function(){
@@ -1246,7 +1259,7 @@ function initPickers(){
       Array.prototype.forEach.call(qs.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
       b.classList.add('on');
       closeQuick(qs);
-      querySingle();
+      querySingle('preset');
     };
     qs.appendChild(b);
   });
@@ -1261,17 +1274,17 @@ function initPickers(){
       Array.prototype.forEach.call(qf.querySelectorAll('button'), function(x){ x.classList.remove('on'); });
       b.classList.add('on');
       closeQuick(qf);
-      queryFit();
+      queryFit('preset');
     };
     qf.appendChild(b);
   });
 
   // 输入/选择即出结果（无需点"查询"）
-  document.getElementById('dim').addEventListener('input', querySingle);
-  document.getElementById('fitDim').addEventListener('input', queryFit);
-  document.getElementById('codeSel').addEventListener('change', querySingle);
+  document.getElementById('dim').addEventListener('input', function(){ querySingle('input'); });
+  document.getElementById('fitDim').addEventListener('input', function(){ queryFit('input'); });
+  document.getElementById('codeSel').addEventListener('change', function(){ querySingle('select'); });
   ['holeSel','shaftSel'].forEach(function(id){
-    document.getElementById(id).addEventListener('change', queryFit);
+    document.getElementById(id).addEventListener('change', function(){ queryFit('select'); });
   });
 }
 
@@ -1445,15 +1458,17 @@ function formatMM(um) {
 /* ============ 结果复制（按钮在两张卡里） ============ */
 var lastSingleText = '', lastFitText = '';
 
-function copyToClipboard(text, okMsg) {
+function copyToClipboard(text, okMsg, onSuccess) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function () { showToast(okMsg); },
-                                            function () { fallbackCopy(text, okMsg); });
+    try {
+      navigator.clipboard.writeText(text).then(function () { showToast(okMsg); if (onSuccess) onSuccess(); },
+                                            function () { fallbackCopy(text, okMsg, onSuccess); });
+    } catch (e) { fallbackCopy(text, okMsg, onSuccess); }
   } else {
-    fallbackCopy(text, okMsg);
+    fallbackCopy(text, okMsg, onSuccess);
   }
 }
-function fallbackCopy(text, okMsg) {
+function fallbackCopy(text, okMsg, onSuccess) {
   var ta = document.createElement('textarea');
   ta.value = text;
   ta.setAttribute('readonly', '');
@@ -1464,6 +1479,7 @@ function fallbackCopy(text, okMsg) {
   try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
   document.body.removeChild(ta);
   showToast(ok ? okMsg : '复制失败，请手动选中结果');
+  if (ok && onSuccess) onSuccess();
 }
 function showToast(msg) {
   var el = document.querySelector('.toast');
@@ -1479,11 +1495,11 @@ function showToast(msg) {
 }
 function copySingle() {
   if (!lastSingleText) { showToast('还没有结果'); return; }
-  copyToClipboard(lastSingleText, '已复制单要素结果');
+  copyToClipboard(lastSingleText, '已复制单要素结果', function() { if (window.ToolUsage) window.ToolUsage.copy('single'); });
 }
 function copyFit() {
   if (!lastFitText) { showToast('还没有结果'); return; }
-  copyToClipboard(lastFitText, '已复制配合结果');
+  copyToClipboard(lastFitText, '已复制配合结果', function() { if (window.ToolUsage) window.ToolUsage.copy('fit'); });
 }
 
 function buildToleranceChart(dim, bands) {
@@ -1523,7 +1539,7 @@ function buildToleranceChart(dim, bands) {
 /* 图纸标注（工程图样式）那套自绘 SVG 已删除 —— 右上角那个「图纸标注 · 实时」框也一并去掉，
    改用下面真实的 CAD 断面图（孔 / 轴）。 */
 
-function querySingle() {
+function querySingle(source) {
   const dim = parseFloat(document.getElementById('dim').value);
   const code = document.getElementById('codeSel').value;
   const result = calcTolerance(dim, code);
@@ -1534,6 +1550,8 @@ function querySingle() {
     document.getElementById('singleFig').hidden = true;
     var cb = document.getElementById('singleChart');
     if (cb) { cb.innerHTML = ''; }
+    lastSingleText = '';
+    if (window.ToolUsage) { window.ToolUsage.cancel('single'); }
     return;
   }
 
@@ -1593,6 +1611,7 @@ function querySingle() {
     + '公差值 ' + formatMM(result.it) + ' mm（毫米）\n'
     + '极限尺寸 ' + minLimit.toFixed(4) + ' ~ ' + maxLimit.toFixed(4) + ' mm（毫米）\n'
     + '依据 ISO 286 / GB/T 1800';
+  if (window.ToolUsage) { window.ToolUsage.query('single', [dim, code].join('|'), source); }
 }
 
 /* ============ 单要素形状图：从断面图克隆一张，只改文字 ============
@@ -1678,7 +1697,7 @@ function showSingleFig(dim, code, result) {
   }
 }
 
-function queryFit() {
+function queryFit(source) {
   const dim = parseFloat(document.getElementById('fitDim').value);
   const holeCode = document.getElementById('holeSel').value;
   const shaftCode = document.getElementById('shaftSel').value;
@@ -1694,6 +1713,8 @@ function queryFit() {
     holeInfo.innerHTML = '';
     shaftInfo.innerHTML = '';
     summary.innerHTML = '';
+    lastFitText = '';
+    if (window.ToolUsage) { window.ToolUsage.cancel('fit'); }
     return;
   }
 
@@ -1760,6 +1781,7 @@ function queryFit() {
     + '，极限 ' + shaftMin.toFixed(4) + ' ~ ' + shaftMax.toFixed(4) + '\n'
     + '最大间隙/过盈 ' + formatMM(result.maxClearance) + ' mm，最小 ' + formatMM(result.minClearance) + ' mm\n'
     + '依据 ISO 286 / GB/T 1800';
+  if (window.ToolUsage) { window.ToolUsage.query('fit', [dim, holeCode, shaftCode].join('|'), source); }
 
   // 断面图：只改图上的文字（图是静态的，见 cadFitSync）
   cadFitSync(dim, holeCode, shaftCode, result);
@@ -1824,14 +1846,20 @@ var qfParamApplied = false;
     var p = new URLSearchParams(location.search);
     var qd = p.get('d'), qh = p.get('h'), qs = p.get('s');
     if (!qd && !qh && !qs) { return; }
-    if (qd && !isNaN(parseFloat(qd))) {
-      document.getElementById('dim').value = qd;
-      document.getElementById('fitDim').value = qd;
+    if (qd) {
+      var qn = Number(qd);
+      if (isFinite(qn) && qn >= 1 && qn <= 500) {
+        document.getElementById('dim').value = String(qn);
+        document.getElementById('fitDim').value = String(qn);
+      }
     }
     if (qh) {
-      var cs = document.getElementById('codeSel');
-      if ([].some.call(cs.options, function (o) { return o.value === qh; })) { cs.value = qh; }
-      document.getElementById('holeSel').value = qh;
+      var hs = document.getElementById('holeSel');
+      if ([].some.call(hs.options, function (o) { return o.value === qh; })) {
+        hs.value = qh;
+        var cs = document.getElementById('codeSel');
+        if (cs) { cs.value = qh; }
+      }
     }
     if (qs) {
       var ss = document.getElementById('shaftSel');
