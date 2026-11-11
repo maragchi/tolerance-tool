@@ -47,12 +47,20 @@
     {
      "block": "*D10",
      "slot": "ch_d2",
-     "kind": "plain",
+     "kind": "stack",
      "label": "槽径",
      "main": {
       "from": "ch_d2",
       "fmt": "trim",
       "prefix": "Φ"
+     },
+     "up": {
+      "from": "ch_d2UP",
+      "fmt": "dev"
+     },
+     "low": {
+      "from": "ch_d2LO",
+      "fmt": "dev"
      }
     },
     {
