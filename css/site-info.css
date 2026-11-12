@@ -1,0 +1,57 @@
+/* 仅用于 site-info 静态信息页，不覆盖共享布局 */
+.site-info {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  color: #333;
+  line-height: 1.8;
+}
+
+.site-info p,
+.site-info h2,
+.site-info ul {
+  margin-bottom: 1em;
+}
+
+.site-info h2 {
+  margin-top: 1.5em;
+  font-size: 1.25rem;
+  color: #1a4d8f;
+}
+
+.site-info a {
+  color: #1a4d8f;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: break-word;
+}
+
+.site-info a:hover {
+  color: #0f2f5c;
+}
+
+.site-info .subtitle {
+  font-size: 1.05rem;
+  color: #555;
+  margin-bottom: 0.5em;
+}
+
+.site-info .updated {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1.5em;
+}
+
+.site-info ul {
+  padding-left: 1.2em;
+}
+
+@media (max-width: 600px) {
+  .site-info {
+    padding: 16px;
+    margin: 10px auto;
+  }
+}

@@ -389,3 +389,32 @@ select.csel-native{position:absolute;width:0;height:0;opacity:0;pointer-events:n
 .row-3 .csel{width:100%}
 @media(max-width:680px){ .ig-row .csel{width:100%} }
 
+
+/* 页脚链接样式，仅作用于 .site-footer .footer-links 及其后代 */
+.site-footer .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  margin-top: 8px;
+}
+
+.site-footer .footer-links a {
+  color: #1a4d8f;
+  text-decoration: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.site-footer .footer-links a:hover {
+  text-decoration: underline;
+}
+
+.site-footer .footer-links a:focus-visible {
+  outline: 2px solid #1a4d8f;
+  outline-offset: 2px;
+  background-color: #f0f5ff;
+}
