@@ -1,0 +1,4 @@
+# BEGIN gongcha-english-no-transform
+/en/iso-286/*
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+# END gongcha-english-no-transform
