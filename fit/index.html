@@ -1065,6 +1065,9 @@ z
   </div>
 </div>
 
+<!-- 广告位：300x250，查询结果卡之后、参考资料之前 -->
+<div class="ad-slot" data-ad="rect"></div>
+
 <details class="card fit-ref" id="fitRef">
   <summary>配合代号怎么读？常用配合怎么选 <span style="font-size:12.5px;font-weight:400;color:#94a3b8">点开查看</span></summary>
   <div class="fit-ref-body">
@@ -1143,6 +1146,9 @@ z
 </details>
 
 <p class="subtitle">ISO 286 / GB/T 1800 | 基本尺寸 1~500mm（毫米） | IT5~IT13</p>
+
+<!-- 广告位：原生广告，落在参考资料结束、页脚之前 -->
+<div class="ad-slot" data-ad="native"></div>
 
 <div class="site-footer">
   <p>公差配合查询 | ISO 286 / GB/T 1800</p>
@@ -1399,14 +1405,20 @@ function calcTolerance(dim, code) {
   const dev = getShaftDeviation(dim, normalLetter, grade);
   if (!dev) return { error: '不支持的偏差代号: ' + letter + '（支持: d,e,f,g,h,js,k,m,n,p,r,s,u）' };
 
-  let upper, lower;
+  let upper, lower, deltaUnavailable = false;
   if (isHole) {
     if (dev.type === 'upper') {
       lower = -dev.value;
       upper = lower + itVal;
     } else {
-      upper = -dev.value;
+      /* ISO 286-1：K~ZC 的孔用 ES = -ei + Δ，Δ = IT_n − IT_(n−1)；
+         等级大于 IT8 时 Δ = 0。IT5 需要 IT4 作差，本站只收录 IT5 起，
+         所以 IT5 退回 ES = -ei 并在结果里标注，不静默给错数。 */
+      const itPrev = grade > 5 ? getIT(dim, grade - 1) : null;
+      const delta = (grade > 8 || itPrev === null) ? 0 : itVal - itPrev;
+      upper = -dev.value + delta;
       lower = upper - itVal;
+      if (itPrev === null && grade <= 8) deltaUnavailable = true;
     }
   } else {
     if (dev.type === 'upper') {
@@ -1421,7 +1433,7 @@ function calcTolerance(dim, code) {
   upper = +upper.toFixed(1);
   lower = +lower.toFixed(1);
 
-  return { upper, lower, it: itVal, isHole, letter, grade };
+  return { upper, lower, it: itVal, isHole, letter, grade, deltaUnavailable };
 }
 
 function calcFit(dim, holeCode, shaftCode) {
@@ -1577,8 +1589,8 @@ function querySingle(source) {
     : '<span class="tag" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d">轴 ' + code + '</span>';
   const maxLimit = (dim * 1000 + result.upper) / 1000;
   const minLimit = (dim * 1000 + result.lower) / 1000;
-  const warn = (isHole && result.letter.charAt(0).toLowerCase() !== 'h' && result.letter.toLowerCase() !== 'js')
-    ? '<p class="hint">提示：非 H/JS 孔偏差按 ISO 286 通用规则换算，高等级（IT≤8 的 K/M/N/P~U）存在 Δ 修正差异，重要配合请核对标准原文。</p>' : '';
+  const warn = result.deltaUnavailable
+    ? '<p class="hint">提示：IT5 的 K~U 孔需要 IT4 才能算 Δ 修正，本站只收录 IT5 起的公差表，此处按 ES = -ei 计算，请核对标准原文。</p>' : '';
 
   const chart = buildToleranceChart(dim, [{
     label: (isHole ? '孔 ' : '轴 ') + code,
@@ -2082,5 +2094,6 @@ window.addEventListener('load', function () { querySingle(); queryFit(); });
 })();
 </script>
 <!--CAD-SCRIPTS-END-->
+<script src="/js/ads.js"></script>
 </body>
 </html>

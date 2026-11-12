@@ -418,3 +418,49 @@ select.csel-native{position:absolute;width:0;height:0;opacity:0;pointer-events:n
   outline-offset: 2px;
   background-color: #f0f5ff;
 }
+
+/* ===== 广告位（Adsterra） ===== */
+.ad-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 22px auto;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.ad-slot iframe {
+  border: 0;
+}
+
+/* 桌面横幅 / 手机窄条：同一位置按屏宽二选一，被隐藏的那档不发起请求 */
+.ad-slot[data-ad="leaderboard"] {
+  display: none;
+}
+
+.ad-slot[data-ad="mobile"] {
+  display: flex;
+  min-height: 50px;
+}
+
+@media (min-width: 780px) {
+  .ad-slot[data-ad="leaderboard"] {
+    display: flex;
+    min-height: 90px;
+  }
+
+  .ad-slot[data-ad="mobile"] {
+    display: none;
+  }
+}
+
+/* 300x250：预留高度，广告回来前后不跳版 */
+.ad-slot[data-ad="rect"] {
+  min-height: 250px;
+}
+
+/* 原生广告高度由脚本决定，不预留 */
+.ad-slot[data-ad="native"] {
+  min-height: 0;
+  margin: 26px auto;
+}
