@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://gongcha.cc/en/iso-286/">
+  <link rel="alternate" hreflang="en" href="https://gongcha.cc/en/iso-286/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://gongcha.cc/fit/">
+  <meta property="og:url" content="https://gongcha.cc/en/iso-286/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="ISO 286 Fit Calculator | Hole &amp; Shaft Limits">
+  <meta property="og:description" content="Calculate metric hole and shaft limits, clearance and interference, with a live tolerance diagram.">
+  <title>ISO 286 Fit Calculator | Hole &amp; Shaft Limits</title>
+  <meta name="description" content="Calculate ISO 286 hole and shaft limits, clearances and interference. Explore H7/g6 and other metric fits with a live tolerance diagram.">
+  <meta name="theme-color" content="#153c35">
+  <link rel="icon" href="./assets/favicon.7fb3b96a22a8.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/style.38ca84b8cf09.css">
+  <script type="module" src="./assets/app.79b69bf1779e.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#calculator">Skip to calculator</a>
+  <header class="topbar"><a class="brand" href="./" aria-label="Fits and Limits home"><img src="./assets/favicon.7fb3b96a22a8.svg" width="32" height="32" alt="">Fits <span>&amp;</span> Limits</a><nav aria-label="Main"><a class="active" href="#calculator">Calculator</a><a href="#fit-guide">Fit guide</a><a href="#scope">Standards &amp; scope</a></nav><a class="language-link" href="/fit/" lang="zh-Hans" hreflang="zh-Hans" aria-label="切换到中文公差配合工具">中文 ↗</a></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow"><span></span> THE ENGINEERING WORKBENCH</p><h1>A better fit.<br><span>Down to the micron.</span></h1><p class="lede">Hole and shaft limits, without the table hunting.<br>Find your fit and see exactly where it lands.</p></div><div class="intro-note"><span class="note-rule"></span><p>ONE BASIC SIZE.<br>TWO TOLERANCE ZONES.<br>A CLEAR ANSWER.</p><small>ISO 286-1:2010 · ISO 286-2:2010</small></div></section>
+    <section id="calculator" class="workbench" aria-label="ISO 286 fit calculator">
+      <aside class="controls">
+        <div class="panel-heading"><span class="step">01</span><h2>Define your fit</h2><span class="tiny">mm</span></div>
+        <form id="fit-form" novalidate>
+          <label for="size">Basic size <span class="muted">1–500 mm</span></label><div class="size-input"><span aria-hidden="true">⌀</span><input id="size" name="size" type="number" min="1" max="500" step="0.001" value="50" inputmode="decimal" required aria-describedby="size-help error"><span>mm</span></div><p id="size-help" class="field-help">Up to three decimal places.</p>
+          <div class="code-fields"><div><label for="hole"><i class="dot hole-dot"></i>Hole class</label><select id="hole" name="hole" aria-describedby="error"></select></div><div><label for="shaft"><i class="dot shaft-dot"></i>Shaft class</label><select id="shaft" name="shaft" aria-describedby="error"></select></div></div>
+          <button class="primary" id="calculate" type="submit" disabled>Calculate fit <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="error" id="error" role="alert"></p>
+        <div class="presets"><p class="label">COMMON STARTING POINTS</p><div id="presets"><button type="button" data-hole="H7" data-shaft="g6" aria-pressed="true">H7/g6 <span>Clearance</span></button><button type="button" data-hole="H7" data-shaft="h6" aria-pressed="false">H7/h6 <span>Zero clearance</span></button><button type="button" data-hole="H7" data-shaft="k6" aria-pressed="false">H7/k6 <span>Transition</span></button><button type="button" data-hole="H7" data-shaft="p6" aria-pressed="false">H7/p6 <span>Interference</span></button></div><p class="field-help">Examples to explore, not application recommendations.</p></div>
+        <div class="local-note"><span aria-hidden="true">◈</span><p>Calculated in your browser.<br>No account or data upload.</p></div>
+      </aside>
+      <div class="results" id="results" aria-busy="true">
+        <div class="result-top"><div><p class="label">YOUR FIT</p><h2 id="fit-title">50 H7/g6</h2></div><div class="result-actions"><div class="unit-switch" role="group" aria-label="Result units"><button type="button" data-unit="mm" aria-pressed="true">mm</button><button type="button" data-unit="um" aria-pressed="false">µm</button></div><button class="copy" id="copy" disabled type="button">Copy result <span aria-hidden="true">↗</span></button></div></div>
+        <div id="result-body" hidden>
+          <div class="fit-summary" id="fit-summary"><div><span class="status-dot"></span><strong id="fit-type">Clearance fit</strong><p id="fit-description"></p></div><div class="clearance-range"><span id="range-label">CLEARANCE RANGE</span><strong id="range-value"></strong></div></div>
+          <section class="diagram-panel" aria-labelledby="diagram-heading"><div class="section-heading"><h3 id="diagram-heading">Tolerance zones</h3><span>Deviation from basic size · µm</span></div><div id="diagram"></div><p class="diagram-caption"><span class="legend"><i class="dot hole-dot"></i>Hole <i class="dot shaft-dot"></i>Shaft</span><span>Vertical scale proportional to deviation</span></p></section>
+          <div class="section-heading limits-heading"><h3>Limits &amp; deviations</h3><span id="table-unit">All values in mm</span></div>
+          <div class="table-wrap"><table><thead><tr><th scope="col">Feature</th><th scope="col">Lower dev.</th><th scope="col">Upper dev.</th><th scope="col">Min. size</th><th scope="col">Max. size</th></tr></thead><tbody id="limits"></tbody></table></div>
+          <p class="result-footnote" id="result-footnote"></p>
+        </div>
+        <p id="loading" class="loading" role="status">Loading calculator…</p>
+        <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+    <section class="guide" id="fit-guide"><div class="guide-heading"><p class="eyebrow">READ THE RESULT</p><h2>Three ways parts come together.</h2><p>The fit describes the possible gap between the hole and shaft at their size limits.</p></div><div class="guide-cards"><article><span class="guide-number">01 / CLEARANCE</span><svg viewBox="0 0 200 80" aria-hidden="true"><path d="M20 18h160M20 62h160" stroke="#3c78a8" stroke-width="9"/><path d="M30 34h140M30 46h140" stroke="#b87735" stroke-width="8"/></svg><h3>Room to move</h3><p>The smallest hole is at least as large as the largest shaft. Minimum clearance may be zero.</p><span class="example">TRY H7/g6</span></article><article><span class="guide-number">02 / TRANSITION</span><svg viewBox="0 0 200 80" aria-hidden="true"><path d="M20 22h160M20 58h160" stroke="#3c78a8" stroke-width="9"/><path d="M30 25h140M30 55h140" stroke="#b87735" stroke-width="8" stroke-dasharray="5 3"/></svg><h3>A close relationship</h3><p>Either clearance or interference is possible, depending on the actual sizes of the two parts.</p><span class="example">TRY H7/k6</span></article><article><span class="guide-number">03 / INTERFERENCE</span><svg viewBox="0 0 200 80" aria-hidden="true"><path d="M30 18h140M30 62h140" stroke="#b87735" stroke-width="9"/><path d="M20 24h160M20 56h160" stroke="#3c78a8" stroke-width="9"/></svg><h3>Held under pressure</h3><p>The smallest shaft is at least as large as the largest hole. Assembly conditions need separate assessment.</p><span class="example">TRY H7/p6</span></article></div></section>
+    <section class="explain"><div><p class="eyebrow">THE NOTATION</p><h2>What does H7/g6 mean?</h2><p><strong>H7</strong> specifies the hole; <strong>g6</strong> specifies the shaft. The letter locates the tolerance zone relative to the basic size. The number is the IT grade, which sets the zone width.</p><p>A hole-basis fit uses an H hole with zero lower deviation. A shaft-basis fit uses an h shaft with zero upper deviation.</p></div><div class="notation" aria-label="H7 represents the hole and g6 the shaft"><span><b>H7</b><small>HOLE CLASS</small></span><i>/</i><span><b>g6</b><small>SHAFT CLASS</small></span></div></section>
+    <section id="scope" class="scope"><div><p class="eyebrow">KNOW YOUR BOUNDARIES</p><h2>Standards &amp; scope</h2></div><div><p>This calculator implements a selected metric subset: basic sizes <strong>1–500 mm</strong>, grades <strong>IT5–IT13</strong>, and the D, E, F, G, H, JS, K, M, N, P, R and S zones and their shaft equivalents. Other classes are not offered. For N9–N13 holes, basic size must be greater than 1 mm.</p><p>Calculation references: <a href="https://www.iso.org/standard/45975.html" target="_blank" rel="noopener noreferrer">ISO 286-1:2010</a> and <a href="https://www.iso.org/standard/54915.html" target="_blank" rel="noopener noreferrer">ISO 286-2:2010</a>. This is an independent implementation, not an ISO publication or certification.</p><p>Limits describe dimensional fits only. Surface texture, temperature, material, form, assembly force and functional suitability need separate engineering assessment.</p><details><summary>How are clearance and interference calculated?</summary><p>Minimum signed clearance = minimum hole size − maximum shaft size. Maximum signed clearance = maximum hole size − minimum shaft size. Negative signed clearance means interference. For an interference fit, the displayed interference magnitudes are positive.</p></details><details><summary>Can I use an inch size or get an ANSI equivalent?</summary><p>This version uses metric ISO classes only. Converting units does not turn an ISO fit into an ANSI/ASME B4.1 fit. An inch-fit calculator and cross-standard index are outside this version.</p></details><details><summary>Why do adjacent sizes sometimes have the same result?</summary><p>ISO tolerances use size intervals. An upper interval boundary belongs to that interval: 50 mm uses the above-30-to-50-mm IT range; a size just above 50 mm uses the next range. Fundamental deviations can use finer intervals.</p></details></div></section>
+    <noscript><p class="error">Enable JavaScript to calculate a fit. The explanations above remain available without JavaScript.</p></noscript>
+  </main>
+  <footer><a class="brand" href="./">Fits <span>&amp;</span> Limits</a><p>Independent engineering tools</p><a href="/fit/" lang="zh-Hans" hreflang="zh-Hans">中文公差配合 ↗</a></footer>
+</body>
+</html>
