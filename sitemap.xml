@@ -56,7 +56,13 @@
   </url>
   <url>
     <loc>https://gongcha.cc/en/iso-286/</loc>
-    <lastmod>2026-11-12</lastmod>
+    <lastmod>2026-11-13</lastmod>
+    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://gongcha.cc/en/iso-286/h7-g6-fit/</loc>
+    <lastmod>2026-11-13</lastmod>
     <priority>0.9</priority>
     <changefreq>monthly</changefreq>
   </url>
