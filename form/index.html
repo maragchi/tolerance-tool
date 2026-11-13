@@ -22,6 +22,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/editorial.css">
 
 <!-- Google Analytics: 替换 G-QNG5GE6S5Z 为你的实际 ID -->
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
@@ -174,6 +175,9 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 <p class="subtitle">GB/T 1184-1996 | 长度 0~10000mm（毫米） | 公差等级 1~12 级 | v2 | <a href="/fit/">公差配合查询 →</a></p>
 <div class="verify-badge">✓ 公差值依据 GB/T 1184-1996 标准原文</div>
 
+<!-- BEGIN original-tool-notes -->
+<section class="tool-notes" aria-labelledby="original-notes-title"><p class="notes-kicker">使用指南 · 原创说明</p><h2 id="original-notes-title">先分清控制对象，再查形状与位置公差</h2><div class="notes-grid"><div><h3>使用步骤</h3><ol><li>先选直线度、平面度、圆度/圆柱度或定向公差，确认自己控制的是线、面还是轴线。</li><li>按当前标签输入被测长度或直径，再选择图样规定的等级。场景推荐只能用来比较，不能替图样指定等级。</li><li>分别阅读查询结果与“未注公差”区域；图样已有单独标注时，先执行该标注。</li></ol></div><div><h3>一个读图实例</h3><p>假设一块100×60 mm基板单独标注平面度0.02 mm，这个0.02是给定的几何要求，等于20 µm；不是±0.02 mm的尺寸公差，也不需要根据“100 mm”再挑一个更宽松的默认值。若图样还要求相对基准的平行度，两项要分别检查。</p></div><div><h3>最容易混淆的地方</h3><p>形状公差不是尺寸上下偏差。直线度不能直接代表整面的平面度，平面度也不能证明该面垂直于某个孔。圆度/圆柱度目前只提供页面列明的数据范围，缺失等级不能按0处理或自行插值。</p></div><div><h3>标准应怎样读</h3><p>GB/T 1184-1996的未注要求和附录参考等级不是同一个入口。旧图样中的ISO 2768-2:1989也不能自动替换成ISO 22081:2021的数值：前者已撤销，后者采用不同的通用几何规范框架。先确认合同和图样引用的具体版次。</p><p><a href="/guides/straightness-vs-flatness/">阅读全文：直线度、平面度与未注公差怎么区分 →</a></p></div></div><p class="notes-source">依据：<a href="https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D79A9FD3A7E05397BE0A0AB82A">GB/T 1184-1996官方状态</a>；<a href="https://www.iso.org/standard/7749.html">ISO 2768-2:1989官方状态</a>。实例中的0.02 mm为假设图样要求，不是某等级的查表结果。</p></section>
+<!-- END original-tool-notes -->
 <div class="site-footer">
   <p>形状公差查询工具 v2 | GB/T 1184-1996 | 数据已与标准原文核对</p>
   <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/fit/">公差配合查询</a> · <a href="/keyway/">键槽查询</a></p>

@@ -23,6 +23,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/editorial.css">
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');</script>
@@ -137,6 +138,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
   </nav>
 </header>
 <div class="breadcrumb"><a href="/">首页</a><span>/</span>气缸选型计算</div>
+<h1 class="tool-page-heading">气缸选型计算器</h1>
 <div class="layout">
 <nav id="nav">
   <a class="active" data-p="page-wizard"><span class="ic">🧭</span>直线缸选型向导</a>
@@ -555,6 +557,9 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <div class="footer-note">本软件依据《气缸选型步骤及技巧》《气缸缸径选型计算表》《史上最全气缸选型设计计算资料》等教程资料编制 ｜ 计算结果供设计参考，最终请以厂家样本校核<br>版本 v1.1（2026-10-11）：新增杆屈曲校核、回转缸重力矩校核、垂直工况杆受拉/受压区分；修正 η 自动覆盖、K 系数统一等，详见《气缸选型软件-更新日志.md》</div>
 </main>
 </div>
+<!-- BEGIN original-tool-notes -->
+<section class="tool-notes" aria-labelledby="original-notes-title"><p class="notes-kicker">使用指南 · 原创说明</p><h2 id="original-notes-title">气缸选型先算力，再检查运动与安装条件</h2><div class="notes-grid"><div><h3>使用步骤</h3><p>先分清输入的是质量还是力，再填写实际工作压力、运动方向与负载率。得到候选缸径后，继续核对行程、速度、缓冲、安装尺寸和耗气量；伸出与回缩的有效受压面积不同。</p></div><div><h3>理论推力实例</h3><p>假设缸径32 mm、无杆腔压力0.5 MPa，且忽略摩擦和背压，面积为π×32²/4≈804.25 mm²，理论伸出力约402.1 N。这个值不是“可搬402 kg”，也不是实际工作状态下的保证输出。</p></div><div><h3>易错点</h3><p>不能把空压机出口压力直接当作气缸动作时的可用压力；管路压降和阀的流量会影响动作。竖直提升还要考虑重力与失压状态，长行程受压杆需要校核稳定性，快速运动则需要核对动能与缓冲能力。</p></div><div><h3>理解负载率</h3><p>负载率用于给理论出力留出功能余量，具体取值应按运动工况和厂家选型资料确定。完成力的计算后，应回到实际缸体系列与安装图确认规格，不用计算值替代产品额定条件。</p></div></div><p class="notes-source">公式与选型背景：<a href="https://www.smcworld.com/catalog/BEST-technical-data-en/pdf/6-2-1-m21-43-tech_en.pdf">SMC气缸选型技术资料</a>。示例为独立算术说明，不是指定产品承载承诺。</p></section>
+<!-- END original-tool-notes -->
 <div class="site-footer">
   <p>公差工具站 | 气缸选型计算器 · 数据依据国家标准与工程手册，已与标准原文核对</p>
   <p style="margin-top:4px">如发现数据有误请反馈 · 工具持续更新中 · <a href="/">返回首页</a></p>

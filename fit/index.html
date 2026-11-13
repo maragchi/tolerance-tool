@@ -24,6 +24,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/editorial.css">
 <!--CAD-CSS-START-->
 <style>
 /* ==== DEMO：CAD 动态尺寸图（由 gen_site_demo.py 注入，删掉这段即恢复原样）==== */
@@ -1151,6 +1152,9 @@ z
 
 <!-- 广告位：原生广告，落在参考资料结束、页脚之前 -->
 
+<!-- BEGIN original-tool-notes -->
+<section class="tool-notes" aria-labelledby="original-notes-title"><p class="notes-kicker">使用指南 · 原创说明</p><h2 id="original-notes-title">把配合代号读成可检查的尺寸范围</h2><div class="notes-grid"><div><h3>怎样查询</h3><p>输入基本尺寸，单要素区选择H7、g6等代号；需要判断装配时，在配合查询区分别选择孔与轴。大写用于孔、小写用于轴，字母决定公差带位置，数字决定IT等级。结果里的上、下偏差与最大、最小极限尺寸应对应阅读。</p></div><div><h3>20 mm H7/g6实例</h3><p>孔为20.000–20.021 mm，轴为19.980–19.993 mm。最小间隙是20.000−19.993=0.007 mm，最大间隙是20.021−19.980=0.041 mm。这里的间隙是直径差；理想同轴情况下单侧径向间隙才是它的一半。</p></div><div><h3>边界与易错点</h3><p>尺寸档位通常按“大于下限、至上限含端点”选择。例如50 mm与略大于50 mm可能用不同档位。H7里的7不是7 µm。几何误差、温度、涂层和表面状态也会影响实际装配，不能仅凭最小间隙大于0就保证所有实物都能顺滑装入。</p></div><div><h3>继续阅读</h3><p><a href="/en/iso-286/h7-g6-fit/">H7/g6英文完整算例与公差带图 →</a></p><p>需要控制平面或轴线形状时，还应结合<a href="/form/">形状公差查询</a>；公差配合查询并不替代几何公差标注。</p></div></div><p class="notes-source">计算参考：ISO 286-1:2010、ISO 286-2:2010及页面列明的GB/T 1800数据范围。本站内容为独立解释。</p></section>
+<!-- END original-tool-notes -->
 <div class="site-footer">
   <p>公差配合查询 | ISO 286 / GB/T 1800</p>
   <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/form/">形状公差查询</a> · <a href="/keyway/">键槽查询</a></p>

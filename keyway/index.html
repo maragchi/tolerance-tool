@@ -22,6 +22,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/editorial.css">
 <!--CAD-CSS-START-->
 <style>
 /* ==== DEMO：CAD 动态尺寸图（由 gen_site_demo.py 注入，删掉这段即恢复原样）==== */
@@ -1092,6 +1093,9 @@ z
 <p class="subtitle">平键 键槽的剖面尺寸 | 轴径 6~500mm（毫米） | 较松 / 一般 / 较紧 三种联结 | <a href="/fit/">公差配合查询 →</a></p>
 <div class="verify-badge">✓ 数据依据 GB/T 1095-2003《平键 键槽的剖面尺寸》；键宽公差按 GB/T 1800.2（ISO 286-2），N9 上偏差 ≤0（b≥3 时 ES=0）</div>
 
+<!-- BEGIN original-tool-notes -->
+<section class="tool-notes" aria-labelledby="original-notes-title"><p class="notes-kicker">使用指南 · 原创说明</p><h2 id="original-notes-title">从轴径查到键槽，再把尺寸正确写上图纸</h2><div class="notes-grid"><div><h3>使用步骤</h3><ol><li>输入与轮毂配合的轴径d，而不是键宽b或槽底直径。</li><li>选择较松、一般或较紧联结，分别看轴槽和毂槽的键宽公差带。</li><li>核对b、h、t₁、t₂以及图示的d−t₁、d+t₂，再检查槽底圆角与键的装配空间。</li></ol></div><div><h3>25 mm轴径的读数示例</h3><p>当前工具中，25 mm落入大于22至30 mm的档位，显示b=8 mm、h=7 mm、t₁=4.0 mm、t₂=3.3 mm。由此得到轴侧标注尺寸d−t₁=21.0 mm，毂侧d+t₂=28.3 mm。后两项是加减关系，不是直径配合的H7/g6。</p></div><div><h3>易错点</h3><p>不要把t₁+t₂简单当成必须等于键高h，也不要把轴槽和毂槽的宽度公差写反。公称槽深、跨径标注尺寸和它们的公差符号是不同层次的数据，应按图示对应，而不是将所有偏差都加在t上。</p></div><div><h3>查询范围与设计边界</h3><p>GB/T 1095规定的是平键键槽剖面尺寸，键的型式、长度和联结强度还要另外选。工具给出剖面尺寸不代表已验算扭矩、疲劳或轮毂壁厚。旧图样有明确键规格时，应先检查引用标准与尺寸档位是否一致。</p><p><a href="/guides/keyway-dimensions/">阅读全文：t₁、t₂与d−t₁、d+t₂的区别 →</a></p></div></div><p class="notes-source">依据：<a href="https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=1F90F0327081018E769B4DC30FE7E7AA">GB/T 1095-2003《平键 键槽的剖面尺寸》</a>。示例数值与当前工具表核对；计算过程为本站独立说明。</p></section>
+<!-- END original-tool-notes -->
 <div class="site-footer">
   <p>键槽查询工具 | GB/T 1095-2003 | 键宽公差按 GB/T 1800.2 (ISO 286-2)，N9/P9 孔公差带上下偏差均为负值</p>
   <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/fit/">公差配合查询</a> · <a href="/form/">形状公差查询</a> · <a href="/roughness/">粗糙度查询</a></p>
