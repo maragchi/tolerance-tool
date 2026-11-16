@@ -43,6 +43,7 @@
   }
   function choose(st, v) {
     st.sel.value = v;
+    st.sel.dispatchEvent(new Event('input', { bubbles: true }));
     st.sel.dispatchEvent(new Event('change', { bubbles: true }));
     sync(st);
     close(st);
@@ -118,4 +119,13 @@
     });
   });
   window.addEventListener('load', function () { states.forEach(sync); });
+  /* 选项被页面脚本重写时（例如形位公差切标签后重填场景列表）同步按钮文案；打开时本就会 rebuild。 */
+  if (typeof MutationObserver === 'function') {
+    states.forEach(function (st) {
+      new MutationObserver(function () {
+        if (st.list.classList.contains('open')) { build(st); }
+        sync(st);
+      }).observe(st.sel, { childList: true, subtree: true });
+    });
+  }
 })();

@@ -17,8 +17,8 @@ h.className+=" has-drawer";
 setTimeout(function(){if(!document.querySelector(".nav-toggle")){
 h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <title>气缸选型计算器 | 缸径/行程/耗气量/回转缸/气爪/选型报告 | 公差工具站</title>
-<meta name="description" content="免费在线气缸选型计算器：按负载和负载率自动计算缸径与行程、估算耗气量与气源，提供回转气缸转矩校核、气爪夹持力计算、杆屈曲校核与选型报告导出。依据 GB2348 / ISO3320 及工程手册公式。">
-<meta name="keywords" content="气缸选型,气缸缸径计算,气缸选型计算,耗气量计算,回转气缸选型,气爪选型,气缸推力计算,活塞杆屈曲校核,GB2348,ISO3320">
+<meta name="description" content="免费在线气缸选型计算器：按负载和负载率自动计算缸径与行程、估算耗气量与气源，提供回转气缸转矩校核、气爪夹持力计算、杆屈曲校核与选型报告导出。依据 GB/T 2348-2018 / ISO 3320:2013 及工程手册公式。">
+<meta name="keywords" content="气缸选型,气缸缸径计算,气缸选型计算,耗气量计算,回转气缸选型,气爪选型,气缸推力计算,活塞杆屈曲校核,GB/T 2348-2018,ISO 3320:2013">
 <link rel="canonical" href="https://gongcha.cc/cylinder/">
 <meta property="og:title" content="气缸选型计算器 | 公差工具站">
 <meta property="og:description" content="负载→缸径→行程→耗气量→回转缸→气爪，一站式气缸选型计算与报告。">
@@ -65,6 +65,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
   @media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
   .fld label{display:block;font-size:13px;color:var(--txt2);margin-bottom:4px;font-weight:600}
   .fld input,.fld select{width:100%;padding:8px 10px;border:1px solid #cdd6e3;border-radius:6px;font-size:14px;background:#fff;color:var(--txt)}
+  .fld .csel { width: 100%; }
   .fld input:focus,.fld select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(29,111,209,.12)}
   .fld .hint{font-size:12px;color:#8a97a8;margin-top:3px}
   .seg{display:flex;gap:8px;flex-wrap:wrap}
@@ -176,7 +177,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
         <div class="grid2">
           <div class="fld"><label>负载质量 m (kg)</label><input type="number" id="w-m" value="50" min="0" step="any"><div class="hint">垂直使用时直接按重力计算</div></div>
           <div class="fld"><label>摩擦系数 μ（水平用）</label>
-            <select id="w-mu">
+            <select id="w-mu" class="code-select">
               <option value="0.004">0.004 直线导轨（滚动）</option>
               <option value="0.01">0.01 精密滚动导向</option>
               <option value="0.1" selected>0.1 一般导向</option>
@@ -218,7 +219,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
         <h3>⑤ 安装形式与缓冲 ⑥ 磁性开关</h3>
         <div class="grid2">
           <div class="fld"><label>安装形式</label>
-            <select id="w-mount">
+            <select id="w-mount" class="code-select">
               <option value="基本型">基本型（缸体直接固定）</option>
               <option value="脚座型 LB">脚座型 LB（底面固定）</option>
               <option value="杆侧法兰 FA">杆侧法兰 FA（前端面固定）</option>
@@ -230,7 +231,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
             <div class="hint">负载运动轨迹为直线 → 固定式（脚座/法兰）；需摆动 → 耳环/耳轴</div>
           </div>
           <div class="fld"><label>缓冲形式</label>
-            <select id="w-cushion">
+            <select id="w-cushion" class="code-select">
               <option value="无缓冲">无缓冲（短行程/低速）</option>
               <option value="橡胶缓冲">橡胶缓冲（固定缓冲）</option>
               <option value="气缓冲（可调）" selected>气缓冲（可调，中高速）</option>
@@ -238,7 +239,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
             </select>
           </div>
           <div class="fld"><label>位置检测（磁性开关）</label>
-            <select id="w-mag">
+            <select id="w-mag" class="code-select">
               <option value="不需要">不需要</option>
               <option value="需要，2个（两端）" selected>需要，2个（两端检出）</option>
               <option value="需要，3个以上（中途检出）">需要，3个以上（中途检出）</option>
@@ -246,7 +247,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
             <div class="hint">使用磁性开关的前提是气缸内置磁环</div>
           </div>
           <div class="fld"><label>气缸品种</label>
-            <select id="w-series">
+            <select id="w-series" class="code-select">
               <option>标准气缸 SC/SU/SI</option>
               <option>薄型气缸 SDA</option>
               <option>自由安装气缸 CU</option>
@@ -296,14 +297,14 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
     <h3>回答几个问题，自动推荐气缸类型</h3>
     <div class="grid3">
       <div class="fld"><label>① 所需运动形式</label>
-        <select id="t-motion">
+        <select id="t-motion" class="code-select">
           <option value="line">直线往复运动</option>
           <option value="swing">摆动 / 旋转</option>
           <option value="grip">夹持 / 抓取工件</option>
         </select>
       </div>
       <div class="fld" id="t-space-w"><label>② 安装空间是否受限</label>
-        <select id="t-space">
+        <select id="t-space" class="code-select">
           <option value="no">空间充足</option>
           <option value="axial">轴向（长度方向）受限</option>
           <option value="radial">径向（高度/宽度）受限</option>
@@ -311,7 +312,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
         </select>
       </div>
       <div class="fld" id="t-prec-w"><label>③ 精度 / 导向要求</label>
-        <select id="t-prec">
+        <select id="t-prec" class="code-select">
           <option value="normal">一般（自带导向即可）</option>
           <option value="high">高定位精度（精密组装/传送）</option>
           <option value="antirot">活塞杆不允许旋转</option>
@@ -321,14 +322,14 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
     </div>
     <div class="grid3" style="margin-top:12px">
       <div class="fld" id="t-load-w"><label>④ 出力 / 成本要求</label>
-        <select id="t-load">
+        <select id="t-load" class="code-select">
           <option value="normal">常规出力</option>
           <option value="big">要求大出力</option>
           <option value="cheap">小负载、低成本、短行程</option>
         </select>
       </div>
       <div class="fld" id="t-angle-w" style="display:none"><label>② 摆动角度</label>
-        <select id="t-angle">
+        <select id="t-angle" class="code-select">
           <option value="90">≤ 90°</option>
           <option value="180">90° ~ 180°</option>
           <option value="270">180° ~ 270° 以上</option>
@@ -336,7 +337,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
         </select>
       </div>
       <div class="fld" id="t-grip-w" style="display:none"><label>② 夹持方式</label>
-        <select id="t-grip">
+        <select id="t-grip" class="code-select">
           <option value="parallel">平行开闭（通用）</option>
           <option value="wide">宽型平行（长工件）</option>
           <option value="fulcrum">支点开闭（夹外径）</option>
@@ -384,7 +385,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
         <div class="fld"><label>工作频率 N (周/min)</label><input type="number" id="a-n" value="10" step="any"><div class="hint">一往复为 1 周</div></div>
         <div class="fld"><label>同时用气缸数量（台）</label><input type="number" id="a-cnt" value="1" min="1" step="1"></div>
         <div class="fld"><label>配管流速限制</label>
-          <select id="a-vp"><option value="9">主管路 8~10 m/s</option><option value="12">支管 10~15 m/s</option></select>
+          <select id="a-vp" class="code-select"><option value="9">主管路 8~10 m/s</option><option value="12">支管 10~15 m/s</option></select>
         </div>
       </div>
     </div>
@@ -448,15 +449,15 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
       <div class="grid2">
         <div class="fld"><label>工件质量 m (kg)</label><input type="number" id="g-m" value="0.5" step="any"></div>
         <div class="fld"><label>夹持面摩擦系数 μ</label>
-          <select id="g-mu"><option value="0.1">0.1（金属光面）</option><option value="0.2" selected>0.2（一般）</option><option value="0.5">0.5（橡胶垫/齿形爪）</option></select>
+          <select id="g-mu" class="code-select"><option value="0.1">0.1（金属光面）</option><option value="0.2" selected>0.2（一般）</option><option value="0.5">0.5（橡胶垫/齿形爪）</option></select>
         </div>
         <div class="fld"><label>安全系数 K</label><input type="number" id="g-k" value="4" step="any"><div class="hint">一般取 4；搬运有加速度时取更大</div></div>
         <div class="fld"><label>手指数</label>
-          <select id="g-n"><option value="2" selected>2 指</option><option value="3">3 指</option><option value="4">4 指</option></select>
+          <select id="g-n" class="code-select"><option value="2" selected>2 指</option><option value="3">3 指</option><option value="4">4 指</option></select>
         </div>
         <div class="fld"><label>工作压力 P (MPa)</label><input type="number" id="g-p" value="0.5" step="0.05"></div>
         <div class="fld"><label>爪型</label>
-          <select id="g-type"><option>平行开闭 HFZ</option><option>宽型平行 HFT</option><option>支点开闭 HFC</option><option>圆柱形 HFR</option></select>
+          <select id="g-type" class="code-select"><option>平行开闭 HFZ</option><option>宽型平行 HFT</option><option>支点开闭 HFC</option><option>圆柱形 HFR</option></select>
         </div>
       </div>
     </div>
@@ -480,7 +481,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
   <p class="sub">标准缸径在各工作压力下的理论推力/拉力（单位：N；kgf ≈ N ÷ 9.8）。实际可用出力 = 理论值 × 负载率η。</p>
   <div class="card">
     <div class="fld" style="max-width:260px;margin-bottom:12px"><label>查看缸径分类</label>
-      <select id="f-cat"><option value="all">全部缸径</option><option value="mini">微型 Φ2.5~6</option><option value="small">小型 Φ8~25</option><option value="mid" selected>中型 Φ32~320</option></select>
+      <select id="f-cat" class="code-select"><option value="all">全部缸径</option><option value="small">小型 Φ8~25</option><option value="mid" selected>中型 Φ32~320</option></select>
     </div>
     <div id="f-table" style="overflow-x:auto"></div>
   </div>
@@ -495,7 +496,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
     <table class="data">
       <tr><th style="width:130px">步骤</th><th>要点</th></tr>
       <tr><td>1. 选定缸径</td><td class="l">确定轴向负载 F（水平 F=μmg，垂直 F=mg）→ 按运动状态选负载率 η → 确定使用压力 P（≤减压阀进口压力85%）→ 由 F=η·P·S 求活塞面积 S，换算缸径 D 并标准化</td></tr>
-      <tr><td>2. 选定行程</td><td class="l">按操作距离与传动机构行程比预选，留适当余量，尽量选标准行程（本表为厂商常用库存系列；GB/T 2349 第一系列为 25/50/80/100/125/160/200…；压紧工况吃进 3~5mm（毫米））</td></tr>
+      <tr><td>2. 选定行程</td><td class="l">按操作距离与传动机构行程比预选，留适当余量，尽量选标准行程（本表为厂商常用库存系列；GB/T 2349-2026（等同采用 ISO 4393:2015，2026-11-01 实施，代替 GB/T 2349-1980）优选行程为 5/10/25/50/80/100/125/160/200/250/320/400/500，需要更长时按 R10 圆整值延伸；压紧工况吃进 3~5mm（毫米））</td></tr>
       <tr><td>3. 选定品种</td><td class="l">按使用目的、缸径、行程从系列中选品种（标准/薄型/滑台/无杆/双杆…）</td></tr>
       <tr><td>4. 选安装形式</td><td class="l">基本型、脚座型、杆侧/无杆侧法兰、单/双耳环、杆侧/无杆侧/中央耳轴</td></tr>
       <tr><td>5. 选缓冲形式</td><td class="l">无缓冲、橡胶缓冲、气缓冲（可调）、外置液压缓冲器</td></tr>
@@ -538,7 +539,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
     <h3>四、缸径分级与选型要点</h3>
     <table class="data">
       <tr><th>分级</th><th>缸径范围</th><th>说明</th></tr>
-      <tr><td>微型气缸</td><td>Φ2.5 ~ Φ6</td><td class="l" rowspan="4">缸径与杆径系列执行 GB2348-80（ISO3320）。缸径选小出力不够，选大则笨重、成本高、耗气浪费；夹具设计尽量用增力机构减小缸径。出力效率约 85%（F′=F×85%）。行程 &gt;1250mm（毫米） 时行程允差由供需双方确定。</td></tr>
+      <tr><td>微型气缸</td><td>Φ2.5 ~ Φ6</td><td class="l" rowspan="4">缸径与杆径系列执行 GB/T 2348-2018（修改采用 ISO 3320:2013；标准缸径系列自 Φ8 起）。缸径选小出力不够，选大则笨重、成本高、耗气浪费；夹具设计尽量用增力机构减小缸径。出力效率约 85%（F′=F×85%）。行程 &gt;1250mm（毫米） 时行程允差由供需双方确定。</td></tr>
       <tr><td>小型气缸</td><td>Φ8 ~ Φ25</td></tr>
       <tr><td>中型气缸</td><td>Φ32 ~ Φ320</td></tr>
       <tr><td>大型气缸</td><td>&gt; Φ320</td></tr>
@@ -575,8 +576,8 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 
 <script>
 /* ================= 基础数据 ================= */
-const STD_BORES=[6,8,10,12,16,20,25,32,40,50,63,80,100,125,160,200,250,320];
-const ROD={6:3,8:4,10:4,12:6,16:6,20:8,25:10,32:12,40:16,50:20,63:20,80:25,100:30,125:32,160:40,200:40,250:50,320:63};
+const STD_BORES=[8,10,12,16,20,25,32,40,50,63,80,100,125,160,200,250,320];
+const ROD={8:4,10:4,12:6,16:6,20:8,25:10,32:12,40:16,50:20,63:20,80:25,100:30,125:32,160:40,200:40,250:50,320:63};
 const STD_STROKES=[25,50,75,100,125,150,160,175,200,250,300,350,400,450,500,600,700,800,900,1000,1100,1200,1250,1400,1500];
 const P0=0.1013, G=9.81;
 /* HRQ 回转气缸参考数据（0.5MPa 转矩 N·m / 允许动能 J(带缓冲)），最终以样本为准 */
@@ -723,7 +724,7 @@ function buildReport(){
       <tr><td class="l">磁性开关</td><td>${mag}</td></tr>
       <tr><td class="l">参考订货型号</td><td style="font-weight:700;color:#155bb0">${model}（具体型号编码以厂家样本为准）</td></tr>
     </table>
-    <p style="margin-top:12px;font-size:12px;color:#8a97a8">注：本报告按 GB2348/ISO3320 标准缸径系列与工程手册公式计算，最终选型请以所选品牌样本的允许负载、动能、行程范围校核。</p>
+    <p style="margin-top:12px;font-size:12px;color:#8a97a8">注：本报告按 GB/T 2348-2018 / ISO 3320:2013 标准缸径系列与工程手册公式计算，最终选型请以所选品牌样本的允许负载、动能、行程范围校核。</p>
   </div>`;
   $('report-content').innerHTML=html;
   document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('active'));
@@ -860,7 +861,6 @@ calcGrip();
 function calcForce(){
   const cat=$('f-cat').value;
   let bores=STD_BORES.slice();
-  if(cat==='mini')bores=[3,4,6];
   if(cat==='small')bores=[8,10,12,16,20,25];
   if(cat==='mid')bores=[32,40,50,63,80,100,125,160,200,250,320];
   const ps=[0.2,0.3,0.4,0.5,0.6,0.7,0.8];
@@ -877,6 +877,7 @@ function calcForce(){
 $('f-cat').addEventListener('change',calcForce);
 calcForce();
 </script>
+<script src="/js/code-select.js"></script>
 <script src="/js/pwa.js" defer></script>
 </body>
 </html>

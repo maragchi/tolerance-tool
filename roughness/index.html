@@ -50,6 +50,8 @@ h1{font-size:22px;margin-bottom:2px}
 .tab:hover{color:#333}
 .tab.active{color:#2563eb;border-bottom-color:#2563eb;font-weight:600}
 .input-group select{width:260px;max-width:100%}
+.input-group .csel { width: 260px; max-width: 100%; }
+@media (max-width: 600px) { .input-group .csel { width: 100%; } }
 .result-highlight{display:flex;align-items:baseline;gap:8px;margin:16px 0;padding:16px;background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-radius:8px;border-left:4px solid #2563eb}
 .result-value{font-size:30px;font-weight:700;color:#1a1a1a;font-family:Consolas,monospace}
 .result-unit{font-size:14px;color:#666}
@@ -138,7 +140,7 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
     <div class="input-row">
       <div class="input-group">
         <label>应用场景</label>
-        <select id="scenarioSelect"></select>
+        <select id="scenarioSelect" class="code-select"></select>
       </div>
     </div>
     <div id="scenarioResult"></div>
@@ -169,6 +171,7 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
   <div class="card">
     <h2>表面粗糙度标注符号</h2>
     <p class="hint" style="margin-bottom:4px">依据 GB/T 131-2006《产品几何技术规范（GPS）技术产品文件中表面结构的表示法》（等同采用 ISO 1302:2002）</p>
+<p class="hint" style="margin-bottom:4px">注：ISO 1302:2002 已于 2021-12-20 撤销，由 ISO 21920-1:2021 代替。旧图样中按 GB/T 131-2006 / ISO 1302:2002 标注的符号及其默认规则，不能自动替换成 ISO 21920-1:2021 的规定：后者采用不同的表面结构标注框架。先确认合同和图样引用的具体版次。依据：<a href="https://www.iso.org/standard/28089.html">ISO 1302:2002官方状态</a>。</p>
 
     <h3 style="font-size:15px;margin:16px 0 4px">三种基本符号</h3>
     <div class="symbol-row">
@@ -399,6 +402,7 @@ function renderMethods() {
 
 init();
 </script>
+<script src="/js/code-select.js"></script>
 <script src="/js/pwa.js" defer></script>
 </body>
 </html>

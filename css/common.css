@@ -384,7 +384,7 @@ html.has-drawer:not(.nav-ready) .nav-mask { transition: none !important; }
 }
 .csel-item:hover,.csel-item.hi{background:#eff6ff;color:#2563eb}
 .csel-item.sel{background:#2563eb;color:#fff;font-weight:600}
-select.csel-native{position:absolute;width:0;height:0;opacity:0;pointer-events:none;overflow:hidden}
+select.code-select.csel-native{position:absolute;width:0!important;min-width:0!important;max-width:0!important;height:0!important;min-height:0!important;opacity:0;pointer-events:none;overflow:hidden;margin:0!important;padding:0!important;border:0!important}
 .ig-row .csel{width:190px}
 .row-3 .csel{width:100%}
 @media(max-width:680px){ .ig-row .csel{width:100%} }

@@ -193,7 +193,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
       "name": "GB/T 1184 和 ISO 2768-2 的关系？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "GB/T 1184-1996《形状和位置公差 未注公差值》等同采用 ISO 2768-2:1989 国际标准。该标准规定了图样上未单独标注形状和位置公差时，应遵守的未注公差值。标准将未注形状公差分为三个等级：H（精密级）、K（中等级）和 L（粗糙级），企业可根据自身产品精度要求在企业标准中选择一个等级。需要注意的是，GB/T 1184 同时也包含了注出公差的公差值表（附录B），用于设计时查取直线度、平面度等形状公差的具体数值。"
+        "text": "GB/T 1184-1996《形状和位置公差 未注公差值》等效采用 ISO 2768-2:1989 国际标准。该标准规定了图样上未单独标注形状和位置公差时，应遵守的未注公差值。标准将未注形状公差分为三个等级：H（精密级）、K（中等级）和 L（粗糙级），企业可根据自身产品精度要求在企业标准中选择一个等级。需要注意的是，GB/T 1184 同时也包含了注出公差的公差值表（附录B），用于设计时查取直线度、平面度等形状公差的具体数值。另需注意：ISO 官网已将 ISO 2768-2:1989 列为已撤销，并指向 ISO 22081:2021；后者采用不同的通用几何规范框架，不能把旧表的 H/K/L 数值直接换过去，旧图样应按双方约定的具体版次执行。"
       }
     },
     {
@@ -328,7 +328,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
       <li>配合查询（H7/g6、H7/k6 等），自动判断间隙/过渡/过盈配合</li>
       <li>支持 d~u 共 12 种轴偏差代号 + js 对称偏差</li>
     </ul>
-    <div class="std-ref">标准：ISO 286-1/2 · GB/T 1800.1/1800.2</div>
+    <div class="std-ref">标准：ISO 286-1/2 · GB/T 1800.1-2020 / GB/T 1800.2-2020</div>
     <a href="/fit/" class="tool-link">开始查询 →</a>
   </div>
 
@@ -342,7 +342,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
       <li>按应用场景反向查询推荐等级</li>
       <li>未注公差（一般公差 H/K/L 级）参考表</li>
     </ul>
-    <div class="std-ref">标准：GB/T 1184-1996 · ISO 2768-2</div>
+    <div class="std-ref">标准：GB/T 1184-1996 · ISO 2768-2:1989（已撤销，现行 ISO 22081:2021）</div>
     <a href="/form/" class="tool-link">开始查询 →</a>
   </div>
 
@@ -355,7 +355,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
       <li>三种联结类型：较松(H9/D10)、一般(N9/JS9)、较紧(P9/P9)</li>
       <li>公差数据经 ISO 286-2 复核修正（N9 上偏差已更正为负值）</li>
     </ul>
-    <div class="std-ref">标准：GB/T 1095-2003 · GB/T 1800.2 (ISO 286-2)</div>
+    <div class="std-ref">标准：GB/T 1095-2003 · GB/T 1800.2-2020 (ISO 286-2)</div>
     <a href="/keyway/" class="tool-link">开始查询 →</a>
   </div>
 
@@ -364,11 +364,11 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
     <h2>卡簧槽查询</h2>
     <p>孔用 / 轴用弹性挡圈（卡簧）沟槽尺寸查询。输入直径，直接给出槽径 d2、槽宽 m、槽边距端面 n 和挡圈规格。</p>
     <ul>
-      <li>孔用挡圈槽（GB/T 893.1）、轴用挡圈槽（GB/T 894.1）</li>
+      <li>孔用挡圈槽（GB/T 893-2017）、轴用挡圈槽（GB/T 894-2017）</li>
       <li>槽径/槽宽带极限偏差，槽边距给最小值 n ≥</li>
       <li>自动算出槽深 (d2−d0)/2 和装配允许尺寸 d3</li>
     </ul>
-    <div class="std-ref">标准：GB/T 893.1 · GB/T 894.1（A 型）</div>
+    <div class="std-ref">标准：GB/T 893-2017 · GB/T 894-2017（A 型）</div>
     <a href="/circlip/" class="tool-link">开始查卡簧槽 →</a>
   </div>
 
@@ -393,7 +393,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
       <li>耗气量与气源计算 + 回转气缸转矩/动能校核 + 气爪夹持力</li>
       <li>杆屈曲校核、类型智能推荐、理论出力查询、选型报告导出</li>
     </ul>
-    <div class="std-ref">依据：GB/T 2348 · ISO 3320 · 工程手册经验公式</div>
+    <div class="std-ref">依据：GB/T 2348-2018 · ISO 3320:2013 · 工程手册经验公式</div>
     <a href="/cylinder/" class="tool-link">开始计算 →</a>
   </div>
 </section>
@@ -427,7 +427,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <details class="faq-item">
     <summary>GB/T 1184 和 ISO 2768-2 的关系？</summary>
     <div class="faq-answer">
-      <p>GB/T 1184-1996《形状和位置公差 未注公差值》等同采用 ISO 2768-2:1989 国际标准。该标准规定了图样上未单独标注形状和位置公差时，应遵守的未注公差值。标准将未注形状公差分为三个等级：H（精密级）、K（中等级）和 L（粗糙级），企业可根据自身产品精度要求在企业标准中选择一个等级。需要注意的是，GB/T 1184 同时也包含了注出公差的公差值表（附录B），用于设计时查取直线度、平面度等形状公差的具体数值。</p>
+      <p>GB/T 1184-1996《形状和位置公差 未注公差值》等效采用 ISO 2768-2:1989 国际标准。该标准规定了图样上未单独标注形状和位置公差时，应遵守的未注公差值。标准将未注形状公差分为三个等级：H（精密级）、K（中等级）和 L（粗糙级），企业可根据自身产品精度要求在企业标准中选择一个等级。需要注意的是，GB/T 1184 同时也包含了注出公差的公差值表（附录B），用于设计时查取直线度、平面度等形状公差的具体数值。另需注意：ISO 官网已将 ISO 2768-2:1989 列为已撤销，并指向 ISO 22081:2021；后者采用不同的通用几何规范框架，不能把旧表的 H/K/L 数值直接换过去，旧图样应按双方约定的具体版次执行。</p>
     </div>
   </details>
 

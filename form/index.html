@@ -60,6 +60,8 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 .tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
 .input-group input, .input-group select { width: 140px; }
 .input-group select { width: 180px; }
+.input-group .csel { width: 180px; }
+@media (max-width: 600px) { .input-group .csel { width: 100%; } }
 .mode-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
 .mode-btn { padding: 4px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; cursor: pointer; background: #fff; color: #666; }
 .mode-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
@@ -138,7 +140,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
       </div>
       <div class="input-group">
         <label>公差等级</label>
-        <select id="gradeSelect"></select>
+        <select id="gradeSelect" class="code-select"></select>
       </div>
       <div class="input-group" id="diaGroup" style="display:none">
         <label>直径 d (mm/毫米)<span style="font-weight:400;color:#94a3b8;font-size:12px"> 圆度/圆柱度</span></label>
@@ -159,7 +161,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
       </div>
       <div class="input-group">
         <label>应用场景</label>
-        <select id="scenarioSelect">
+        <select id="scenarioSelect" class="code-select">
           <option value="">请选择</option>
         </select>
       </div>
@@ -584,6 +586,7 @@ function renderGeneralTol() {
 
 init();
 </script>
+<script src="/js/code-select.js"></script>
 <script src="/js/pwa.js" defer></script>
 </body>
 </html>

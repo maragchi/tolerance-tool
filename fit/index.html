@@ -414,6 +414,40 @@ select.code-select{
 .input-row .quick-toggle{height:44px;padding:0 16px;margin-top:0;flex:0 0 auto}
 /* 单要素卡那行原本是 grid，按钮会被挤到第二行 → 显式改成 flex（.row-3 有 !important 不受影响） */
 .card > .input-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+/* 单要素卡两个胶囊等宽，并压过上面的 flex，避免手机上 .picker 拉满、.csel 缩成文字宽 */
+.card > .input-row:has(> .ig-row){
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px 26px;
+}
+.card > .input-row:has(> .ig-row) > .ig-row{
+  display:grid;
+  grid-template-columns:160px minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.card > .input-row:has(> .ig-row) .picker,
+.card > .input-row:has(> .ig-row) .csel{
+  width:100%;
+  min-width:0;
+  max-width:none;
+  flex:none;
+  box-sizing:border-box;
+  display:flex;
+}
+.card > .input-row:has(> .ig-row) .csel{display:block}
+/* 360px 时 number input 固有宽度把 ▼ 挤出胶囊：输入框允许收缩，前缀/按钮不收缩 */
+.card > .input-row:has(> .ig-row) .picker input{width:0;flex:1 1 0;min-width:0}
+.card > .input-row:has(> .ig-row) .picker .dim-prefix,
+.card > .input-row:has(> .ig-row) .picker .picker-toggle{flex:0 0 auto}
+@media(max-width:680px){
+  .card > .input-row:has(> .ig-row){
+    grid-template-columns:minmax(0,1fr);
+    gap:12px;
+  }
+}
 @media(max-width:760px){
   .row-with-quick{flex-wrap:wrap}
   .row-with-quick .quick-toggle{width:100%;justify-content:center}
