@@ -464,3 +464,18 @@ select.code-select.csel-native{position:absolute;width:0!important;min-width:0!i
   min-height: 0;
   margin: 26px auto;
 }
+
+/* 工具页底部「参考资料」小块（/fit/ /form/ /keyway/ /circlip/ /roughness/ /cylinder/），仅作用于 .ref-links 及其后代 */
+.ref-links{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin:20px 0;color:#334155}
+.ref-links h2{font-size:16px;font-weight:600;color:#1e293b;margin:0 0 8px}
+.ref-links ul{list-style:none;margin:0;padding:0}
+.ref-links li{padding:8px 0;border-top:1px dashed #e2e8f0;font-size:13.5px;line-height:1.65}
+.ref-links li:first-child{border-top:0}
+.ref-links li>a{color:#1d4ed8;text-decoration:none;overflow-wrap:anywhere}
+.ref-links li>a:hover{text-decoration:underline}
+.ref-links .ref-desc{display:block;color:#64748b;font-size:12.5px;overflow-wrap:anywhere}
+.ref-links .res-tag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:999px;border:1px solid #cbd5e1;background:#f1f5f9;color:#475569;font-size:11px;line-height:1.7;white-space:nowrap;vertical-align:1px}
+.ref-links .res-tag-open{border-color:#86efac;background:#f0fdf4;color:#166534}
+.ref-links .ref-more{display:inline-block;margin-top:8px;font-size:13.5px;font-weight:600;color:#1d4ed8;text-decoration:none}
+.ref-links .ref-more:hover{text-decoration:underline}
+@media(max-width:600px){.ref-links{padding:14px 14px}}
