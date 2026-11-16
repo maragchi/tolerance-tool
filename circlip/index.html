@@ -68,7 +68,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 .result-label { font-size: 12.5px; color: #475569; }
 .result-value { font-family: ui-monospace, Consolas, monospace; font-size: 24px; font-weight: 700; color: #1d4ed8; line-height: 1.25; }
 .result-unit { font-size: 13px; font-weight: 400; color: #64748b; }
-.cad-figs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.cad-figs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 0; }
 .clip-table th { white-space: nowrap; }
 .clip-hide { display: none !important; }
 @media (max-width: 760px) { .cad-figs { grid-template-columns: 1fr; } }
@@ -76,12 +76,13 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 body { max-width: 1240px; }
 .page-sub { margin: 0 0 10px; }
 .page-sub .breadcrumb { margin-bottom: 3px; text-align: center; }
-.page-sub .subtitle { margin-bottom: 0; text-align: center; font-size: 12.5px; }
+.cl-sub { grid-area: sub; margin: 14px 0 0; text-align: center; font-size: 12.5px; }
 .cl-layout { display: grid; align-items: start; gap: 0 18px;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); grid-template-areas: "h2 fig" "head fig"; }
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); grid-template-areas: "h2 fig" "head fig" "detail detail" "sub sub"; }
 .cl-h2 { grid-area: h2; margin-bottom: 10px; text-align: center; }
 .cl-head { grid-area: head; min-width: 0; }
 .cl-fig { grid-area: fig; min-width: 0; }
+.cl-detail { grid-area: detail; min-width: 0; margin-top: 16px; }
 /* 孔用 / 轴用切换：与键槽页联结类型按钮同款 */
 .fit-toggle { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
 .fit-btn { flex: 1 1 0; min-width: 0; padding: 7px 8px; border: 1.5px solid #ddd; border-radius: 8px; background: #fff;
@@ -118,8 +119,6 @@ body { max-width: 1240px; }
 /* 断面图区块：与键槽页 .dwg-block 同款 */
 .dwg-block { border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; background: #f8fafc; }
 .dwg-head { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: #0f172a; }
-.dwg-note { font-size: 11.5px; color: #94a3b8; margin-top: 9px; line-height: 1.7; }
-.dwg-note b { color: #475569; }
 .action-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .act-btn { flex: 1 1 0; padding: 9px 18px; border: 1.5px solid #d0d5dd; border-radius: 8px; background: #fff; color: #444;
   font-size: 13px; cursor: pointer; transition: all .15s; }
@@ -145,7 +144,7 @@ body { max-width: 1240px; }
 .ref-wrap table.data-table tr:hover td { background: #f8fbff; }
 .error a { color: #2563eb; }
 @media (max-width: 960px) {
-  .cl-layout { grid-template-columns: 1fr; gap: 0; grid-template-areas: "h2" "head" "fig"; }
+  .cl-layout { grid-template-columns: 1fr; gap: 0; grid-template-areas: "h2" "head" "fig" "detail" "sub"; }
   .cl-fig { margin-top: 16px; }
 }
 @media (max-width: 760px) { .load-grid { grid-template-columns: 1fr 1fr; } }
@@ -243,12 +242,6 @@ body.cad-zoom-open{overflow:hidden}
 <div class="breadcrumb">
   <a href="/">公差工具站</a><span>›</span>卡簧槽查询
 </div>
-
-<p class="subtitle">
-  孔用弹性挡圈 <b>GB/T 893-2017</b>（标准型 A / 重型 B，已代替 893.1/893.2-1986）的沟槽尺寸查询：
-  输入孔径 → 直接给出槽径 d2、槽宽 m（H13）、槽深 t、槽边距端面 n、允许套入轴径 d4，并同步画到下面的断面图上。<br>
-  轴用一栏按 <b>GB/T 894-2017</b> 表（d0 3~200，76 档，已与 2017 版逐行核对）。
-</p>
 </div>
 
 <div class="card">
@@ -278,7 +271,7 @@ body.cad-zoom-open{overflow:hidden}
       <div class="dwg-head"><span>卡簧槽断面图</span></div>
   <div class="cad-figs" id="cadFigs">
     <!--CAD-FIGS-START-->
-<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 374.4 405.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="-1.261 33.975 350.23 355.996" xmlns="http://www.w3.org/2000/svg" version="1.1">
  
  <defs>
   <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -526,88 +519,88 @@ L 333.678391 336.514286
    <g id="fig1-LineCollection_3">
     <path d="M 320.23686 135.942857 
 L 333.678391 122.501326 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 300.223718 135.942857 
 L 333.678391 102.488184 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 280.210576 135.942857 
 L 323.667719 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 260.197434 135.942857 
 L 303.654576 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 240.184291 135.942857 
 L 283.641434 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 220.171149 135.942857 
 L 263.628292 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 200.158007 135.942857 
 L 243.61515 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 180.144865 135.942857 
 L 223.602008 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 160.131722 135.942857 
 L 203.588865 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 140.11858 135.942857 
 L 183.575723 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 120.105438 135.942857 
 L 163.562581 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 110.821248 125.213905 
 L 143.549439 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 110.821248 105.200763 
 L 123.536296 92.485714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig1-PathCollection_4"/>
    <g id="fig1-LineCollection_4">
     <path d="M 316.365541 379.971429 
 L 333.678391 362.658578 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 296.352398 379.971429 
 L 333.678391 342.645436 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 276.339256 379.971429 
 L 319.796399 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 256.326114 379.971429 
 L 299.783257 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 236.312972 379.971429 
 L 279.770115 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 216.299829 379.971429 
 L 259.756972 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 196.286687 379.971429 
 L 239.74383 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 176.273545 379.971429 
 L 219.730688 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 156.260403 379.971429 
 L 199.717546 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 136.247261 379.971429 
 L 179.704403 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 116.234118 379.971429 
 L 159.691261 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 110.821248 365.371157 
 L 134.10669 342.085714 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 135.335534 340.856871 
 L 139.678119 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
     <path d="M 110.821248 345.358014 
 L 119.664977 336.514286 
-" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #ff00ff"/>
+" clip-path="url(#fig1-pa74342e90d)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig1-PathCollection_5"/>
    <g id="fig1-LineCollection_5">
@@ -1094,7 +1087,7 @@ z
   </clipPath>
  </defs>
 </svg><div class="cad-figcap">孔用挡圈槽 <span id="cadCapCh"></span></div></div></div>
-<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 374.4 405.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<div class="cad-figbox"><div class="cad-figwrap"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="-1.261 33.975 350.23 355.996" xmlns="http://www.w3.org/2000/svg" version="1.1">
  
  <defs>
   <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
@@ -1297,36 +1290,36 @@ z
    </g>
    <g id="fig2-PathCollection_3"/>
    <g id="fig2-LineCollection_3">
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig2-PathCollection_4"/>
    <g id="fig2-LineCollection_4">
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
-    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #ff00ff"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
+    <path clip-path="url(#fig2-p1683268c9e)" style="fill: none; stroke: #1f2937"/>
    </g>
    <g id="fig2-PathCollection_5"/>
    <g id="fig2-LineCollection_5">
@@ -1859,15 +1852,18 @@ z
 </svg><div class="cad-figcap">轴用挡圈槽 <span id="cadCapCs"></span></div></div></div>
 <!--CAD-FIGS-END-->
   </div>
-      <p class="dwg-note">
-    上图是 CAD 原图渲出的两张断面：<b>左=孔用槽、右=轴用槽</b>，几何是静态底图，<b>两侧尺寸数字都随上面选择的直径实时填</b>（孔用按当前 A/B 型、轴用按 GB/T 894-2017 同规格），不重新渲染、不发请求。
-      </p>
     </div>
     <div class="action-row">
       <button type="button" class="act-btn primary" id="copyBtn">复制结果</button>
       <button type="button" class="act-btn" id="printBtn">打印</button>
     </div>
   </div>
+  <div class="cl-detail" id="detailArea"></div>
+  <p class="subtitle cl-sub">
+  孔用弹性挡圈 <b>GB/T 893-2017</b>（标准型 A / 重型 B，已代替 893.1/893.2-1986）的沟槽尺寸查询：
+  输入孔径 → 直接给出槽径 d2、槽宽 m（H13）、槽深 t、槽边距端面 n、允许套入轴径 d4，并同步画到下面的断面图上。<br>
+  轴用一栏按 <b>GB/T 894-2017</b> 表（d0 3~200，76 档，已与 2017 版逐行核对）。
+  </p>
   </div>
 </div>
 
@@ -2055,6 +2051,7 @@ z
   var sizeList = document.getElementById('sizeList');
   var label = document.getElementById('sizeLabel');
   var area = document.getElementById('resultArea');
+  var detail = document.getElementById('detailArea');
   var spec = document.getElementById('specVal');
   var refBox = document.getElementById('refTable');
   var figs = document.getElementById('cadFigs');
@@ -2096,12 +2093,12 @@ z
 
   function render() {
     var row = find(sel.value);
-    if (!row) { area.innerHTML = '<p class="error">没有这个规格</p>'; return; }
+    if (!row) { area.innerHTML = '<p class="error">没有这个规格</p>'; if (detail) detail.innerHTML = ''; return; }
     var hole = isHole(), std = D[cur].std;
     var depth = hole ? (row.d2 - row.size) / 2 : (row.size - row.d2) / 2;
     spec.textContent = '挡圈 ' + std + ' ' + t(row.size);
 
-    var html = ''
+    var highlight = ''
       + '<div class="result-highlight"><div>'
       + '<div class="result-label">' + D[cur].name
       + ' <span class="type-tag ' + (hole ? 'type-h' : 'type-s') + '">' + std + '</span></div>'
@@ -2109,8 +2106,9 @@ z
       + (hole ? 'd1（孔径）' : 'd0（轴径）') + '</span></div>'
       + '<div class="result-label">槽径 d2 = Φ' + t(row.d2) + ' ｜ 槽宽 m = ' + t(row.m)
       + ' ｜ 槽深 = ' + t(depth) + '</div>'
-      + '</div></div>'
-      + '<table class="data-table clip-table" style="margin-top:12px">'
+      + '</div></div>';
+    var table = ''
+      + '<table class="data-table clip-table">'
       + '<tr><th>项目</th><th>数值</th><th>说明</th></tr>'
       + '<tr><td>挡圈外径 ' + (hole ? 'd3' : 'D') + '</td><td>' + t(row.ring) + '</td><td>挡圈装在槽里的外径</td></tr>'
       + '<tr><td>挡圈厚度 ' + (hole ? 's' : 'S') + '</td><td>' + t(row.thick) + '</td><td>槽宽 m 要比它略大</td></tr>'
@@ -2130,7 +2128,8 @@ z
       + (row.FN ? '<tr><td>承载能力 F<sub>N</sub> / F<sub>R</sub></td><td>' + t(row.FN) + ' / ' + t(row.FR)
               + ' kN</td><td>2017 版新增（材料 R<sub>eL</sub>≥200 MPa）</td></tr>' : '')
       + '</table>';
-    area.innerHTML = html;
+    area.innerHTML = highlight;
+    if (detail) detail.innerHTML = table;
 
     /* 两张图都显示、都填数：孔用取当前类型（A/B）的行，轴用取同规格的 GB/T 894-2017 行 */
     var holeRow = hole ? row : findIn('holeA', row.size);
@@ -2235,6 +2234,7 @@ z
     if (hi !== null) near.push('<a href="#" data-pick="' + hi + '">Φ' + t(hi) + '</a>');
     area.innerHTML = '<p class="error">没有 Φ' + t(v) + ' 这一档（只收录标准档位，不插值）。'
       + (near.length ? '相邻档位：' + near.join(' / ') : '') + '</p>';
+    if (detail) detail.innerHTML = '';
     spec.textContent = '—';
   }
   function pickSize(v) {
