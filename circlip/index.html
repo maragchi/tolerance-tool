@@ -83,6 +83,11 @@ body { max-width: 1240px; }
 .cl-head { grid-area: head; min-width: 0; }
 .cl-fig { grid-area: fig; min-width: 0; }
 .cl-detail { grid-area: detail; min-width: 0; margin-top: 16px; }
+/* 宽屏：右侧断面图跨 h2+head 两行时，多出的高度只给 head 行，标题紧贴类型按钮（窄屏单列不受影响） */
+@media (min-width: 961px) {
+  .cl-layout { grid-template-rows: auto 1fr auto auto; align-content: start; }
+  .cl-h2 { align-self: start; }
+}
 /* 孔用 / 轴用切换：与键槽页联结类型按钮同款 */
 .fit-toggle { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 12px; }
 .fit-btn { flex: 1 1 0; min-width: 0; padding: 7px 8px; border: 1.5px solid #ddd; border-radius: 8px; background: #fff;
