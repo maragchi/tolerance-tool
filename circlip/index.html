@@ -27,6 +27,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <link rel="manifest" href="/manifest.json">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/editorial.css">
+<link rel="stylesheet" href="/css/result-card.css">
 
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
@@ -160,6 +161,15 @@ body { max-width: 1240px; }
   .load-grid { grid-template-columns: 1fr; }
   .fit-btn { flex: 1 1 calc(50% - 3px); }
 }
+/* ===== 结果优先：沟槽查询 / 载荷校核先给结果卡（组件见 /css/result-card.css），明细表、推导表、「尺寸怎么用」收进「显示详细数据」 ===== */
+.cl-head .answer-card { margin-top: 6px; }
+.answer-title .nw { white-space: nowrap; }
+.answer-card.clip-fail { border-color: #ea580c; background: #fff7ed; }
+.answer-card.clip-fail .answer-title { color: #c2410c; }
+.cl-detail .answer-details { margin-top: 0; }
+#loadResult .answer-details .result-highlight { display: none; }
+#loadResult .answer-details-body > .clip-table { margin-top: 0 !important; }
+#usageDetails .answer-details-body { margin-top: 10px; }
 @media print {
   .site-nav, .action-row, .picker-toggle, .cad-zoom, .cad-rot, .tool-notes, .site-footer, .fit-btn:not(.active) { display: none !important; }
   body { max-width: none; }
@@ -1902,6 +1912,9 @@ z
 
 <div class="card">
   <h2>尺寸怎么用（先看这一条）</h2>
+  <details class="answer-details" id="usageDetails">
+  <summary>显示详细数据</summary>
+  <div class="answer-details-body">
   <div class="hint" style="line-height:1.9">
     <p><b>孔用挡圈</b>：在孔壁上车一圈槽，槽径 d2 比孔径 d0 <b>大</b>；挡圈外径 D 也大于孔径，
     装配后卡进槽里挡住外圈零件。槽宽 m 要略大于挡圈厚度 S，装配时挡圈才有活动量。</p>
@@ -1912,6 +1925,8 @@ z
     <p><b>d3 是装配允许尺寸</b>：孔用给"轴径 ≤ d3"（挡圈内孔能通过的轴），轴用给"孔径 ≥ d3"
     （挡圈能套进去的孔）—— 校核装配通过性时用这一列。</p>
   </div>
+  </div>
+  </details>
 </div>
 
 <div class="card">
@@ -1944,6 +1959,7 @@ z
 <!--CAD-SCRIPTS-START-->
 <script>window.CAD={"id":"site-circlip","title":"卡簧槽断面 · 动态尺寸","subtitle":"孔用 GB/T 893-2017 ｜ 轴用 GB/T 894-2017 —— 槽径/槽宽/槽边距由页面实时填","figures":[{"key":"ch","title":"孔用挡圈槽","slots":[{"slot":"ch-ch_d1","kind":"plain","label":"孔径","main":{"fmt":"int","prefix":"Φ","suffix":"","from":"ch_d1"}},{"slot":"ch-ch_d1b","kind":"plain","label":"孔径(右)","main":{"fmt":"int","prefix":"Φ","suffix":"","from":"ch_d1"}},{"slot":"ch-ch_d2","kind":"stack","label":"槽径","main":{"fmt":"trim","prefix":"Φ","suffix":"","from":"ch_d2"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"ch_d2UP"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"ch_d2LO"}},{"slot":"ch-ch_m","kind":"stack","label":"槽宽","main":{"fmt":"trim","prefix":"","suffix":"","from":"ch_m"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"ch_mUP"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"ch_mLO"}},{"slot":"ch-ch_n","kind":"plain","label":"槽边距端面","main":{"fmt":"trim","prefix":"n≥","suffix":"","from":"ch_n"}}]},{"key":"cs","title":"轴用挡圈槽","slots":[{"slot":"cs-cs_d0","kind":"plain","label":"轴径","main":{"fmt":"int","prefix":"Φ","suffix":"","from":"cs_d0"}},{"slot":"cs-cs_d0b","kind":"plain","label":"轴径(左)","main":{"fmt":"int","prefix":"Φ","suffix":"","from":"cs_d0"}},{"slot":"cs-cs_d2","kind":"stack","label":"槽径","main":{"fmt":"trim","prefix":"Φ","suffix":"","from":"cs_d2"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"cs_d2UP"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"cs_d2LO"}},{"slot":"cs-cs_m","kind":"stack","label":"槽宽","main":{"fmt":"trim","prefix":"","suffix":"","from":"cs_m"},"up":{"fmt":"dev","prefix":"","suffix":"","from":"cs_mUP"},"low":{"fmt":"dev","prefix":"","suffix":"","from":"cs_mLO"}},{"slot":"cs-cs_n","kind":"plain","label":"槽边距端面","main":{"fmt":"trim","prefix":"n≥","suffix":"","from":"cs_n"}}]}],"legend":[],"initial":{"ch_d1":45,"ch_d2":47.5,"ch_m":1.85,"ch_n":3.8,"ch_mUP":0.14,"ch_mLO":0.0,"ch_d2UP":0.25,"ch_d2LO":0.0,"cs_d2UP":0.0,"cs_d2LO":-0.25,"cs_mUP":0.14,"cs_mLO":0.0,"cs_d0":45,"cs_d2":42.5,"cs_m":1.85,"cs_n":3.8},"colors":{"pos":"#DC2626","neg":"#1D4ED8","zero":"#DC2626"}};</script>
 <script src="/js/cad-live.js"></script>
+<script src="/js/result-card.js"></script>
 <script>
 /* ===== 图纸放大 / 旋转（两个页面共用）=====
    点右上角放大镜、或点图任意处 → 全屏看；**放大后再点一下（点图或点面板）就收起来**，
@@ -2090,6 +2106,38 @@ z
   }
   function isHole() { return cur !== 'shaft'; }
 
+  /* ============ 结果卡（结果优先）：只换展示，数值全部来自 CLIP_DATA 与原有计算 ============ */
+  var CLIP_OPEN = {};   /* 各「显示详细数据」展开状态跨重算保留 */
+  function clipDetails(id, body) {
+    var o = !!CLIP_OPEN[id];
+    return '<details class="answer-details" id="' + id + '"' + (o ? ' open' : '') + '>'
+      + '<summary>' + (o ? '收起详细数据' : '显示详细数据') + '</summary>'
+      + '<div class="answer-details-body">' + body + '</div></details>';
+  }
+  function bindClipDetails(id) {
+    var d = document.getElementById(id);
+    if (!d) return;
+    var sum = d.querySelector('summary');
+    d.addEventListener('toggle', function () {
+      CLIP_OPEN[id] = d.open;
+      if (sum) sum.textContent = d.open ? '收起详细数据' : '显示详细数据';
+    });
+  }
+  function hasV(v) { return v !== null && v !== undefined; }
+  function grooveCardHTML(row, hole, std, depth) {
+    var d2Dev = hasV(row.d2Up) ? '（' + dev2(row.d2Up, row.d2Lo) + '）' : '';
+    var mTol = hole ? '（H13）' : (hasV(row.mUp) ? '（' + dev2(row.mUp, row.mLo) + '）' : '');
+    return '<div class="answer-card"><div class="answer-label">' + D[cur].name + ' · ' + std + '</div>'
+      + '<div class="answer-title long">' + (hole ? '孔径 d1' : '轴径 d0') + ' Φ' + t(row.size)
+      + ' → <span class="nw">槽径 d2 = Φ' + t(row.d2) + '</span></div>'
+      + '<div class="answer-line">槽径 d2 = Φ' + t(row.d2) + d2Dev + ' · 槽宽 m = ' + t(row.m) + mTol + '</div>'
+      + '<div class="answer-line">槽边到端面 n ≥ ' + t(row.n) + '（min，小于它装不进工具）</div>'
+      + '<div class="answer-line muted">槽深 = ' + t(depth) + '（由 d2 与 ' + (hole ? 'd1' : 'd0') + ' 算出）'
+      + (hasV(row.t) ? ' · 表列槽深 t = ' + t(row.t) : '') + '</div>'
+      + '<div class="answer-advice">按此车槽、配挡圈 ' + std + ' ' + t(row.size) + (hole ? '（外径 ' + t(row.ring) + '、厚度 ' + t(row.thick) + '）' : '（厚度 ' + t(row.thick) + '）') + '即可装配；'
+      + (hole ? '穿过挡圈的轴径不大于 d4 = ' : '套在挡圈外的孔径不小于 d3 = ') + t(row.allow) + '。</div></div>';
+  }
+
   function buildSelect() {
     var r = rows(), h = '';
     for (var i = 0; i < r.length; i++) h += '<div class="picker-item" data-v="' + r[i].size + '">Φ' + r[i].size + '</div>';
@@ -2135,8 +2183,8 @@ z
       + (row.FN ? '<tr><td>承载能力 F<sub>N</sub> / F<sub>R</sub></td><td>' + t(row.FN) + ' / ' + t(row.FR)
               + ' kN</td><td>2017 版新增（材料 R<sub>eL</sub>≥200 MPa）</td></tr>' : '')
       + '</table>';
-    area.innerHTML = highlight;
-    if (detail) detail.innerHTML = table;
+    area.innerHTML = grooveCardHTML(row, hole, std, depth);   /* 原高亮块（类型、Φ、d2、m、槽深）的内容全部在卡里 */
+    if (detail) { detail.innerHTML = clipDetails('clipDetails', table); bindClipDetails('clipDetails'); }
 
     /* 两张图都显示、都填数：孔用取当前类型（A/B）的行，轴用取同规格的 GB/T 894-2017 行 */
     var holeRow = hole ? row : findIn('holeA', row.size);
@@ -2310,6 +2358,12 @@ z
     });
   })();
   document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+  var printOpened = [];
+  window.addEventListener('beforeprint', function () {
+    printOpened = [].slice.call(document.querySelectorAll('#clipDetails:not([open]),#loadDetails:not([open])'));
+    printOpened.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () { printOpened.forEach(function (d) { d.open = false; }); printOpened = []; });
 
   document.getElementById('copyBtn').addEventListener('click', function () {
     var row = find(sel.value); if (!row) return;
@@ -2373,6 +2427,13 @@ z
     var ok = !isNaN(F) && F > 0 && F <= allow;
     var n = (!isNaN(F) && F > 0) ? allow / F : null;
 
+    var noF = isNaN(F) || F <= 0;
+    var card = '<div class="answer-card' + (ok ? '' : (noF ? ' none' : ' clip-fail')) + '">'
+      + '<div class="answer-label">载荷校核 · ' + D[cur].name + ' Φ' + t(row.size) + '（' + D[cur].std + '）</div>'
+      + '<div class="answer-title long">' + (noF ? '请输入载荷' : 'F = ' + fmt(F, 1) + ' kN：<span class="nw">' + (ok ? '通过' : '不通过') + '</span>') + '</div>'
+      + '<div class="answer-line">许用静载 ≈ ' + fmt(allow, 1) + ' kN' + (n !== null ? ' · 安全系数（许用/实际）= ' + fmt(n, 2) : '') + '</div>'
+      + (noF ? '' : '<div class="answer-advice">' + (ok ? '低于许用值，可用。' : '高于许用值，放大一档或加支承环。') + '</div>')
+      + '</div>';
     var html = ''
       + '<div class="result-highlight" style="' + (ok ? '' : 'background:#fff7ed;border-left-color:#ea580c') + '">'
       + '<div class="result-label">' + D[cur].name + ' Φ' + t(row.size) + '（' + D[cur].std + '）</div>'
@@ -2402,7 +2463,8 @@ z
       + '</table>'
       + '<p class="hint" style="margin-top:8px">注：表中值不含疲劳安全系数；动载工况需另行校核。'
       + '零件倒角大于 <i>g</i> 时按式(2) F′<sub>Rg</sub>=F<sub>Rg</sub>·(g/g′) 折减，且 F′<sub>Rg</sub> 大于 F<sub>R</sub> 时取 F<sub>R</sub>（本页已支持）。</p>';
-    box.innerHTML = html;
+    box.innerHTML = card + clipDetails('loadDetails', html);
+    bindClipDetails('loadDetails');
   }
 
   ['loadF', 'loadRel', 'loadT', 'loadG'].forEach(function (id) {
@@ -2412,6 +2474,7 @@ z
 
   try { sync(); } catch (e) { window.__syncErr = String(e); }
   try { loadCheck(); } catch (e) { window.__lcErr = String(e); }
+  if (window.ResultCard) window.ResultCard.bindDetails('usageDetails');
   window.__LC = loadCheck;
 })();
 </script>
