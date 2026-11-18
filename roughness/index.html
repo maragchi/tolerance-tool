@@ -25,6 +25,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/editorial.css">
+<link rel="stylesheet" href="/css/result-card.css">
 
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
@@ -100,6 +101,16 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
   table.data-table{font-size:11px}
   table.data-table th,table.data-table td{padding:5px 6px}
 }
+/* ===== 结果优先：Ra 推荐 / 加工对照 先给结果卡（组件见 /css/result-card.css），表格与长说明收进「显示详细数据」 ===== */
+#scenarioResult > .answer-card,#methodAnswer > .answer-card{margin-top:16px}
+.answer-details .result-highlight{display:none}
+.answer-details .info-grid:first-child{margin-top:0}
+.answer-title .nw{white-space:nowrap}
+.answer-card .cost-badge{vertical-align:1px}
+.rough-alts{grid-template-columns:1fr}
+.rough-alts .answer-alt-title{font-family:inherit;font-size:14px}
+#methodPanel .input-row{gap:12px}
+@media(max-width:600px){#methodPanel .input-group{width:100%}}
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#2563eb">
@@ -148,12 +159,17 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
   </div>
   <div class="card">
     <h2>关于 Ra 选值的经验法则</h2>
+    <details class="answer-details" id="rulesDetails">
+    <summary>显示详细数据</summary>
+    <div class="answer-details-body">
     <div class="info-grid">
       <div class="info-item"><div class="info-label">成本递增规律</div><div class="info-value">Ra 每降低一个等级，加工成本明显上升；Ra≤0.4 需磨削，Ra≤0.1 需研磨/超精，成本数倍增长</div></div>
       <div class="info-item"><div class="info-label">降本原则</div><div class="info-value">非关键面尽量放宽 Ra（如非配合面用 6.3~12.5 而非 1.6），避免过度要求</div></div>
     </div>
     <div class="data-note">📐 <strong>成本分级基准</strong>（以普通粗车 Ra 12.5 为参照）：低成本 ×1（粗加工即可）；中等 ×2~3（需精加工）；较高 ×5~10（需磨削）；极高 ×20 以上（需研磨/超精）。倍数为粗略经验，实际因材料/批量差异很大。</div>
     <div class="data-note">⚠️ 推荐 Ra 为工程经验值（综合自《机械设计手册》《机械加工工艺手册》），默认针对<strong>典型钢件、中等批量</strong>。铸铁/铝合金/塑料达到同 Ra 的难度不同；具体取值需结合材料、工况、公差等级（如 IT7 配合面常用 Ra 0.8~1.6），以企业工艺标准为准。</div>
+    </div>
+    </details>
   </div>
 </div>
 
@@ -162,7 +178,23 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
   <div class="card">
     <h2>加工方法能达到的 Ra 范围</h2>
     <p class="hint" style="margin-bottom:8px">判断现有工艺能否达到图纸要求；Ra 范围为该加工方法常见可达区间</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label for="raSelect">图纸要求 Ra（μm（微米））</label>
+        <select id="raSelect" class="code-select"></select>
+      </div>
+      <div class="input-group">
+        <label for="methodSelect">或：现有加工方法</label>
+        <select id="methodSelect" class="code-select"></select>
+      </div>
+    </div>
+    <div id="methodAnswer" aria-live="polite"></div>
+    <details class="answer-details" id="methodDetails">
+    <summary>显示详细数据（各加工方法可达范围）</summary>
+    <div class="answer-details-body">
     <div id="methodTable"></div>
+    </div>
+    </details>
     <div class="data-note">⚠️ 加工方法可达 Ra 为经验区间，受机床精度、刀具、参数、材料影响，实际以试加工为准。</div>
   </div>
 </div>
@@ -250,7 +282,7 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
 </div>
 
 <!-- ========== 折叠补充 ========== -->
-<details class="fold" open>
+<details class="fold">
   <summary>Ra 和 Rz 的区别（无精确换算）</summary>
   <div class="fold-body">
     <p><strong>Ra</strong>（轮廓算术平均偏差）：反映整个评定长度内轮廓偏离中线的平均程度，能综合表征表面，稳定性好，<strong>GB/T 1031 推荐优先使用</strong>。</p>
@@ -277,6 +309,7 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
 </div>
 
 <script src="/js/nav.js"></script>
+<script src="/js/result-card.js"></script>
 <script>
 // ===== 数据（经验值初稿，待豆包/手册核对）=====
 const SCENARIOS = [
@@ -346,12 +379,122 @@ function umToMm(v){
   return mm.toFixed(6).replace(/0+$/, '').replace(/\.$/, '');
 }
 
+/* ============ 结果卡（结果优先）：只换展示，数值全部来自上面的 SCENARIOS / METHODS / findLrForRa ============ */
+const ROUGH_OPEN = {};          /* 「显示详细数据」展开状态跨重算保留 */
+const ROUGH_FOOT = '推荐 Ra 为工程经验值，默认针对典型钢件、中等批量；场景推荐是选型起点，不是验收保证。';
+const METHOD_FOOT = '加工方法可达 Ra 为经验区间，受机床精度、刀具、参数、材料影响，实际以试加工为准。';
+const COST_RANK = {low:0, mid:1, high:2, vhigh:3};
+function costBadge(c) { return '<span class="cost-badge '+COST_CLASS[c]+'">'+COST_LABEL[c]+'</span>'; }
+function roughDetails(id, body, label) {
+  const open = !!ROUGH_OPEN[id];
+  return '<details class="answer-details" id="'+id+'"'+(open?' open':'')+'><summary>'+(open?'收起详细数据':(label||'显示详细数据'))+'</summary>'
+    + '<div class="answer-details-body">'+body+'</div></details>';
+}
+function bindRoughDetails(id, label) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const sum = el.querySelector('summary');
+  el.addEventListener('toggle', () => {
+    ROUGH_OPEN[id] = el.open;
+    if (sum) sum.textContent = el.open ? '收起详细数据' : (label || '显示详细数据');
+  });
+}
+function scenarioCardHTML(s, lr) {
+  const hard = s.cost === 'high' || s.cost === 'vhigh';
+  return '<div class="answer-card"><div class="answer-label">Ra 推荐 · '+s.name+'</div>'
+    + '<div class="answer-title long">标 Ra '+s.raMin+' ~ '+s.raMax+' μm，<span class="nw">'+(hard ? '需'+s.methods : s.methods+'即可')+'</span></div>'
+    + '<div class="answer-line">'+costBadge(s.cost)+' 推荐加工：'+s.methods+' · '+s.note+'</div>'
+    + '<div class="answer-line muted">换算 ≈ '+umToMm(s.raMin)+' ~ '+umToMm(s.raMax)+' 毫米 · 取样长度 lr '+(lr ? lr.lr+' mm' : '—')+' · 评定长度 ln '+(lr ? lr.ln+' mm' : '—')+'（按 Ra '+s.raMax+'）</div>'
+    + '<div class="answer-advice">'+(hard ? '该 Ra 范围要求较高，加工成本显著。若该面非关键功能面，可考虑放宽 Ra 以降本。' : '')+ROUGH_FOOT+'</div></div>';
+}
+/* 目标 Ra 与某加工方法可达区间的关系（只按页面 METHODS 的 raMin / raMax 判断，不另造数）：
+   stable = 可达区间整体 ≤ 目标；ok = 区间跨过目标；limit = 目标恰为可达下限；no = 达不到 */
+function raFit(m, r) {
+  if (m.raMax <= r) return 'stable';
+  if (m.raMin < r) return 'ok';
+  if (m.raMin === r) return 'limit';
+  return 'no';
+}
+const FIT_TXT = {stable:'稳妥：整个可达区间都不超过要求', ok:'可达：区间跨过要求，需控制参数、试切确认', limit:'已到可达下限：不易稳定'};
+function methodAltHTML(m, r) {
+  const f = raFit(m, r);
+  return '<li class="answer-alt"><span class="answer-alt-title">'+m.name+' · Ra '+m.raMin+' ~ '+m.raMax+'</span>'
+    + '<span class="answer-alt-line'+(f==='stable'?'':' warn')+'">'+FIT_TXT[f]+'</span>'
+    + '<span class="answer-alt-line muted">'+COST_LABEL[m.cost]+' · '+m.note+'</span></li>';
+}
+function raCardHTML(r) {
+  const order = (a, b) => COST_RANK[a.cost] - COST_RANK[b.cost] || METHODS.indexOf(a) - METHODS.indexOf(b);
+  const stable = METHODS.filter(m => raFit(m, r) === 'stable').sort(order);
+  const ok = METHODS.filter(m => raFit(m, r) === 'ok').sort(order);
+  const limit = METHODS.filter(m => raFit(m, r) === 'limit').sort(order);
+  const reach = stable.length + ok.length + limit.length;
+  if (!reach) {
+    return '<div class="answer-card none"><div class="answer-label">加工对照 · 图纸要求 Ra '+r+'</div><div class="answer-none">页面所列加工方法都达不到 Ra '+r+'</div></div>';
+  }
+  const main = stable[0] || ok[0] || limit[0];
+  const mf = raFit(main, r);
+  const verdict = mf === 'stable' ? main.name+'即可' : mf === 'ok' ? '可用'+main.name+'，需控制参数' : main.name+'已到可达下限';
+  let html = '<div class="answer-card"><div class="answer-label">加工对照 · 图纸要求 Ra '+r+' μm</div>'
+    + '<div class="answer-title long">标 Ra '+r+'：<span class="nw">'+verdict+'</span></div>'
+    + '<div class="answer-line">'+costBadge(main.cost)+' '+main.name+' 可达 Ra '+main.raMin+' ~ '+main.raMax+' μm · '+main.note+'</div>'
+    + '<div class="answer-line muted">'+FIT_TXT[mf]+'；页面所列方法中共 '+reach+' 种可达 Ra '+r+'（稳妥 '+stable.length+' · 需控制 '+ok.length+' · 到下限 '+limit.length+'）</div>'
+    + '<div class="answer-advice">'+METHOD_FOOT+'</div></div>';
+  /* 备选最多 3 条：先给成本不高于首选、但需控制参数的（更经济），再补其他稳妥的 */
+  const cheaper = ok.concat(limit).filter(m => m !== main && COST_RANK[m.cost] <= COST_RANK[main.cost]).slice(0, 2);
+  const safer = stable.filter(m => m !== main);
+  const alts = cheaper.concat(safer).slice(0, 3);
+  if (alts.length) html += '<p class="answer-sub">备选</p><ul class="answer-alts rough-alts">'+alts.map(m => methodAltHTML(m, r)).join('')+'</ul>';
+  return html;
+}
+function methodCardHTML(m) {
+  return '<div class="answer-card"><div class="answer-label">加工对照 · '+m.cat+'</div>'
+    + '<div class="answer-title long">'+m.name+' → <span class="nw">可标 Ra '+m.raMin+' ~ '+m.raMax+' μm</span></div>'
+    + '<div class="answer-line">'+costBadge(m.cost)+' '+m.note+'</div>'
+    + '<div class="answer-line muted">换算 ≈ '+umToMm(m.raMin)+' ~ '+umToMm(m.raMax)+' 毫米</div>'
+    + '<div class="answer-line">图纸要求 Ra ≥ '+m.raMax+'：可稳定达到；Ra '+m.raMin+' ~ '+m.raMax+' 之间：需控制参数、试切确认；小于 Ra '+m.raMin+'：超出该方法常见可达区间。</div>'
+    + '<div class="answer-advice">'+METHOD_FOOT+'</div></div>';
+}
+let methodBusy = false;
+function queryMethod(src) {
+  const ra = document.getElementById('raSelect'), ms = document.getElementById('methodSelect');
+  const box = document.getElementById('methodAnswer');
+  if (!ra || !ms || !box) return;
+  /* 两个下拉二选一：改了一个就把另一个清空（同步自定义下拉的显示） */
+  if (!methodBusy) {
+    const other = src === 'ra' ? ms : ra;
+    if ((src === 'ra' ? ra : ms).value !== '' && other.value !== '') {
+      methodBusy = true; other.value = ''; other.dispatchEvent(new Event('change')); methodBusy = false;
+    }
+  } else { return; }
+  if (src === 'method' && ms.value !== '') { box.innerHTML = methodCardHTML(METHODS[parseInt(ms.value)]); return; }
+  if (ra.value !== '') { box.innerHTML = raCardHTML(parseFloat(ra.value)); return; }
+  if (ms.value !== '') { box.innerHTML = methodCardHTML(METHODS[parseInt(ms.value)]); return; }
+  box.innerHTML = '<p class="hint">选一个图纸要求的 Ra，或选一种现有加工方法。</p>';
+}
+function initMethodQuery() {
+  const ra = document.getElementById('raSelect'), ms = document.getElementById('methodSelect');
+  if (!ra || !ms) return;
+  /* Ra 选项＝加工对照表里出现过的全部可达区间端点（页面已有数值），从小到大 */
+  const vals = [];
+  METHODS.forEach(m => { [m.raMin, m.raMax].forEach(v => { if (vals.indexOf(v) < 0) vals.push(v); }); });
+  vals.sort((a, b) => a - b);
+  ra.innerHTML = '<option value="">—</option>' + vals.map(v => '<option value="'+v+'">Ra '+v+'</option>').join('');
+  ms.innerHTML = '<option value="">—</option>' + METHODS.map((m, i) => '<option value="'+i+'">'+m.name+'（Ra '+m.raMin+' ~ '+m.raMax+'）</option>').join('');
+  ra.value = '3.2';
+  ra.addEventListener('change', () => queryMethod('ra'));
+  ms.addEventListener('change', () => queryMethod('method'));
+  queryMethod('ra');
+  bindRoughDetails('methodDetails', '显示详细数据（各加工方法可达范围）');
+  bindRoughDetails('rulesDetails');
+}
+
 function init() {
   const sel = document.getElementById('scenarioSelect');
   sel.innerHTML = '';
   SCENARIOS.forEach((s,i) => { sel.innerHTML += '<option value="'+i+'">'+s.name+'</option>'; });
   sel.addEventListener('change', queryScenario);
   renderMethods();
+  initMethodQuery();
   document.querySelectorAll('.tab').forEach(t => {
     t.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
@@ -381,7 +524,8 @@ function queryScenario() {
   if (s.cost === 'high' || s.cost === 'vhigh') {
     html += '<div class="data-note">💡 该 Ra 范围要求较高，加工成本显著。若该面非关键功能面，可考虑放宽 Ra 以降本。</div>';
   }
-  area.innerHTML = html;
+  area.innerHTML = scenarioCardHTML(s, lr) + roughDetails('scenDetails', html);
+  bindRoughDetails('scenDetails');
 }
 
 function renderMethods() {
