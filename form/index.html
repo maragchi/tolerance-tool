@@ -288,7 +288,7 @@ const DATA_STATUS = '数据依据 GB/T 1184-1996 标准原文';
 const DATA = { straightness: null, flatness: null };
 
 
-/* GB/T 1184-1996 附录 B 表 B4：圆度、圆柱度公差值（μm）
+/* GB/T 1184-1996 附录 B 表 B2：圆度、圆柱度公差值（μm）
    ⚠️ 目前只收录 0~8 级（8 级部分档位缺），来源见 data/gb1184-geometric.json */
 const ROUNDNESS_BINS = [3, 6, 10, 18, 30, 50, 80, 120, 180, 250, 315, 400, 500];
 const ROUNDNESS_GRADES = {
@@ -538,7 +538,7 @@ function queryByGrade() {
              : ti.appsKey === 'flatness' ? FLATNESS_APPS : [];
   const matchedApps = apps.filter(a => grade >= a.grades[0] && grade <= a.grades[1]);
 
-  /* 圆度/圆柱度：主参数是直径 d，走表 B4 */
+  /* 圆度/圆柱度：主参数是直径 d，走表 B2 */
   if (ti.param === 'd') {
     const dia = parseFloat(document.getElementById('diamInput').value);
     const prevB = [0, 3, 6, 10, 18, 30, 50, 80, 120, 180, 250, 315, 400];
@@ -557,14 +557,14 @@ function queryByGrade() {
     if (rd.value == null) {
       h += '<p class="hint">该等级暂无数据 —— 圆度/圆柱度目前收录 0~8 级（9~12 级为粗加工面，标准表待补）。</p>';
     }
-    h += '<p class="hint">依据 GB/T 1184-1996 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</p>';
+    h += '<p class="hint">依据 GB/T 1184-1996 表 B2：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</p>';
     var binTxt = prevB[rd.idx] + '~' + ROUNDNESS_BINS[rd.idx] + ' 档';
     var card = rd.value != null
       ? '<div class="answer-card"><div class="answer-label">' + ti.sym + ' ' + ti.name + '公差值</div>'
         + '<div class="answer-title long">Φ' + dia + '、' + grade + ' 级 <span class="nw">→ ' + rd.value + ' μm</span></div>'
         + '<div class="answer-line">直径 Φ' + dia + '（' + binTxt + '）· ' + grade + ' 级</div>'
         + methodLines(mfg, meas, '')
-        + '<div class="answer-advice">' + (mfg ? mfg.desc + '。' : '') + '依据 GB/T 1184-1996 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</div></div>'
+        + '<div class="answer-advice">' + (mfg ? mfg.desc + '。' : '') + '依据 GB/T 1184-1996 表 B2：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</div></div>'
       : '<div class="answer-card none"><div class="answer-label">' + ti.sym + ' ' + ti.name + '公差值</div>'
         + '<div class="answer-none">Φ' + dia + '、' + grade + ' 级：暂无数据</div>'
         + '<div class="answer-line">直径 Φ' + dia + '（' + binTxt + '）· ' + grade + ' 级</div>'
@@ -579,13 +579,13 @@ function queryByGrade() {
 
   let html = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+param+'公差值</div><div class="result-value">'+tol+' <span class="result-unit">μm</span></div><div class="result-label">长度范围 '+range.label+' · '+grade+' 级</div></div></div><div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
 
-  /* 定向公差：只在「平行度/垂直度/倾斜度」标签下显示（表 B2 与 B1 同系列，主参数同为 L） */
+  /* 定向公差：只在「平行度/垂直度/倾斜度」标签下显示（表 B3 与 B1 同系列，主参数同为 L） */
   if (currentTab === 'orientation') {
   html += '<div class="info-item" style="margin-top:12px">'
     + '<div class="info-label">同类定向公差（同值）</div>'
     + '<div class="info-value">平行度 / 垂直度 / 倾斜度 —— 同为 ' + tol + ' μm'
     + '<div style="font-size:12px;color:#888;margin-top:4px">'
-    + '依据 GB/T 1184 表 B2：这三项的公差值与直线度/平面度同系列，主参数取「被测要素的长度 L」；'
+    + '依据 GB/T 1184 表 B3：这三项的公差值与直线度/平面度同系列，主参数取「被测要素的长度 L」；'
     + '若被测要素是整条直线或整个平面，用上面的长度即可。</div></div></div>';
   }
 
@@ -605,7 +605,7 @@ function queryByGrade() {
   var lenTxt = document.getElementById('lengthInput').value.trim();
   var advice = (mfg ? mfg.desc : '');
   if (currentTab === 'orientation') {
-    advice += (advice ? '；' : '') + '平行度 / 垂直度 / 倾斜度同为 ' + tol + ' μm（GB/T 1184 表 B2，主参数取被测要素的长度 L）';
+    advice += (advice ? '；' : '') + '平行度 / 垂直度 / 倾斜度同为 ' + tol + ' μm（GB/T 1184 表 B3，主参数取被测要素的长度 L）';
   } else if (matchedApps.length > 0) {
     advice += (advice ? '；' : '') + '适用场景：' + matchedApps.map(function (a) { return a.name + '（' + a.desc + '）'; }).join('、');
   }
