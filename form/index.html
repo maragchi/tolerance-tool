@@ -202,6 +202,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
   <details class="answer-details" id="genDetails">
   <summary>显示详细数据</summary>
   <div class="answer-details-body">
+  <p class="hint" style="margin:0 0 8px">下表为直线度 / 平面度的未注公差值（单位 mm）；其他几何公差项目本站未收录未注值。</p>
   <div id="generalTolArea"></div>
   </div>
   </details>
@@ -554,7 +555,7 @@ function queryByGrade() {
       + '<div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">' + (mfg ? mfg.methods : '-') + '</div></div>'
       + '<div class="info-item"><div class="info-label">测量方法</div><div class="info-value">' + (meas ? meas.methods : '-') + '</div></div></div>';
     if (rd.value == null) {
-      h += '<p class="hint">该等级暂无数据 —— 圆心度/圆柱度目前收录 0~8 级（9~12 级为粗加工面，标准表待补）。</p>';
+      h += '<p class="hint">该等级暂无数据 —— 圆度/圆柱度目前收录 0~8 级（9~12 级为粗加工面，标准表待补）。</p>';
     }
     h += '<p class="hint">依据 GB/T 1184-1996 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</p>';
     var binTxt = prevB[rd.idx] + '~' + ROUNDNESS_BINS[rd.idx] + ' 档';
@@ -701,9 +702,10 @@ function queryGeneralTol() {
       + '<div class="answer-line">未注形状公差表只列到 ' + lastMax + ' mm（最后一档 ' + last + '），表外不做外推。</div></div>';
     return;
   }
-  box.innerHTML = '<div class="answer-card"><div class="answer-label">未注形状公差（ISO 2768-2 / GB/T 1184）</div>'
+  box.innerHTML = '<div class="answer-card"><div class="answer-label">未注直线度 / 平面度公差（ISO 2768-2 / GB/T 1184）</div>'
     + '<div class="answer-title long">' + cls + ' 级、' + formEsc(raw) + ' mm <span class="nw">→ ' + c.values[i] + ' mm</span></div>'
-    + '<div class="answer-line">' + cls + '（' + c.name + '）· 长度范围 ' + GENERAL_TOL.ranges[i] + '</div>'
+    + '<div class="answer-line">适用项目：直线度 / 平面度 · ' + cls + '（' + c.name + '）· 长度范围 ' + GENERAL_TOL.ranges[i] + '</div>'
+    + '<div class="answer-line muted">只对应直线度、平面度；垂直度、对称度、圆跳动等其他几何公差的未注值本站未收录，不能套用这个数。</div>'
     + '<div class="answer-advice">适用于图样上未单独标注公差的要素；图样已有单独标注时，先执行该标注。</div></div>';
 }
 
