@@ -28,6 +28,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/editorial.css">
+<link rel="stylesheet" href="/css/result-card.css">
 
 <!-- Google Analytics: 替换 G-QNG5GE6S5Z 为你的实际 ID -->
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
@@ -137,6 +138,12 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   .quick-form{grid-template-columns:1fr 1fr}
   .qf-go{grid-column:1 / -1}
 }
+</style>
+<style>
+/* 快速查配合：首页直接给迷你结果卡（组件见 /css/result-card.css） */
+.quick-fit .answer-slot{margin-top:14px}
+.quick-fit .answer-slot:empty{display:none}
+.quick-fit .answer-card{margin:0}
 </style>
 <script type="application/ld+json">
 {
@@ -316,6 +323,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
     </div>
     <button type="submit" class="qf-go">查询</button>
   </form>
+  <div class="answer-slot" id="qfResult" aria-live="polite"></div>
   <p class="qf-hint">常用：H7/g6（滑动）、H7/h6（定位可拆）、H7/k6（过渡）、H7/p6（过盈压装）。不知道选什么？看<a href="/fit/#fitRef">常用配合推荐</a>。</p>
 </section>
 
@@ -540,24 +548,71 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 
 <script src="/js/nav.js"></script>
 <script src="/js/usage-events.js"></script>
+<script src="/js/iso286.js"></script>
+<script src="/js/result-card.js"></script>
 <script src="/js/pwa.js" defer></script>
 <script>
-/* 首页快速查询：把三个参数带到 /fit/，那边落地即出结果（不改 URL 结构，可正常收录/分享） */
-function quickGo(e) {
-  if (e) { e.preventDefault(); }
+/* 首页快速查询：本页直接出一张迷你结果卡（计算与 /fit/ 同一套 /js/iso286.js），
+   「查看详细」再带参数跳到 /fit/?d=..&h=..&s=..#fitQuery（/fit/ 落地即按这三个参数出结果）。 */
+function quickFitUrl(d, h, s) {
+  return '/fit/?d=' + encodeURIComponent(d)
+    + '&h=' + encodeURIComponent(h) + '&s=' + encodeURIComponent(s) + '#fitQuery';
+}
+function quickRender() {
+  var box = document.getElementById('qfResult');
+  var I = window.ISO286, RC = window.ResultCard;
+  if (!box || !I || !RC) { return null; }
   var d = (document.getElementById('qDim').value || '').trim();
   var h = (document.getElementById('qHole').value || 'H7').trim();
   var s = (document.getElementById('qShaft').value || 'g6').trim();
   var num = Number(d);
-  if (!d || !isFinite(num) || num < 1 || num > 500) {
+  var err = d ? I.sizeRangeError(num) : '请输入有效的基本尺寸（mm）';
+  var r = err ? null : I.calcFit(num, h, s);
+  if (!err && r && r.error) { err = r.error; }
+  if (err) {
+    box.innerHTML = '<div class="answer-card none"><p class="error">' + RC.esc(err) + '</p></div>';
+    return null;
+  }
+  var code = h + '/' + s;
+  box.innerHTML = '<div class="answer-card">'
+    + '<div class="answer-label">配合结果</div>'
+    + '<div class="answer-title long">Φ' + num + ' ' + RC.esc(code) + '：' + RC.rangeText(r.minClearance, r.maxClearance) + '，' + r.fitTypeCN
+    + ' ' + RC.badge(r.fitType, r.fitTypeShort) + '</div>'
+    + '<div class="answer-line">孔 ' + RC.esc(h) + ' <b>' + I.formatDev(r.hole.upper) + ' / ' + I.formatDev(r.hole.lower) + '</b>'
+    + '　轴 ' + RC.esc(s) + ' <b>' + I.formatDev(r.shaft.upper) + ' / ' + I.formatDev(r.shaft.lower) + '</b> mm</div>'
+    + '<div class="answer-line muted">最大间隙/过盈 ' + I.formatMM(r.maxClearance) + ' mm，最小间隙/过盈 ' + I.formatMM(r.minClearance) + ' mm（负值为过盈）</div>'
+    + '<div class="answer-advice">' + RC.fitAdvice(code, r.fitType) + '</div>'
+    + '<div class="answer-actions"><a class="answer-link" id="qfDetailLink" href="' + quickFitUrl(String(num), h, s) + '">查看详细（公差带图、极限尺寸）→</a></div>'
+    + '</div>';
+  return r;
+}
+function quickGo(e) {
+  if (e) { e.preventDefault(); }
+  var r = quickRender();
+  if (!r) {
     document.getElementById('qDim').focus();
     return false;
   }
   if (window.ToolUsage) { window.ToolUsage.home(); }
-  location.href = '/fit/?d=' + encodeURIComponent(d)
-    + '&h=' + encodeURIComponent(h) + '&s=' + encodeURIComponent(s) + '#fitQuery';
   return false;
 }
+(function () {
+  function bind() {
+    quickRender();
+    var inp = document.getElementById('qDim');
+    if (inp) { inp.addEventListener('input', quickRender); }
+    ['qHole', 'qShaft'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) { el.addEventListener('change', quickRender); }
+    });
+    /* 常用尺寸列表点选只改 value、不发事件 → 点完再刷一次 */
+    var list = document.getElementById('qDimList');
+    if (list) { list.addEventListener('click', function () { setTimeout(quickRender, 0); }); }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bind);
+  } else { bind(); }
+})();
 </script>
 <script src="/js/code-select.js" defer></script>
 <script>

@@ -41,6 +41,10 @@
 .answer-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .answer-card .error{margin:0;color:#b91c1c}
 
+/* 卡内跳转链接（如首页迷你卡的「查看详细」） */
+.answer-link{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid #2563eb;background:#fff;color:#1d4ed8;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none}
+.answer-link:hover{background:#eff6ff}
+
 /* 「显示详细数据」折叠 */
 .answer-details{margin:12px 0 0;min-width:0}
 .answer-details > summary{display:inline-flex;align-items:center;gap:6px;list-style:none;padding:7px 14px;border:1px solid #2563eb;background:#fff;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600;user-select:none}
