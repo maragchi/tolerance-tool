@@ -608,6 +608,8 @@ select.code-select{
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="公差工具">
+<style>.reverse-entry{margin:0 0 16px;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:13.5px;color:#334155;line-height:1.65}.reverse-entry a{color:#1d4ed8;font-weight:600;text-decoration:none}.reverse-entry a:hover{text-decoration:underline}
+</style>
 </head>
 <body>
 
@@ -630,6 +632,8 @@ select.code-select{
 <div class="breadcrumb">
   <a href="/">公差工具站</a><span>›</span>公差配合查询
 </div>
+
+<p class="reverse-entry">已知上下偏差，或已知间隙 / 过盈范围？可用 <a href="/reverse/">公差反查</a> 反查公差带或推荐配合。</p>
 
 
 <div class="card">
@@ -1195,7 +1199,7 @@ z
 <!-- BEGIN ref-links --><section class="ref-links" aria-labelledby="ref-links-title"><h2 id="ref-links-title">参考资料</h2><ul><li><a href="https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=B2EA3A6454B903DCF466A0CE16F2ED26" target="_blank" rel="noopener nofollow">GB/T 1800.1-2020 产品几何技术规范（GPS） 线性尺寸公差ISO代号体系 第1部分：公差、偏差和配合的基础</a><span class="res-tag">仅题录</span><span class="ref-desc">标准公差、基本偏差和配合制度的国标题录（现行，推荐性）</span></li><li><a href="https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=8450464EA932756AE6C10593E68AA1AF" target="_blank" rel="noopener nofollow">GB/T 1800.2-2020 … 第2部分：标准公差带代号和孔、轴的极限偏差表</a><span class="res-tag">仅题录</span><span class="ref-desc">孔、轴极限偏差表的国标题录（现行）</span></li><li><a href="https://www.iso.org/standard/54915.html" target="_blank" rel="noopener nofollow">ISO 286-2:2010</a><span class="ref-desc">ISO 286 第2部分：孔、轴标准公差带和极限偏差表；仍现行</span></li></ul><a class="ref-more" href="/resources/#fit">更多资料 →</a></section><!-- END ref-links -->
 <div class="site-footer">
   <p>公差配合查询 | ISO 286 / GB/T 1800</p>
-  <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/form/">形状公差查询</a> · <a href="/keyway/">键槽查询</a></p>
+  <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/reverse/">公差反查</a> · <a href="/form/">形状公差查询</a> · <a href="/keyway/">键槽查询</a></p>
 <nav class="footer-links" aria-label="网站信息">
   <a href="/privacy/">隐私政策</a>
   <a href="/about/">关于本站</a>
@@ -1205,6 +1209,7 @@ z
 
 <script src="/js/nav.js"></script>
 <script src="/js/usage-events.js"></script>
+<script src="/js/iso286.js"></script>
 <script>
 // === 车间友好：密集尺寸下拉 + 公差代号下拉 + 快捷点选 ===
 const DIMS = (function(){
@@ -1216,11 +1221,9 @@ const DIMS = (function(){
   for (var i = 1; i <= 500; i++) a.push(i);
   return a;
 })();
-// 下拉可选的完整代号（必须与 SHAFT_DEV 数据表支持的偏差一致：d,e,f,g,h,js,k,m,n,p,r,s,u）
-const HOLE_CODES = ['H7','H8','H9','H11','H12','JS7','JS8','JS9','K7','M7','N7','P7','R7','S7','U7','F8','G7','D10','E9'];
-const SHAFT_CODES = ['h6','h7','h9','h11','h12','js6','js7','js9','g6','g7','f7','f8','e8','e9','d9','d10','k6','m6','n6','p6','r6','s6','u6'];
+// HOLE_CODES / SHAFT_CODES 见 /js/iso286.js
 const SINGLE_QUICK = ['H7','H8','h6','h7','g6','f7','k6','js6','p6','N7'];
-const FIT_QUICK = ['H7/g6','H7/h6','H7/k6','H7/n6','H7/p6','H7/s6','H8/f7','H9/d9','H7/js6','H7/u6'];
+// FIT_QUICK 见 /js/iso286.js
 
 function optList(arr){
   // 自动过滤：只保留 SHAFT_DEV 数据表支持的偏差（防下拉与数据不一致）
@@ -1342,177 +1345,7 @@ function initPickers(){
   });
 }
 
-// === IT 标准公差值 (μm) ===
-const IT = {
-  IT5:  [4,5,6,8,9,11,13,15,18,20,23,25,27],
-  IT6:  [6,8,9,11,13,16,19,22,25,29,32,36,40],
-  IT7:  [10,12,15,18,21,25,30,35,40,46,52,57,63],
-  IT8:  [14,18,22,27,33,39,46,54,63,72,81,89,97],
-  IT9:  [25,30,36,43,52,62,74,87,100,115,130,140,155],
-  IT10: [40,48,58,70,84,100,120,140,160,185,210,230,250],
-  IT11: [60,75,90,110,130,160,190,220,250,290,320,360,400],
-  IT12: [100,120,150,180,210,250,300,350,400,460,520,570,630],
-  IT13: [140,180,220,270,330,390,460,540,630,720,810,890,970]
-};
-
-const COARSE = [
-  [0,3],[3,6],[6,10],[10,18],[18,30],[30,50],[50,80],[80,120],[120,180],[180,250],[250,315],[315,400],[400,500]
-];
-
-const FINE = [
-  [0,3],[3,6],[6,10],[10,14],[14,18],[18,24],[24,30],[30,40],[40,50],
-  [50,65],[65,80],[80,100],[100,120],[120,140],[140,160],[160,180],
-  [180,200],[200,225],[225,250],[250,280],[280,315],[315,355],[355,400],[400,450],[450,500]
-];
-
-const SHAFT_DEV = {
-  d: { type:'upper', v:[-20,-30,-40,-50,-50,-65,-65,-80,-80,-100,-100,-120,-120,-145,-145,-145,-170,-170,-170,-190,-190,-210,-210,-230,-230] },
-  e: { type:'upper', v:[-14,-20,-25,-32,-32,-40,-40,-50,-50,-60,-60,-72,-72,-85,-85,-85,-100,-100,-100,-110,-110,-125,-125,-135,-135] },
-  f: { type:'upper', v:[-6,-10,-13,-16,-16,-20,-20,-25,-25,-30,-30,-36,-36,-43,-43,-43,-50,-50,-50,-56,-56,-62,-62,-68,-68] },
-  g: { type:'upper', v:[-2,-4,-5,-6,-6,-7,-7,-9,-9,-10,-10,-12,-12,-14,-14,-14,-15,-15,-15,-17,-17,-18,-18,-20,-20] },
-  h: { type:'upper', v:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] },
-  k: { type:'lower', v:[0,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,5,5] },
-  m: { type:'lower', v:[2,4,6,7,7,8,8,9,9,11,11,13,13,15,15,15,17,17,17,20,20,21,21,23,23] },
-  n: { type:'lower', v:[4,8,10,12,12,15,15,17,17,20,20,23,23,27,27,27,31,31,31,34,34,37,37,40,40] },
-  p: { type:'lower', v:[6,12,15,18,18,22,22,26,26,32,32,37,37,43,43,43,50,50,50,56,56,62,62,68,68] },
-  r: { type:'lower', v:[10,15,19,23,23,28,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132] },
-  s: { type:'lower', v:[14,19,23,28,28,35,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,250] },
-  u: { type:'lower', v:[18,23,28,33,33,41,41,48,48,60,66,80,90,106,118,132,155,170,190,218,240,268,296,330,370] }
-};
-
-function findCoarseIndex(dim) {
-  for (let i = 0; i < COARSE.length; i++) {
-    if (dim > COARSE[i][0] && dim <= COARSE[i][1]) return i;
-  }
-  return -1;
-}
-
-function findFineIndex(dim) {
-  for (let i = 0; i < FINE.length; i++) {
-    if (dim > FINE[i][0] && dim <= FINE[i][1]) return i;
-  }
-  return -1;
-}
-
-function getIT(dim, grade) {
-  const idx = findCoarseIndex(dim);
-  if (idx < 0) return null;
-  const key = 'IT' + grade;
-  if (!IT[key]) return null;
-  return IT[key][idx];
-}
-
-function getShaftDeviation(dim, letter, grade) {
-  const idx = findFineIndex(dim);
-  if (idx < 0) return null;
-  const d = SHAFT_DEV[letter];
-  if (!d) return null;
-  // ISO 286: k 在 IT8 及以上时 ei=0
-  if (letter === 'k' && grade >= 8) {
-    return { type: d.type, value: 0 };
-  }
-  return { type: d.type, value: d.v[idx] };
-}
-
-function calcTolerance(dim, code) {
-  const match = code.trim().match(/^([a-zA-Z]+)(\d+)$/);
-  if (!match) return { error: '公差代号格式错误，如 H7、g6' };
-
-  const letter = match[1];
-  const grade = parseInt(match[2]);
-  const isHole = letter === letter.toUpperCase();
-
-  if (grade < 5 || grade > 13) return { error: 'IT等级范围: 5~13' };
-  if (dim < 1 || dim > 500) return { error: '超出 ISO 286 标准范围（1~500mm（毫米）），请改用标准内尺寸' };
-
-  const normalLetter = letter.toLowerCase();
-  const itVal = getIT(dim, grade);
-
-  if (itVal === null) return { error: '找不到该尺寸的IT值' };
-
-  if (normalLetter === 'js') {
-    const half = itVal / 2;
-    const upper = +half.toFixed(1);
-    const lower = +(-half).toFixed(1);
-    return { upper, lower, it: itVal, isHole, letter, grade };
-  }
-
-  if (normalLetter === 'h') {
-    if (isHole) {
-      return { upper: itVal, lower: 0, it: itVal, isHole, letter, grade };
-    } else {
-      return { upper: 0, lower: -itVal, it: itVal, isHole, letter, grade };
-    }
-  }
-
-  const dev = getShaftDeviation(dim, normalLetter, grade);
-  if (!dev) return { error: '不支持的偏差代号: ' + letter + '（支持: d,e,f,g,h,js,k,m,n,p,r,s,u）' };
-
-  let upper, lower, deltaUnavailable = false;
-  if (isHole) {
-    if (dev.type === 'upper') {
-      lower = -dev.value;
-      upper = lower + itVal;
-    } else {
-      /* ISO 286-1：K~ZC 的孔用 ES = -ei + Δ，Δ = IT_n − IT_(n−1)；
-         等级大于 IT8 时 Δ = 0。IT5 需要 IT4 作差，本站只收录 IT5 起，
-         所以 IT5 退回 ES = -ei 并在结果里标注，不静默给错数。 */
-      const itPrev = grade > 5 ? getIT(dim, grade - 1) : null;
-      const delta = (grade > 8 || itPrev === null) ? 0 : itVal - itPrev;
-      upper = -dev.value + delta;
-      lower = upper - itVal;
-      if (itPrev === null && grade <= 8) deltaUnavailable = true;
-    }
-  } else {
-    if (dev.type === 'upper') {
-      upper = dev.value;
-      lower = dev.value - itVal;
-    } else {
-      lower = dev.value;
-      upper = dev.value + itVal;
-    }
-  }
-
-  upper = +upper.toFixed(1);
-  lower = +lower.toFixed(1);
-
-  return { upper, lower, it: itVal, isHole, letter, grade, deltaUnavailable };
-}
-
-function calcFit(dim, holeCode, shaftCode) {
-  const hole = calcTolerance(dim, holeCode);
-  const shaft = calcTolerance(dim, shaftCode);
-
-  if (hole.error) return { error: '孔公差错误: ' + hole.error };
-  if (shaft.error) return { error: '轴公差错误: ' + shaft.error };
-
-  const maxClearance = hole.upper - shaft.lower;
-  const minClearance = hole.lower - shaft.upper;
-
-  let fitType, fitTypeCN;
-  if (minClearance >= 0 && maxClearance >= 0) {
-    fitType = 'clearance';
-    fitTypeCN = '间隙配合';
-  } else if (minClearance <= 0 && maxClearance <= 0) {
-    fitType = 'interference';
-    fitTypeCN = '过盈配合';
-  } else {
-    fitType = 'transition';
-    fitTypeCN = '过渡配合';
-  }
-
-  return { hole, shaft, maxClearance, minClearance, fitType, fitTypeCN };
-}
-
-function formatDev(val) {
-  if (val === 0) return '0';
-  const sign = val > 0 ? '+' : '';
-  return sign + (val / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
-}
-
-function formatMM(um) {
-  return (um / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
-}
+// IT / SHAFT_DEV / calcTolerance / calcFit / formatDev / formatMM 见 /js/iso286.js
 
 /* 公差带示意图：把孔/轴的公差带画出来（单位 μm，自动缩放） */
 /* ============ 结果复制（按钮在两张卡里） ============ */

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN" translate="no">
+<head>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8050421705150828"
+     crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>/* 抽屉模式尽早生效，避免首帧导航"唰"地滑到右边 */
+(function(){var h=document.documentElement;
+if(!(window.matchMedia&&window.matchMedia("(max-width:900px)").matches))return;
+h.className+=" has-drawer";
+setTimeout(function(){if(!document.querySelector(".nav-toggle")){
+h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
+<meta name="color-scheme" content="only light">
+<title>公差反查 | 由偏差或间隙反查公差带与配合 | 公差工具站</title>
+<meta name="description" content="根据上下偏差反查 ISO 286 公差带代号，或根据间隙 / 过盈范围推荐配合。与公差配合查询使用同一套 GB/T 1800 数据。">
+<link rel="canonical" href="https://gongcha.cc/reverse/">
+<link rel="alternate" hreflang="zh-Hans" href="https://gongcha.cc/reverse/">
+<meta property="og:title" content="公差反查 | 公差工具站">
+<meta property="og:description" content="根据上下偏差反查公差带，或根据间隙 / 过盈范围推荐配合。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<link rel="stylesheet" href="/css/common.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#2563eb">
+<script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');
+</script>
+<script>
+var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?dd63a540d9441532766fd5b3c53e8311";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s)})();
+</script>
+<style>
+.rev-lede{color:#475569;font-size:14.5px;line-height:1.8;margin:0 0 16px}
+.rev-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.rev-tab{appearance:none;border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer}
+.rev-tab.active{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600}
+.rev-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin:0 0 18px}
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 14px;align-items:end}
+.rev-grid .input-group{margin:0}
+.rev-grid label{display:block;font-size:12.5px;color:#64748b;margin:0 0 5px}
+.rev-grid input[type="number"],.rev-grid select{width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;background:#fff}
+.rev-kind{display:flex;gap:8px;flex-wrap:wrap}
+.rev-kind label{display:inline-flex;align-items:center;gap:6px;margin:0;padding:7px 12px;border:1px solid #d1d5db;border-radius:999px;cursor:pointer;font-size:14px;color:#334155}
+.rev-kind input{accent-color:#2563eb}
+.rev-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.rev-actions button[type="submit"]{padding:8px 18px;background:#2563eb;color:#fff;border:0;border-radius:8px;font-size:14px;cursor:pointer}
+.rev-actions button[type="submit"]:hover{background:#1d4ed8}
+.rev-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rev-examples button{padding:4px 10px;font-size:12.5px;background:#f8fafc;color:#334155;border:1px solid #e2e8f0;border-radius:999px;cursor:pointer}
+.rev-examples button:hover{border-color:#2563eb;color:#1d4ed8}
+.rev-msg{margin:0 0 10px;color:#334155;font-size:14px;line-height:1.7}
+.rev-msg.error{color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 12px}
+.rev-note{margin:10px 0 0;color:#64748b;font-size:12.5px;line-height:1.7}
+.rev-note a{color:#1d4ed8;text-decoration:none}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:8px}
+.rev-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px}
+.rev-table th,.rev-table td{padding:8px 10px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:top}
+.rev-table th{font-size:12px;color:#64748b;font-weight:600;background:#f8fafc;white-space:nowrap}
+.rev-table tr.exact td{background:#f0fdf4}
+.rev-table .mono{font-family:ui-monospace,Consolas,monospace;white-space:nowrap}
+.pref{display:inline-block;margin-left:4px;padding:0 6px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:600}
+.fit-type{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.fit-type.clearance{background:#ecfdf5;color:#047857}
+.fit-type.transition{background:#fffbeb;color:#b45309}
+.fit-type.interference{background:#fef2f2;color:#b91c1c}
+.rev-more{margin:12px 0 0}
+.rev-more-btn{padding:7px 14px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;cursor:pointer;font-size:13.5px}
+@media(max-width:600px){.rev-card{padding:14px 14px}.rev-table{font-size:13px}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand"><a href="/" class="site-name">公差工具站</a></div>
+  <h1 class="page-name">公差反查</h1>
+  <nav class="site-nav">
+    <a href="/">首页</a>
+    <a href="/fit/">公差配合</a>
+    <a href="/form/">形状公差</a>
+    <a href="/keyway/">键槽查询</a>
+    <a href="/circlip/">卡簧槽</a>
+    <a href="/roughness/">粗糙度</a>
+    <a href="/cylinder/">气缸选型</a>
+    <a href="/resources/">资料目录</a>
+  </nav>
+</header>
+
+<div class="breadcrumb"><a href="/">公差工具站</a><span>›</span>公差反查</div>
+
+<p class="rev-lede">已知上下偏差时，反查 ISO 286 公差带代号；已知间隙或过盈范围时，列出实际间隙落在该范围内的配合。计算与「<a href="/fit/" style="color:#1d4ed8;text-decoration:none">公差配合查询</a>」使用同一套数据（1~500 mm，IT5~IT13）。下面的说明是占位文案，稍后会再润色。</p>
+
+<div class="rev-tabs" role="tablist" aria-label="反查方式">
+  <button type="button" class="rev-tab active" role="tab" data-mode="dev" aria-selected="true">按偏差查代号</button>
+  <button type="button" class="rev-tab" role="tab" data-mode="fit" aria-selected="false">按间隙 / 过盈查配合</button>
+</div>
+
+<div id="panel-dev" class="rev-card" role="tabpanel">
+  <form id="devForm">
+    <div class="rev-grid">
+      <div class="input-group">
+        <label for="devDim">基本尺寸 (mm)</label>
+        <input type="number" id="devDim" value="25" min="1" max="500" step="any" required>
+      </div>
+      <div class="input-group">
+        <label>孔 / 轴</label>
+        <div class="rev-kind">
+          <label><input type="radio" name="kind" value="hole" checked> 孔</label>
+          <label><input type="radio" name="kind" value="shaft"> 轴</label>
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="devUpper">上偏差</label>
+        <input type="number" id="devUpper" value="0.021" step="any" required>
+      </div>
+      <div class="input-group">
+        <label for="devLower">下偏差</label>
+        <input type="number" id="devLower" value="0" step="any" required>
+      </div>
+      <div class="input-group">
+        <label for="devUnit">偏差单位</label>
+        <select id="devUnit">
+          <option value="mm" selected>mm</option>
+          <option value="um">μm</option>
+        </select>
+      </div>
+    </div>
+    <div class="rev-actions"><button type="submit">反查代号</button></div>
+    <div class="rev-examples">
+      <button type="button" data-example="h7">示例：Ø25 孔 +0.021 / 0 mm</button>
+      <button type="button" data-example="g6">示例：Ø50 轴 g6 偏差</button>
+      <button type="button" data-example="close">示例：Ø25 孔 +0.020 / 0 mm（无精确匹配）</button>
+    </div>
+  </form>
+  <div id="devResult" style="margin-top:16px"></div>
+</div>
+
+<div id="panel-fit" class="rev-card" role="tabpanel" hidden>
+  <form id="fitForm">
+    <p class="rev-note" style="margin:0 0 12px">最小 / 最大间隙均指孔相对轴的间隙；过盈请填负值。只有实际最小间隙和最大间隙都落在该区间内的配合才会列出。</p>
+    <div class="rev-grid">
+      <div class="input-group">
+        <label for="fitDim">基本尺寸 (mm)</label>
+        <input type="number" id="fitDim" value="25" min="1" max="500" step="any" required>
+      </div>
+      <div class="input-group">
+        <label for="fitMin">最小间隙（过盈用负值）</label>
+        <input type="number" id="fitMin" value="0.020" step="any" required>
+      </div>
+      <div class="input-group">
+        <label for="fitMax">最大间隙（过盈用负值）</label>
+        <input type="number" id="fitMax" value="0.070" step="any" required>
+      </div>
+      <div class="input-group">
+        <label for="fitUnit">间隙单位</label>
+        <select id="fitUnit">
+          <option value="mm" selected>mm</option>
+          <option value="um">μm</option>
+        </select>
+      </div>
+    </div>
+    <div class="rev-actions"><button type="submit">查找配合</button></div>
+    <div class="rev-examples">
+      <button type="button" data-example="inter">示例：Ø30，过盈 −0.050 ~ −0.010 mm</button>
+      <button type="button" data-example="clr">示例：Ø25，间隙 0.020 ~ 0.070 mm</button>
+    </div>
+  </form>
+  <div id="fitResult" style="margin-top:16px"></div>
+</div>
+
+<div class="site-footer">
+  <p>公差反查 | ISO 286 / GB/T 1800 · 与公差配合查询共用数据</p>
+  <p style="margin-top:4px"><a href="/">返回首页</a> · <a href="/fit/">公差配合查询</a></p>
+<nav class="footer-links" aria-label="网站信息">
+  <a href="/privacy/">隐私政策</a>
+  <a href="/about/">关于本站</a>
+  <a href="/contact/">联系方式</a>
+</nav>
+</div>
+
+<script src="/js/nav.js"></script>
+<script src="/js/usage-events.js"></script>
+<script src="/js/iso286.js"></script>
+<script src="/js/reverse.js"></script>
+<script src="/js/pwa.js" defer></script>
+</body>
+</html>
