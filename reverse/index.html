@@ -69,8 +69,30 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 .fit-type.transition{background:#fffbeb;color:#b45309}
 .fit-type.interference{background:#fef2f2;color:#b91c1c}
 .rev-more{margin:12px 0 0}
-.rev-more-btn{padding:7px 14px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;cursor:pointer;font-size:13.5px}
-@media(max-width:600px){.rev-card{padding:14px 14px}.rev-table{font-size:13px}}
+.rev-more-btn{padding:7px 14px;border:1px solid #2563eb;background:#fff;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600}
+.rev-more-btn:hover{background:#eff6ff;color:#1d4ed8}
+.rev-sub{margin:14px 0 6px;font-size:13px;color:#64748b;font-weight:600}
+.rev-rec{border:2px solid #2563eb;background:#f8fbff;border-radius:12px;padding:14px 16px;margin:0 0 4px;overflow-wrap:anywhere}
+.rev-rec.exact{border-color:#16a34a;background:#f6fdf8}
+.rev-rec.none{border-color:#f59e0b;background:#fffbeb}
+.rev-rec-label{font-size:12.5px;color:#475569;font-weight:600;margin:0 0 4px}
+.rev-rec-code{font-family:ui-monospace,Consolas,monospace;font-size:30px;font-weight:700;color:#0f172a;line-height:1.25;margin:0 0 6px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.rev-rec-code .fit-type{font-family:inherit;font-size:13px}
+.rev-rec-none{font-size:20px;font-weight:700;color:#b45309;margin:0 0 6px}
+.rev-rec-line{font-size:14px;color:#334155;line-height:1.7}
+.rev-rec-line.muted{color:#64748b;font-size:13px}
+.rev-rec-why{margin-top:8px;padding-top:8px;border-top:1px dashed #cbd5e1;font-size:14px;color:#1e3a8a;line-height:1.7}
+.rev-alts,.rev-all{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.rev-all{margin-top:4px}
+.rev-all[hidden],#fitAll[hidden]{display:none!important}
+.rev-alt{border:1px solid #e2e8f0;border-radius:10px;padding:9px 12px;background:#fff;display:flex;flex-direction:column;gap:2px;min-width:0;overflow-wrap:anywhere}
+.rev-alt-code{font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:15px;color:#0f172a;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.rev-alt-line{font-size:13px;color:#334155;line-height:1.6}
+.rev-alt-line.muted{color:#64748b;font-size:12.5px}
+.rev-alt-line.warn{color:#b45309}
+.tag-muted{display:inline-block;padding:0 6px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:11px;font-weight:600;font-family:system-ui,sans-serif}
+.rev-alt-code .pref,.rev-alt-code .fit-type{font-family:system-ui,sans-serif;margin-left:0}
+@media(max-width:600px){.rev-card{padding:14px 14px}.rev-table{font-size:13px}.rev-rec-code{font-size:26px}.rev-alts,.rev-all{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -91,7 +113,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 
 <div class="breadcrumb"><a href="/">公差工具站</a><span>›</span>公差反查</div>
 
-<p class="rev-lede">已知上下偏差时，反查 ISO 286 公差带代号；已知间隙或过盈范围时，列出实际间隙落在该范围内的配合。计算与「<a href="/fit/" style="color:#1d4ed8;text-decoration:none">公差配合查询</a>」使用同一套数据（1~500 mm，IT5~IT13）。下面的说明是占位文案，稍后会再润色。</p>
+<p class="rev-lede">已知上下偏差时，反查 ISO 286 公差带代号；已知间隙或过盈范围时，直接给出推荐配合。计算与「<a href="/fit/" style="color:#1d4ed8;text-decoration:none">公差配合查询</a>」使用同一套数据（1~500 mm，IT5~IT13）。下面的说明是占位文案，稍后会再润色。</p>
 
 <div class="rev-tabs" role="tablist" aria-label="反查方式">
   <button type="button" class="rev-tab active" role="tab" data-mode="dev" aria-selected="true">按偏差查代号</button>
@@ -140,7 +162,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 
 <div id="panel-fit" class="rev-card" role="tabpanel" hidden>
   <form id="fitForm">
-    <p class="rev-note" style="margin:0 0 12px">最小 / 最大间隙均指孔相对轴的间隙；过盈请填负值。只有实际最小间隙和最大间隙都落在该区间内的配合才会列出。</p>
+    <p class="rev-note" style="margin:0 0 12px">最小 / 最大间隙均指孔相对轴的间隙；过盈请填负值。实际最小间隙和最大间隙都落在该区间内的配合才算满足。</p>
     <div class="rev-grid">
       <div class="input-group">
         <label for="fitDim">基本尺寸 (mm)</label>

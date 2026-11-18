@@ -1,16 +1,15 @@
-/* 公差反查页 UI，计算全部走 /js/iso286.js */
+/* 公差反查页 UI，数据与计算全部走 /js/iso286.js；这里只负责筛选、排序和展示 */
 (function () {
   'use strict';
   var I = window.ISO286;
   if (!I) return;
 
-  var INITIAL = 20;
-  var shownFits = 0;
-  var lastFitResult = null;
+  var MAX_ALTS = 3;
 
   function $(id) { return document.getElementById(id); }
   function val(id) { return $(id).value; }
   function num(id) { return parseFloat(val(id)); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   function setMode(mode) {
     document.querySelectorAll('.rev-tab').forEach(function (t) {
@@ -27,18 +26,50 @@
     return el ? el.value : 'hole';
   }
 
-  function fmtPair(upper, lower) {
-    return I.formatUm(upper) + ' / ' + I.formatUm(lower) + ' μm';
-  }
-
-  function fmtClr(v) {
-    var n = +(+v).toFixed(1);
-    if (n === 0) return '0 μm';
-    return (n > 0 ? '+' : '') + n + ' μm';
-  }
+  function r1(v) { var n = +(+v).toFixed(1); return n === 0 ? 0 : n; }
+  function um(v) { return I.formatUm(r1(v)); }               /* 带符号：+21 / -13 / 0 */
+  function abs(v) { return String(Math.abs(r1(v))); }
+  function pair(u, l) { return um(u) + ' / ' + um(l) + ' μm'; }
 
   function showError(box, msg) {
-    box.innerHTML = '<p class="rev-msg error">' + msg + '</p>';
+    box.innerHTML = '<p class="rev-msg error">' + esc(msg) + '</p>';
+  }
+
+  function gradeOf(code) { return parseInt(String(code).replace(/\D/g, ''), 10); }
+
+  function typeClass(t) {
+    if (t === 'clearance') return 'clearance';
+    if (t === 'interference') return 'interference';
+    return 'transition';
+  }
+
+  /* 用工程上的说法描述一个间隙区间：间隙 a–b / 过盈 a–b / 过盈 a ~ 间隙 b */
+  function rangeText(min, max) {
+    min = r1(min); max = r1(max);
+    if (min >= 0) return '间隙 ' + abs(min) + '–' + abs(max) + ' μm';
+    if (max <= 0) return '过盈 ' + abs(max) + '–' + abs(min) + ' μm';
+    return '最大过盈 ' + abs(min) + ' μm ~ 最大间隙 ' + abs(max) + ' μm';
+  }
+
+  function bindToggle(btnId, boxId, labelOpen, labelClosed) {
+    var btn = $(btnId), box = $(boxId);
+    if (!btn || !box) return;
+    btn.addEventListener('click', function () {
+      var open = box.hidden;
+      box.hidden = !open;
+      btn.textContent = open ? labelOpen : labelClosed;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+
+  /* ---------- 模式 1：偏差 → 代号 ---------- */
+
+  function zoneMini(row, showDelta) {
+    return '<li class="rev-alt">' +
+      '<span class="rev-alt-code">' + esc(row.code) + '</span>' +
+      '<span class="rev-alt-line">' + pair(row.upper, row.lower) + ' · IT' + row.grade + '</span>' +
+      (showDelta ? '<span class="rev-alt-line muted">相差 上 ' + um(row.dUpper) + ' / 下 ' + um(row.dLower) + ' μm</span>' : '') +
+      '</li>';
   }
 
   function runDev() {
@@ -48,97 +79,185 @@
     var upper = I.toUm(num('devUpper'), unit);
     var lower = I.toUm(num('devLower'), unit);
     var isHole = selectedKind() === 'hole';
-    var r = I.findCodesByDeviation(dim, upper, lower, isHole, { limitClose: 8 });
+    var r = I.findCodesByDeviation(dim, upper, lower, isHole, { limitClose: 1000 });
     if (r.error) { showError(box, r.error); return; }
+    var kind = isHole ? '孔' : '轴';
+    var q = 'Φ' + r.dim + ' ' + kind + '，输入 ' + pair(r.queryUpper, r.queryLower);
+    var html = '';
 
-    var rows = r.exact.length ? r.exact : r.closest;
-    var title = r.exact.length
-      ? ('精确匹配 ' + r.exact.length + ' 个' + (isHole ? '孔' : '轴') + '公差带')
-      : ('没有精确匹配，下面是最接近的 ' + rows.length + ' 个（按接近程度排列）');
-    var html = '<p class="rev-msg">' + title +
-      '。查询：Φ' + r.dim + ' ' + (isHole ? '孔' : '轴') + ' ' +
-      I.formatUm(r.queryUpper) + ' / ' + I.formatUm(r.queryLower) + ' μm。</p>';
-    if (!r.exact.length) {
-      html += '<p class="rev-note">接近程度：先比较 max(|Δ上偏差|, |Δ下偏差|)，相同时再比较两者绝对值之和。差值单位为 μm，正值表示该代号比查询值更大（更正）。</p>';
-    }
-    html += '<div class="table-scroll"><table class="rev-table"><thead><tr>' +
-      '<th>代号</th><th>上偏差</th><th>下偏差</th><th>IT</th>' +
-      (r.exact.length ? '' : '<th>Δ上 (μm)</th><th>Δ下 (μm)</th><th>接近度</th>') +
-      '</tr></thead><tbody>';
-    rows.forEach(function (row) {
-      html += '<tr class="' + (row.exact ? 'exact' : '') + '"><td class="mono">' + row.code + '</td>' +
-        '<td class="mono">' + I.formatUm(row.upper) + ' μm</td>' +
-        '<td class="mono">' + I.formatUm(row.lower) + ' μm</td>' +
-        '<td class="mono">IT' + row.grade + '（' + row.it + ' μm）</td>';
-      if (!r.exact.length) {
-        html += '<td class="mono">' + I.formatUm(row.dUpper) + '</td>' +
-          '<td class="mono">' + I.formatUm(row.dLower) + '</td>' +
-          '<td class="mono">' + row.chebyshev + '（和 ' + row.manhattan + '）</td>';
+    if (r.exact.length) {
+      var e = r.exact[0];
+      html += '<div class="rev-rec exact">' +
+        '<div class="rev-rec-label">匹配代号</div>' +
+        '<div class="rev-rec-code">' + esc(e.code) + '</div>' +
+        '<div class="rev-rec-line">上偏差 <b>' + um(e.upper) + ' μm</b>（' + I.formatDev(e.upper) + ' mm），下偏差 <b>' + um(e.lower) + ' μm</b>（' + I.formatDev(e.lower) + ' mm）</div>' +
+        '<div class="rev-rec-line">IT' + e.grade + ' = ' + e.it + ' μm · ' + esc(q) + '</div>' +
+        (r.exact.length > 1 ? '<div class="rev-rec-line">同样匹配：' + r.exact.slice(1).map(function (x) { return esc(x.code); }).join('、') + '</div>' : '') +
+        '</div>';
+    } else {
+      var list = r.closest;
+      if (!list.length) { box.innerHTML = '<p class="rev-msg">该尺寸下没有可比较的公差带。</p>'; return; }
+      var c = list[0];
+      html += '<div class="rev-rec">' +
+        '<div class="rev-rec-label">没有完全一致的代号，最接近的是</div>' +
+        '<div class="rev-rec-code">' + esc(c.code) + '</div>' +
+        '<div class="rev-rec-line">' + esc(c.code) + ' 的偏差：上 <b>' + um(c.upper) + ' μm</b>（' + I.formatDev(c.upper) + ' mm），下 <b>' + um(c.lower) + ' μm</b>（' + I.formatDev(c.lower) + ' mm），IT' + c.grade + ' = ' + c.it + ' μm</div>' +
+        '<div class="rev-rec-line">与输入相差：上偏差 <b>' + um(c.dUpper) + ' μm</b>，下偏差 <b>' + um(c.dLower) + ' μm</b>（正值表示代号比输入大）</div>' +
+        '<div class="rev-rec-line muted">' + esc(q) + '</div>' +
+        '</div>';
+      var alts = list.slice(1, 1 + MAX_ALTS);
+      if (alts.length) {
+        html += '<p class="rev-sub">其他接近的代号</p><ul class="rev-alts">' + alts.map(function (x) { return zoneMini(x, true); }).join('') + '</ul>';
       }
-      html += '</tr>';
-    });
-    html += '</tbody></table></div>';
-    html += '<p class="rev-note">数值来自本站与「公差配合查询」共用的 ISO 286 / GB/T 1800 数据，范围 1~500 mm、IT5~IT13。可到 <a href="/fit/">公差配合查询</a> 核对极限尺寸。</p>';
+      var rest = list.slice(1 + MAX_ALTS);
+      if (rest.length) {
+        var lbl = '显示其余 ' + rest.length + ' 个';
+        html += '<p class="rev-more"><button type="button" class="rev-more-btn" id="devAllBtn" aria-expanded="false">' + lbl + '</button></p>' +
+          '<ul class="rev-all" id="devAll" hidden>' + rest.map(function (x) { return zoneMini(x, true); }).join('') + '</ul>';
+      }
+      html += '<p class="rev-note">接近程度：先看上、下偏差差值中较大的那个，再看两者之和，再看 IT 等级（细的在前）。</p>';
+    }
+    html += '<p class="rev-note">数值来自本站与「<a href="/fit/">公差配合查询</a>」共用的 ISO 286 / GB/T 1800 数据，范围 1~500 mm、IT5~IT13。</p>';
     box.innerHTML = html;
+    bindToggle('devAllBtn', 'devAll', '收起', rest && rest.length ? '显示其余 ' + rest.length + ' 个' : '');
   }
 
-  function typeClass(t) {
-    if (t === 'clearance') return 'clearance';
-    if (t === 'interference') return 'interference';
-    return 'transition';
+  /* ---------- 模式 2：间隙 / 过盈 → 配合 ---------- */
+
+  /* 常见组合：基孔制（H 孔），孔等级 = 轴等级 或 比轴粗一级 */
+  function isCommonCombo(row) {
+    if (!/^H\d+$/.test(row.holeCode)) return false;
+    var hg = gradeOf(row.holeCode), sg = gradeOf(row.shaftCode);
+    return hg === sg || hg === sg + 1;
   }
 
-  function renderFits(all) {
-    var box = $('fitResult');
-    var rows = lastFitResult.matches;
-    var show = rows.slice(0, shownFits);
-    var html = '<p class="rev-msg">共 ' + lastFitResult.total + ' 组配合的实际间隙范围落在所给区间内' +
-      '（Φ' + lastFitResult.dim + '，要求 ' + fmtClr(lastFitResult.reqMin) + ' ~ ' + fmtClr(lastFitResult.reqMax) +
-      '）。常用配合（本站「公差配合查询」的常用配合列表）和基孔制（H 孔）排在前面。</p>';
-    if (!rows.length) {
-      box.innerHTML = html + '<p class="rev-msg">没有符合该范围的配合。可放宽最小 / 最大间隙后再查。</p>';
-      return;
-    }
-    html += '<div class="table-scroll"><table class="rev-table"><thead><tr>' +
-      '<th>配合</th><th>类型</th><th>孔偏差</th><th>轴偏差</th><th>实际最小间隙</th><th>实际最大间隙</th></tr></thead><tbody>';
-    show.forEach(function (row) {
-      html += '<tr>' +
-        '<td class="mono">' + row.code + (row.preferred ? ' <span class="pref">常用</span>' : '') + '</td>' +
-        '<td><span class="fit-type ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '</span></td>' +
-        '<td class="mono">' + fmtPair(row.holeUpper, row.holeLower) + '</td>' +
-        '<td class="mono">' + fmtPair(row.shaftUpper, row.shaftLower) + '</td>' +
-        '<td class="mono">' + fmtClr(row.minClearance) + '</td>' +
-        '<td class="mono">' + fmtClr(row.maxClearance) + '</td>' +
-        '</tr>';
-    });
-    html += '</tbody></table></div>';
-    if (shownFits < rows.length) {
-      html += '<p class="rev-more"><button type="button" class="rev-more-btn" id="showMoreFits">再显示 20 条（还有 ' +
-        (rows.length - shownFits) + ' 条）</button></p>';
-    } else if (rows.length > INITIAL) {
-      html += '<p class="rev-note">已显示全部 ' + rows.length + ' 条。</p>';
-    }
-    html += '<p class="rev-note">实际最小 / 最大间隙必须都落在要求范围内才会列出。负值表示过盈。数值与「公差配合查询」同源。</p>';
-    box.innerHTML = html;
-    var btn = $('showMoreFits');
-    if (btn) {
-      btn.addEventListener('click', function () {
-        shownFits = Math.min(shownFits + 20, lastFitResult.matches.length);
-        renderFits();
+  /* 富余 = (实际最小间隙 − 要求最小) + (要求最大 − 实际最大间隙)
+     = 要求区间宽度 − 配合实际变动量。越小说明孔轴公差越宽、越好加工。 */
+  function decorate(row, reqMin, reqMax) {
+    row.slack = r1((row.minClearance - reqMin) + (reqMax - row.maxClearance));
+    row.edge = r1(Math.min(row.minClearance - reqMin, reqMax - row.maxClearance));
+    return row;
+  }
+
+  function byRecommend(a, b) {
+    if (a.preferred !== b.preferred) return a.preferred ? -1 : 1;
+    if (a.slack !== b.slack) return a.slack - b.slack;
+    if (a.edge !== b.edge) return b.edge - a.edge;
+    var ae = gradeOf(a.holeCode) === gradeOf(a.shaftCode), be = gradeOf(b.holeCode) === gradeOf(b.shaftCode);
+    if (ae !== be) return ae ? 1 : -1;  /* 孔比轴粗一级（如 H7/g6）更常见，排前 */
+    return a.code < b.code ? -1 : a.code > b.code ? 1 : 0;
+  }
+
+  function fitMini(row) {
+    var tags = '';
+    if (row.preferred) tags += '<span class="pref">常用</span>';
+    if (!row.holeBasis) tags += '<span class="tag-muted">非基孔制</span>';
+    else if (!isCommonCombo(row)) tags += '<span class="tag-muted">等级不常见</span>';
+    return '<li class="rev-alt">' +
+      '<span class="rev-alt-code">' + esc(row.code) + ' <span class="fit-type ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '</span>' + tags + '</span>' +
+      '<span class="rev-alt-line">' + rangeText(row.minClearance, row.maxClearance) + '</span>' +
+      '<span class="rev-alt-line muted">孔 ' + pair(row.holeUpper, row.holeLower) + ' · 轴 ' + pair(row.shaftUpper, row.shaftLower) + '</span>' +
+      '</li>';
+  }
+
+  function lowSide(fv, rv) {   /* fv < rv：实际最小间隙低于要求 */
+    if (rv >= 0 && fv >= 0) return '最小间隙 ' + abs(fv) + ' μm 小于要求的 ' + abs(rv) + ' μm';
+    if (rv <= 0) return '最大过盈 ' + abs(fv) + ' μm 超过要求的 ' + abs(rv) + ' μm';
+    return '会出现 ' + abs(fv) + ' μm 过盈，而要求最小间隙 ' + abs(rv) + ' μm';
+  }
+  function highSide(fv, rv) {  /* fv > rv：实际最大间隙高于要求 */
+    if (rv >= 0) return '最大间隙 ' + abs(fv) + ' μm 超过要求的 ' + abs(rv) + ' μm';
+    if (fv <= 0) return '最小过盈 ' + abs(fv) + ' μm 小于要求的 ' + abs(rv) + ' μm';
+    return '会出现 ' + abs(fv) + ' μm 间隙，而要求至少过盈 ' + abs(rv) + ' μm';
+  }
+
+  function nearestQuick(dim, reqMin, reqMax) {
+    var out = [];
+    I.FIT_QUICK.forEach(function (code) {
+      var p = code.split('/');
+      var f = I.calcFit(dim, p[0], p[1]);
+      if (!f || f.error || f.hole.deltaUnavailable || f.shaft.deltaUnavailable) return;
+      var mn = r1(f.minClearance), mx = r1(f.maxClearance);
+      var miss = [];
+      var short = 0;
+      if (mn < reqMin) { miss.push(lowSide(mn, reqMin)); short += reqMin - mn; }
+      if (mx > reqMax) { miss.push(highSide(mx, reqMax)); short += mx - reqMax; }
+      out.push({
+        code: code, holeCode: p[0], shaftCode: p[1], holeBasis: true, preferred: true,
+        holeUpper: f.hole.upper, holeLower: f.hole.lower, shaftUpper: f.shaft.upper, shaftLower: f.shaft.lower,
+        minClearance: mn, maxClearance: mx, fitType: f.fitType, fitTypeShort: f.fitTypeShort,
+        short: r1(short), miss: miss
       });
-    }
+    });
+    out.sort(function (a, b) { return a.short - b.short || (a.code < b.code ? -1 : 1); });
+    return out.slice(0, 2);
+  }
+
+  function recCard(row, label, reason) {
+    return '<div class="rev-rec">' +
+      '<div class="rev-rec-label">' + label + '</div>' +
+      '<div class="rev-rec-code">' + esc(row.code) + ' <span class="fit-type ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '配合</span></div>' +
+      '<div class="rev-rec-line">孔 ' + esc(row.holeCode) + '：<b>' + pair(row.holeUpper, row.holeLower) + '</b>　轴 ' + esc(row.shaftCode) + '：<b>' + pair(row.shaftUpper, row.shaftLower) + '</b></div>' +
+      '<div class="rev-rec-line">实际最小间隙 <b>' + um(row.minClearance) + ' μm</b>，最大间隙 <b>' + um(row.maxClearance) + ' μm</b>（负值为过盈）</div>' +
+      '<div class="rev-rec-why">' + reason + '</div>' +
+      '</div>';
   }
 
   function runFit() {
+    var box = $('fitResult');
     var dim = num('fitDim');
     var unit = val('fitUnit');
     var reqMin = I.toUm(num('fitMin'), unit);
     var reqMax = I.toUm(num('fitMax'), unit);
-    var r = I.findFitsByClearance(dim, reqMin, reqMax, { initial: INITIAL });
-    if (r.error) { showError($('fitResult'), r.error); lastFitResult = null; return; }
-    lastFitResult = r;
-    shownFits = Math.min(INITIAL, r.matches.length) || INITIAL;
-    renderFits();
+    var r = I.findFitsByClearance(dim, reqMin, reqMax, { initial: 20 });
+    if (r.error) { showError(box, r.error); return; }
+    reqMin = r.reqMin; reqMax = r.reqMax;
+    var all = r.matches.map(function (row) { return decorate(row, reqMin, reqMax); });
+    var common = all.filter(isCommonCombo).sort(byRecommend);
+    var reqText = rangeText(reqMin, reqMax);
+    var html = '<p class="rev-msg">Φ' + r.dim + '，要求' + reqText + '（实际最小 / 最大间隙都要落在 ' + um(reqMin) + ' ~ ' + um(reqMax) + ' μm 内）。</p>';
+
+    if (common.length) {
+      var best = common[0];
+      var why = (best.preferred ? '常用配合，' + rangeText(best.minClearance, best.maxClearance) + ' 落在要求范围内。'
+        : '常用配合都不满足；这是基孔制常见组合里公差最宽（最好加工）的一组，' + rangeText(best.minClearance, best.maxClearance) + ' 落在要求范围内。');
+      html += recCard(best, '推荐配合', why);
+      var alts = common.slice(1, 1 + MAX_ALTS);
+      if (alts.length) {
+        html += '<p class="rev-sub">备选</p><ul class="rev-alts">' + alts.map(fitMini).join('') + '</ul>';
+      }
+    } else {
+      html += '<div class="rev-rec none"><div class="rev-rec-label">结论</div>' +
+        '<div class="rev-rec-none">没有常见配合满足</div>' +
+        '<div class="rev-rec-line">基孔制、孔轴等级相同或孔粗一级的组合里，没有一组的实际间隙完全落在要求范围内。下面是最接近的常用配合：</div></div>';
+      var near = nearestQuick(r.dim, reqMin, reqMax);
+      if (near.length) {
+        html += '<ul class="rev-alts">' + near.map(function (n) {
+          return '<li class="rev-alt">' +
+            '<span class="rev-alt-code">' + esc(n.code) + ' <span class="fit-type ' + typeClass(n.fitType) + '">' + n.fitTypeShort + '</span><span class="pref">常用</span></span>' +
+            '<span class="rev-alt-line">' + rangeText(n.minClearance, n.maxClearance) + '</span>' +
+            '<span class="rev-alt-line warn">差在：' + n.miss.join('；') + '</span>' +
+            '<span class="rev-alt-line muted">孔 ' + pair(n.holeUpper, n.holeLower) + ' · 轴 ' + pair(n.shaftUpper, n.shaftLower) + '</span>' +
+            '</li>';
+        }).join('') + '</ul>';
+      }
+    }
+
+    if (all.length) {
+      var lbl = '显示全部 ' + all.length + ' 组';
+      var full = all.slice().sort(function (a, b) {
+        if (a.group !== b.group) return a.group - b.group;
+        return byRecommend(a, b);
+      });
+      html += '<p class="rev-more"><button type="button" class="rev-more-btn" id="fitAllBtn" aria-expanded="false">' + lbl + '</button></p>' +
+        '<div id="fitAll" hidden><p class="rev-note" style="margin:0 0 8px">满足要求的全部组合（含非基孔制和等级不常见的组合），常用配合在前，其余按富余从小到大。</p>' +
+        '<ul class="rev-all">' + full.map(fitMini).join('') + '</ul></div>';
+      html += '<p class="rev-note">排序：常用配合优先，其次按「富余」从小到大。富余 =（实际最小间隙 − 要求最小）+（要求最大 − 实际最大间隙），富余越小，孔轴公差越宽、越好加工。数值与「<a href="/fit/">公差配合查询</a>」同源。</p>';
+    } else {
+      html += '<p class="rev-note">任何孔轴组合都无法满足该范围，可放宽最小 / 最大间隙后再查。</p>';
+    }
+    box.innerHTML = html;
+    bindToggle('fitAllBtn', 'fitAll', '收起', all.length ? '显示全部 ' + all.length + ' 组' : '');
   }
 
   function bindExamples() {
