@@ -330,6 +330,28 @@ const TOLERANCE_TABLE = [
   { min:6300, max:10000, label:">6300~10000", grades:{1:6,2:12,3:25,4:40,5:60,6:100,7:150,8:250,9:400,10:600,11:1000,12:2000} }
 ];
 
+/* GB/T 1184-1996 附录 B 表 B3：平行度、垂直度、倾斜度公差值（μm），主参数 L、d(D)。
+   表 B3 有自己的数值，不套用上面直线度/平面度的表 B1（如 >63~100、7 级：B1 15 μm，B3 40 μm）。
+   来源：GB/T 1184-1996 表 B3（经 mechtool.cn 两页、嘉立创 FA 机械设计手册 2-3-24 转载逐格核对，192 格一致） */
+const ORIENTATION_TABLE = [
+  { min:0, max:10, label:"≤10", grades:{1:0.4,2:0.8,3:1.5,4:3,5:5,6:8,7:12,8:20,9:30,10:50,11:80,12:120} },
+  { min:10, max:16, label:">10~16", grades:{1:0.5,2:1,3:2,4:4,5:6,6:10,7:15,8:25,9:40,10:60,11:100,12:150} },
+  { min:16, max:25, label:">16~25", grades:{1:0.6,2:1.2,3:2.5,4:5,5:8,6:12,7:20,8:30,9:50,10:80,11:120,12:200} },
+  { min:25, max:40, label:">25~40", grades:{1:0.8,2:1.5,3:3,4:6,5:10,6:15,7:25,8:40,9:60,10:100,11:150,12:250} },
+  { min:40, max:63, label:">40~63", grades:{1:1,2:2,3:4,4:8,5:12,6:20,7:30,8:50,9:80,10:120,11:200,12:300} },
+  { min:63, max:100, label:">63~100", grades:{1:1.2,2:2.5,3:5,4:10,5:15,6:25,7:40,8:60,9:100,10:150,11:250,12:400} },
+  { min:100, max:160, label:">100~160", grades:{1:1.5,2:3,3:6,4:12,5:20,6:30,7:50,8:80,9:120,10:200,11:300,12:500} },
+  { min:160, max:250, label:">160~250", grades:{1:2,2:4,3:8,4:15,5:25,6:40,7:60,8:100,9:150,10:250,11:400,12:600} },
+  { min:250, max:400, label:">250~400", grades:{1:2.5,2:5,3:10,4:20,5:30,6:50,7:80,8:120,9:200,10:300,11:500,12:800} },
+  { min:400, max:630, label:">400~630", grades:{1:3,2:6,3:12,4:25,5:40,6:60,7:100,8:150,9:250,10:400,11:600,12:1000} },
+  { min:630, max:1000, label:">630~1000", grades:{1:4,2:8,3:15,4:30,5:50,6:80,7:120,8:200,9:300,10:500,11:800,12:1200} },
+  { min:1000, max:1600, label:">1000~1600", grades:{1:5,2:10,3:20,4:40,5:60,6:100,7:150,8:250,9:400,10:600,11:1000,12:1500} },
+  { min:1600, max:2500, label:">1600~2500", grades:{1:6,2:12,3:25,4:50,5:80,6:120,7:200,8:300,9:500,10:800,11:1200,12:2000} },
+  { min:2500, max:4000, label:">2500~4000", grades:{1:8,2:15,3:30,4:60,5:100,6:150,7:250,8:400,9:600,10:1000,11:1500,12:2500} },
+  { min:4000, max:6300, label:">4000~6300", grades:{1:10,2:20,3:40,4:80,5:120,6:200,7:300,8:500,9:800,10:1200,11:2000,12:3000} },
+  { min:6300, max:10000, label:">6300~10000", grades:{1:12,2:25,3:50,4:100,5:150,6:250,7:400,8:600,9:1000,10:1500,11:2500,12:4000} }
+];
+
 const GENERAL_TOL = {
   ranges: ["≤10",">10~30",">30~100",">100~300",">300~1000",">1000~3000"],
   classes: {
@@ -460,11 +482,13 @@ function populateScenarios() {
   });
 }
 
-function findRange(length) {
-  for (const r of TOLERANCE_TABLE) {
+/* 按长度找档位；table 省略时为直线度/平面度的表 B1，定向公差传 ORIENTATION_TABLE（表 B3），档位划分相同 */
+function findRange(length, table) {
+  table = table || TOLERANCE_TABLE;
+  for (const r of table) {
     if (length > r.min && length <= r.max) return r;
   }
-  if (length === 0) return TOLERANCE_TABLE[0];
+  if (length === 0) return table[0];
   return null;
 }
 
@@ -524,13 +548,13 @@ function queryByGrade() {
     return;
   }
 
-  const range = findRange(length);
+  const range = findRange(length, currentTab === 'orientation' ? ORIENTATION_TABLE : TOLERANCE_TABLE);
   if (!range) {
     area.innerHTML = '<p class="error">未找到对应的长度范围</p>';
     return;
   }
 
-  const tol = getTolerance(length, grade);
+  const tol = range.grades[grade] || null;   /* 定向公差取表 B3，其余取表 B1 */
   const mfg = getMfgMethod(grade);
   const meas = getMeasMethod(grade);
   const ti = typeInfo();
@@ -579,13 +603,13 @@ function queryByGrade() {
 
   let html = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+param+'公差值</div><div class="result-value">'+tol+' <span class="result-unit">μm</span></div><div class="result-label">长度范围 '+range.label+' · '+grade+' 级</div></div></div><div class="info-grid"><div class="info-item"><div class="info-label">加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
 
-  /* 定向公差：只在「平行度/垂直度/倾斜度」标签下显示（表 B3 与 B1 同系列，主参数同为 L） */
+  /* 定向公差：只在「平行度/垂直度/倾斜度」标签下显示（数值取表 B3，主参数为 L） */
   if (currentTab === 'orientation') {
   html += '<div class="info-item" style="margin-top:12px">'
-    + '<div class="info-label">同类定向公差（同值）</div>'
+    + '<div class="info-label">同类定向公差（三项同值）</div>'
     + '<div class="info-value">平行度 / 垂直度 / 倾斜度 —— 同为 ' + tol + ' μm'
     + '<div style="font-size:12px;color:#888;margin-top:4px">'
-    + '依据 GB/T 1184 表 B3：这三项的公差值与直线度/平面度同系列，主参数取「被测要素的长度 L」；'
+    + '依据 GB/T 1184 表 B3：平行度、垂直度、倾斜度三项取同一公差值（表 B3 有自己的数值，不能套用直线度/平面度的表 B1），主参数取「被测要素的长度 L」；'
     + '若被测要素是整条直线或整个平面，用上面的长度即可。</div></div></div>';
   }
 

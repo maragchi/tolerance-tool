@@ -384,6 +384,9 @@ const ROUGH_OPEN = {};          /* 「显示详细数据」展开状态跨重算
 const ROUGH_FOOT = '推荐 Ra 为工程经验值，默认针对典型钢件、中等批量；场景推荐是选型起点，不是验收保证。';
 const METHOD_FOOT = '加工方法可达 Ra 为经验区间，受机床精度、刀具、参数、材料影响，实际以试加工为准。';
 const COST_RANK = {low:0, mid:1, high:2, vhigh:3};
+/* 按图纸 Ra 推荐加工方法时不参与推荐（首选与备选都不出现）；对照表与「现有加工方法」下拉里照常保留 */
+const RA_NOT_RECOMMEND = ['喷砂/喷丸'];
+function raRecommendable(m) { return RA_NOT_RECOMMEND.indexOf(m.name) < 0; }
 function costBadge(c) { return '<span class="cost-badge '+COST_CLASS[c]+'">'+COST_LABEL[c]+'</span>'; }
 function roughDetails(id, body, label) {
   const open = !!ROUGH_OPEN[id];
@@ -424,10 +427,12 @@ function methodAltHTML(m, r) {
 }
 function raCardHTML(r) {
   const order = (a, b) => COST_RANK[a.cost] - COST_RANK[b.cost] || METHODS.indexOf(a) - METHODS.indexOf(b);
-  const stable = METHODS.filter(m => raFit(m, r) === 'stable').sort(order);
-  const ok = METHODS.filter(m => raFit(m, r) === 'ok').sort(order);
-  const limit = METHODS.filter(m => raFit(m, r) === 'limit').sort(order);
+  const pool = METHODS.filter(raRecommendable);
+  const stable = pool.filter(m => raFit(m, r) === 'stable').sort(order);
+  const ok = pool.filter(m => raFit(m, r) === 'ok').sort(order);
+  const limit = pool.filter(m => raFit(m, r) === 'limit').sort(order);
   const reach = stable.length + ok.length + limit.length;
+  const skipped = METHODS.filter(m => !raRecommendable(m) && raFit(m, r) !== 'no').map(m => m.name);
   if (!reach) {
     return '<div class="answer-card none"><div class="answer-label">加工对照 · 图纸要求 Ra '+r+'</div><div class="answer-none">页面所列加工方法都达不到 Ra '+r+'</div></div>';
   }
@@ -437,7 +442,7 @@ function raCardHTML(r) {
   let html = '<div class="answer-card"><div class="answer-label">加工对照 · 图纸要求 Ra '+r+' μm</div>'
     + '<div class="answer-title long">标 Ra '+r+'：<span class="nw">'+verdict+'</span></div>'
     + '<div class="answer-line">'+costBadge(main.cost)+' '+main.name+' 可达 Ra '+main.raMin+' ~ '+main.raMax+' μm · '+main.note+'</div>'
-    + '<div class="answer-line muted">'+FIT_TXT[mf]+'；页面所列方法中共 '+reach+' 种可达 Ra '+r+'（稳妥 '+stable.length+' · 需控制 '+ok.length+' · 到下限 '+limit.length+'）</div>'
+    + '<div class="answer-line muted">'+FIT_TXT[mf]+'；页面所列方法中共 '+reach+' 种可达 Ra '+r+'（稳妥 '+stable.length+' · 需控制 '+ok.length+' · 到下限 '+limit.length+'）'+(skipped.length ? '；不计'+skipped.join('、')+'（表面处理，不作加工推荐）' : '')+'</div>'
     + '<div class="answer-advice">'+METHOD_FOOT+'</div></div>';
   /* 备选最多 3 条：先给成本不高于首选、但需控制参数的（更经济），再补其他稳妥的 */
   const cheaper = ok.concat(limit).filter(m => m !== main && COST_RANK[m.cost] <= COST_RANK[main.cost]).slice(0, 2);
@@ -447,6 +452,14 @@ function raCardHTML(r) {
   return html;
 }
 function methodCardHTML(m) {
+  if (!raRecommendable(m)) {
+    return '<div class="answer-card"><div class="answer-label">加工对照 · '+m.cat+'</div>'
+      + '<div class="answer-title long">'+m.name+' → <span class="nw">表面常见 Ra '+m.raMin+' ~ '+m.raMax+' μm</span></div>'
+      + '<div class="answer-line">'+costBadge(m.cost)+' '+m.note+'</div>'
+      + '<div class="answer-line muted">换算 ≈ '+umToMm(m.raMin)+' ~ '+umToMm(m.raMax)+' 毫米</div>'
+      + '<div class="answer-line">'+m.name+'属表面处理（'+m.note+'），本页不把它当作达到图纸 Ra 要求的加工方法推荐；按图纸 Ra 选工艺请用上方「图纸要求 Ra」。</div>'
+      + '<div class="answer-advice">'+METHOD_FOOT+'</div></div>';
+  }
   return '<div class="answer-card"><div class="answer-label">加工对照 · '+m.cat+'</div>'
     + '<div class="answer-title long">'+m.name+' → <span class="nw">可标 Ra '+m.raMin+' ~ '+m.raMax+' μm</span></div>'
     + '<div class="answer-line">'+costBadge(m.cost)+' '+m.note+'</div>'
