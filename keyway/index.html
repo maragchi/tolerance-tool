@@ -25,6 +25,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/editorial.css">
+<link rel="stylesheet" href="/css/result-card.css">
 <!--CAD-CSS-START-->
 <style>
 /* ==== DEMO：CAD 动态尺寸图（由 gen_site_demo.py 注入，删掉这段即恢复原样）==== */
@@ -288,6 +289,30 @@ body{max-width:1240px}
   color:#475569;height:44px
 }
 .kw-head .picker:focus-within{border-color:#2563eb !important;box-shadow:0 0 0 3px rgba(37,99,235,.16)}
+
+/* ===== 结果优先：键槽结果卡（组件见 /css/result-card.css），补充参数与全档位表收进「显示详细数据」 ===== */
+.kw-head .answer-card{margin:6px 0 2px}
+.kw-card .answer-title .nw{white-space:nowrap}
+.kw-card .fit-toggle{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 6px}
+.kw-card .fit-btn{flex:1 1 0;min-width:0;padding:6px 8px;font-size:12px;line-height:1.35}
+.kw-card .fit-btn small{font-size:10.5px;margin-top:1px;white-space:nowrap}
+.kw-dims{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.kw-dim{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;min-width:0}
+.kw-dim-h{font-size:12.5px;font-weight:700;color:#2563eb;margin:0 0 2px}
+.kw-dim .answer-line{font-size:13.5px;line-height:1.6}
+.kw-dim .kw-mark{margin-top:3px;padding-top:3px;border-top:1px dashed #e2e8f0;color:#0f172a}
+.kw-dim .kw-mark b{font-family:Consolas,monospace}
+.kw-head .answer-sub{margin:10px 0 6px;text-align:left}
+.kw-alts{grid-template-columns:1fr}
+.kw-alts .answer-alt-title{font-family:inherit;font-size:14px}
+/* 本页全局 details{} 自带虚线上边框，共用折叠按钮不需要 */
+.answer-details{border-top:0;padding-top:0}
+.kw-detail .answer-details{margin-top:10px}
+.ref-card .answer-details-body .hint{margin-top:10px}
+@media(max-width:520px){
+  .kw-dims{grid-template-columns:1fr}
+  .kw-card .fit-btn{flex:1 1 calc(50% - 3px)}
+}
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#2563eb">
@@ -1082,14 +1107,19 @@ z
   </details>
 </div>
 
-<div class="card">
+<div class="card ref-card">
   <h2>GB/T 1095 平键键槽尺寸速查表（全档位）</h2>
+  <details class="answer-details" id="kwTableDetails">
+  <summary>显示详细数据（全档位表）</summary>
+  <div class="answer-details-body">
   <div class="ref-wrap">
     <table class="data-table" id="refTable"><!--REF-TABLE-START-->
 <thead><tr><th>轴径 d 范围 (mm/毫米)</th><th>键槽宽 b</th><th>键高 h</th><th>轴槽深 t₁</th><th>毂槽深 t₂</th><th>轴槽深偏差</th><th>毂槽深偏差</th><th>槽底圆角 r</th></tr></thead><tbody><tr><td>6 ~ 8</td><td>2</td><td>2</td><td>1.2</td><td>1</td><td>+0.1 / 0</td><td>+0.1 / 0</td><td>0.08~0.16</td></tr><tr><td>8 ~ 10</td><td>3</td><td>3</td><td>1.8</td><td>1.4</td><td>+0.1 / 0</td><td>+0.1 / 0</td><td>0.08~0.16</td></tr><tr><td>10 ~ 12</td><td>4</td><td>4</td><td>2.5</td><td>1.8</td><td>+0.1 / 0</td><td>+0.1 / 0</td><td>0.16~0.25</td></tr><tr><td>12 ~ 17</td><td>5</td><td>5</td><td>3</td><td>2.3</td><td>+0.1 / 0</td><td>+0.1 / 0</td><td>0.16~0.25</td></tr><tr><td>17 ~ 22</td><td>6</td><td>6</td><td>3.5</td><td>2.8</td><td>+0.1 / 0</td><td>+0.1 / 0</td><td>0.16~0.25</td></tr><tr><td>22 ~ 30</td><td>8</td><td>7</td><td>4</td><td>3.3</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.25~0.4</td></tr><tr><td>30 ~ 38</td><td>10</td><td>8</td><td>5</td><td>3.3</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.25~0.4</td></tr><tr><td>38 ~ 44</td><td>12</td><td>8</td><td>5</td><td>3.3</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.25~0.4</td></tr><tr><td>44 ~ 50</td><td>14</td><td>9</td><td>5.5</td><td>3.8</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.25~0.4</td></tr><tr><td>50 ~ 58</td><td>16</td><td>10</td><td>6</td><td>4.3</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.25~0.4</td></tr><tr><td>58 ~ 65</td><td>18</td><td>11</td><td>7</td><td>4.4</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.25~0.4</td></tr><tr><td>65 ~ 75</td><td>20</td><td>12</td><td>7.5</td><td>4.9</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.4~0.6</td></tr><tr><td>75 ~ 85</td><td>22</td><td>14</td><td>9</td><td>5.4</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.4~0.6</td></tr><tr><td>85 ~ 95</td><td>25</td><td>14</td><td>9</td><td>5.4</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.4~0.6</td></tr><tr><td>95 ~ 110</td><td>28</td><td>16</td><td>10</td><td>6.4</td><td>+0.2 / 0</td><td>+0.2 / 0</td><td>0.4~0.6</td></tr><tr><td>110 ~ 130</td><td>32</td><td>18</td><td>11</td><td>7.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>0.7~1</td></tr><tr><td>130 ~ 150</td><td>36</td><td>20</td><td>12</td><td>8.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>0.7~1</td></tr><tr><td>150 ~ 170</td><td>40</td><td>22</td><td>13</td><td>9.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>0.7~1</td></tr><tr><td>170 ~ 200</td><td>45</td><td>25</td><td>15</td><td>10.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>0.7~1</td></tr><tr><td>200 ~ 230</td><td>50</td><td>28</td><td>17</td><td>11.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>0.7~1</td></tr><tr><td>230 ~ 260</td><td>56</td><td>32</td><td>20</td><td>12.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>1.2~1.6</td></tr><tr><td>260 ~ 290</td><td>63</td><td>32</td><td>20</td><td>12.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>1.2~1.6</td></tr><tr><td>290 ~ 330</td><td>70</td><td>36</td><td>22</td><td>14.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>1.2~1.6</td></tr><tr><td>330 ~ 380</td><td>80</td><td>40</td><td>25</td><td>15.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>2~2.5</td></tr><tr><td>380 ~ 440</td><td>90</td><td>45</td><td>28</td><td>17.4</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>2~2.5</td></tr><tr><td>440 ~ 500</td><td>100</td><td>50</td><td>31</td><td>19.5</td><td>+0.3 / 0</td><td>+0.3 / 0</td><td>2~2.5</td></tr></tbody>
 <!--REF-TABLE-END--></table>
   </div>
   <p class="hint">轴径落在哪一段，就取该行的 键槽宽 b / 键高 h / 轴槽深 t₁ / 毂槽深 t₂；键宽 b 的极限偏差随联结类型变化（见上方查询结果）。表中 t₁、t₂ 为公称值，图上按 d−t₁、d+t₂ 标注。</p>
+  </div>
+  </details>
 </div>
 
 
@@ -1112,6 +1142,7 @@ z
 
 <div class="toast" id="toast"></div>
 
+<script src="/js/result-card.js"></script>
 <script>
 /* ============ 车间友好：轴径可输入 + 下拉候选（每 1mm） ============ */
 const DIAS = (function(){
@@ -1278,6 +1309,53 @@ function fitToggleHTML(){
   return buf+'</div>';
 }
 
+/* ============ 结果卡（结果优先）：只换展示，数值全部来自上面同一组 KEYWAY / KEY_TOL / FIT_DEF ============ */
+var kwDetailsOpen=false;          /* 「显示详细数据」展开状态跨重算保留 */
+function kwDim(title, widthCode, widthTv, b, depthName, depth, depthTol, markName, markVal, markTol){
+  return '<div class="kw-dim"><div class="kw-dim-h">'+title+'</div>'
+    +'<div class="answer-line">槽宽 <b>'+b+' '+widthCode+'</b>（'+fmtTol(widthTv)+'）</div>'
+    +'<div class="answer-line">槽深 '+depthName+' = '+depth+'（'+depthTol+'）</div>'
+    +'<div class="answer-line kw-mark">图纸标注 <b>'+markName+' = '+markVal+'</b>（'+markTol+'）</div></div>';
+}
+function kwCardHTML(d, row, fit, sTv, hTv){
+  var tol=KEY_TOL[row.b];
+  var html='<div class="answer-card kw-card">'
+    +'<div class="answer-label">键槽尺寸 · '+fit.name+'（轴槽 '+fit.shaft+' · 毂槽 '+fit.hub+'）</div>'
+    +'<div class="answer-title long">Φ'+d+' → 键 <span class="nw">'+row.b+' × '+row.h+' mm</span></div>'
+    +'<div class="answer-line muted">GB/T 1095 档位 '+row.d1+'~'+row.d2+' mm · 标准平键 '+row.b+'×'+row.h+'（h9）</div>'
+    +fitToggleHTML()
+    +'<div class="kw-dims">'
+    +kwDim('轴槽', fit.shaft, sTv, row.b, 't₁', row.t1, '+'+row.t1tol+' / 0', 'd−t₁', (d-row.t1).toFixed(1), '0 / −'+row.t1tol)
+    +kwDim('毂槽', fit.hub, hTv, row.b, 't₂', row.t2, '+'+row.t2tol+' / 0', 'd+t₂', (d+row.t2).toFixed(1), '+'+row.t2tol+' / 0')
+    +'</div>'
+    +'<div class="answer-advice">'+fit.name+'：'+fit.desc+'。图上只需标 d−t₁ 与 d+t₂，t₁、t₂ 仅为查表公称值。</div>'
+    +'</div>';
+  /* 备选：另外两种联结只改键宽公差带（槽深各项来自同一行 KEYWAY） */
+  var alts='';
+  ['loose','normal','tight'].forEach(function(k){
+    if(k===curFit) return;
+    var f=FIT_DEF[k];
+    alts+='<li class="answer-alt"><span class="answer-alt-title">'+f.name+'</span>'
+      +'<span class="answer-alt-line">轴槽 '+f.shaft+'（'+fmtTol(getTolValues(tol[f.shaft]))+'）· 毂槽 '+f.hub+'（'+fmtTol(getTolValues(tol[f.hub]))+'）</span>'
+      +'<span class="answer-alt-line muted">'+f.desc+'</span></li>';
+  });
+  return html+'<p class="answer-sub">其他联结（只改键宽公差）</p><ul class="answer-alts kw-alts">'+alts+'</ul>';
+}
+function kwDetailsHTML(body){
+  return '<details class="answer-details" id="kwDetails"'+(kwDetailsOpen?' open':'')+'>'
+    +'<summary>'+(kwDetailsOpen?'收起详细数据':'显示详细数据')+'</summary>'
+    +'<div class="answer-details-body">'+body+'</div></details>';
+}
+function bindKwDetails(){
+  var el=document.getElementById('kwDetails');
+  if(!el) return;
+  var sum=el.querySelector('summary');
+  el.addEventListener('toggle',function(){
+    kwDetailsOpen=el.open;
+    if(sum) sum.textContent=el.open?'收起详细数据':'显示详细数据';
+  });
+}
+
 function render(){
   var core=document.getElementById('coreArea');
   var det=document.getElementById('detailArea');
@@ -1298,14 +1376,8 @@ function render(){
 
   /* ---- 顶部只放"输入 + 结果"：参数块全部挪到图后面（用户："键槽参数移到下面去，
           图往上拉，第一屏就能看到图"）---- */
-  var html='';
-  html+='<div class="result-highlight">'
-    +'<div><div class="result-label">键尺寸 b × h</div>'
-    +'<div class="result-value">'+row.b+' × '+row.h+' <span class="result-unit">mm（毫米）</span></div>'
-    +'<div class="result-label">轴径 '+d+'mm（毫米） · 范围 '+row.d1+'~'+row.d2+'mm（毫米）</div></div>'
-    +fitToggleHTML()+'</div>';
-  html+='<p class="fit-desc">'+fit.name+'：'+fit.desc+'（轴槽 '+fit.shaft+' · 毂槽 '+fit.hub+'）</p>';
-  core.innerHTML=html;
+  /* 结果卡（结果优先）：键 b×h + 两条图纸标注 d−t₁ / d+t₂ + 槽宽公差，数值与下方「显示详细数据」同源 */
+  core.innerHTML=kwCardHTML(d, row, fit, sTv, hTv);
 
   /* ---- 补充参数（左列下部：手机上排在断面图之后）---- */
   var dh='';
@@ -1331,7 +1403,8 @@ function render(){
 
   // 说明：原先此处还有「查看 XX~XXmm 轴径段完整数据」的可展开表，
   // 因页面底部新增的「全档位速查表」已覆盖同样字段并会高亮当前档位，故移除避免重复。
-  det.innerHTML=dh;
+  det.innerHTML=kwDetailsHTML(dh);
+  bindKwDetails();
 
   // ---- 右列：键槽断面图（静态图 + 动态尺寸）----
   // 图本身不动（CAD 原图几何，页面加载时就在 DOM 里），这里只做三件事：
@@ -1473,6 +1546,19 @@ document.getElementById('btnCopy').addEventListener('click',function(){
   if(LAST) copyData(LAST.row, LAST.d, LAST.fit, LAST.sTv, LAST.hTv);
 });
 document.getElementById('btnPrint').addEventListener('click',function(){ window.print(); });
+if(window.ResultCard) window.ResultCard.bindDetails('kwTableDetails');
+/* 打印 / PDF 要完整数据：打印前临时展开所有「显示详细数据」，打印后恢复 */
+(function(){
+  var reopened=[];
+  window.addEventListener('beforeprint',function(){
+    reopened=[];
+    Array.prototype.forEach.call(document.querySelectorAll('details.answer-details:not([open])'),function(el){ el.open=true; reopened.push(el); });
+  });
+  window.addEventListener('afterprint',function(){
+    reopened.forEach(function(el){ el.open=false; });
+    reopened=[];
+  });
+})();
 document.getElementById('noteList').innerHTML=NOTES.map(function(n){return '<li>'+n+'</li>';}).join('');
 document.getElementById('tipBox').innerHTML=TIPS;
 render();
