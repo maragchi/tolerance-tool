@@ -25,6 +25,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/editorial.css">
+<link rel="stylesheet" href="/css/result-card.css">
 
 <!-- Google Analytics: 替换 G-QNG5GE6S5Z 为你的实际 ID -->
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
@@ -87,6 +88,15 @@ h1 { font-size: 22px; margin-bottom: 2px; }
   table.data-table{font-size:11px}
   table.data-table th,table.data-table td{padding:4px 4px}
 }
+/* ===== 结果优先：先给结果卡（组件见 /css/result-card.css），原结果块收进「显示详细数据」 ===== */
+#resultArea > .answer-card,#genAnswer > .answer-card{margin-top:16px}
+/* 详细数据里保留原结果块的全部内容；大号数值已在结果卡上，这里不再重复显示 */
+.answer-details .result-highlight{display:none}
+.answer-title .nw{white-space:nowrap}
+.answer-details .info-grid:first-child{margin-top:0}
+.answer-details .data-table{width:100%}
+.answer-alts.form-alts{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+@media(max-width:600px){.answer-alts.form-alts{grid-template-columns:1fr}}
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#2563eb">
@@ -174,7 +184,27 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 <div class="card">
   <h2>未注公差值（一般公差）</h2>
   <p class="hint" style="margin-bottom:8px">ISO 2768-2 / GB/T 1184 未注形状公差，适用于图样上未单独标注公差的要素</p>
+  <div class="input-row">
+    <div class="input-group">
+      <label for="genLen">被测要素长度 L (mm/毫米)</label>
+      <input type="number" id="genLen" value="100" min="0" max="3000" step="1" class="dim-input" placeholder="输入长度">
+    </div>
+    <div class="input-group">
+      <label for="genClass">未注公差等级</label>
+      <select id="genClass" class="code-select">
+        <option value="H">H（精密级）</option>
+        <option value="K" selected>K（中等级）</option>
+        <option value="L">L（粗糙级）</option>
+      </select>
+    </div>
+  </div>
+  <div id="genAnswer" aria-live="polite"></div>
+  <details class="answer-details" id="genDetails">
+  <summary>显示详细数据</summary>
+  <div class="answer-details-body">
   <div id="generalTolArea"></div>
+  </div>
+  </details>
 </div>
 
 <p class="subtitle">GB/T 1184-1996 | 长度 0~10000mm（毫米） | 公差等级 1~12 级 | v2 | <a href="/fit/">公差配合查询 →</a></p>
@@ -195,6 +225,7 @@ h1 { font-size: 22px; margin-bottom: 2px; }
 </div>
 
 <script src="/js/nav.js"></script>
+<script src="/js/result-card.js"></script>
 <script>
 // === 车间友好：长度可输入 + 下拉候选（密集档位） ===
 const LENGTHS = (function(){
@@ -399,6 +430,10 @@ function init() {
   });
 
   renderGeneralTol();
+  queryGeneralTol();
+  document.getElementById('genLen').addEventListener('input', queryGeneralTol);
+  document.getElementById('genClass').addEventListener('change', queryGeneralTol);
+  if (window.ResultCard) { window.ResultCard.bindDetails('genDetails'); }
 
   document.getElementById('lengthInput').addEventListener('keydown', e => { if (e.key === 'Enter') queryByGrade(); });
   document.getElementById('lengthInput2').addEventListener('keydown', e => { if (e.key === 'Enter') queryByScenario(); });
@@ -452,6 +487,28 @@ function getMeasMethod(grade) {
   return null;
 }
 
+/* ============ 结果卡（结果优先）：只换展示，数值与原结果块同源 ============ */
+var formDetailsOpen = false;   /* 「显示详细数据」展开状态跨重算保留 */
+function formEsc(t) { return window.ResultCard ? window.ResultCard.esc(t) : String(t); }
+function formDetails(body) {
+  return '<details class="answer-details" id="formDetails"' + (formDetailsOpen ? ' open' : '') + '>'
+    + '<summary>' + (formDetailsOpen ? '收起详细数据' : '显示详细数据') + '</summary>'
+    + '<div class="answer-details-body">' + body + '</div></details>';
+}
+function bindFormDetails() {
+  var d = document.getElementById('formDetails');
+  if (!d) { return; }
+  var sum = d.querySelector('summary');
+  d.addEventListener('toggle', function () {
+    formDetailsOpen = d.open;
+    if (sum) { sum.textContent = d.open ? '收起详细数据' : '显示详细数据'; }
+  });
+}
+function methodLines(mfg, meas, prefix) {
+  return '<div class="answer-line muted">' + prefix + '加工：' + (mfg ? mfg.methods : '-') + '</div>'
+    + '<div class="answer-line muted">' + prefix + '测量：' + (meas ? meas.methods : '-') + '</div>';
+}
+
 function queryByGrade() {
   const length = parseFloat(document.getElementById('lengthInput').value);
   const grade = parseInt(document.getElementById('gradeSelect').value);
@@ -500,7 +557,19 @@ function queryByGrade() {
       h += '<p class="hint">该等级暂无数据 —— 圆心度/圆柱度目前收录 0~8 级（9~12 级为粗加工面，标准表待补）。</p>';
     }
     h += '<p class="hint">依据 GB/T 1184-1996 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</p>';
-    area.innerHTML = h;
+    var binTxt = prevB[rd.idx] + '~' + ROUNDNESS_BINS[rd.idx] + ' 档';
+    var card = rd.value != null
+      ? '<div class="answer-card"><div class="answer-label">' + ti.sym + ' ' + ti.name + '公差值</div>'
+        + '<div class="answer-title long">Φ' + dia + '、' + grade + ' 级 <span class="nw">→ ' + rd.value + ' μm</span></div>'
+        + '<div class="answer-line">直径 Φ' + dia + '（' + binTxt + '）· ' + grade + ' 级</div>'
+        + methodLines(mfg, meas, '')
+        + '<div class="answer-advice">' + (mfg ? mfg.desc + '。' : '') + '依据 GB/T 1184-1996 表 B4：圆度与圆柱度取同一数值，主参数为被测表面直径 d。</div></div>'
+      : '<div class="answer-card none"><div class="answer-label">' + ti.sym + ' ' + ti.name + '公差值</div>'
+        + '<div class="answer-none">Φ' + dia + '、' + grade + ' 级：暂无数据</div>'
+        + '<div class="answer-line">直径 Φ' + dia + '（' + binTxt + '）· ' + grade + ' 级</div>'
+        + '<div class="answer-advice">本站圆度 / 圆柱度目前只收录到 8 级（8 级部分档位缺），这一格没有标准数据，不做插值。</div></div>';
+    area.innerHTML = card + formDetails(h);
+    bindFormDetails();
     return;
   }
 
@@ -532,7 +601,21 @@ function queryByGrade() {
   }
   html += '</tr></table></details>';
 
-  area.innerHTML = html;
+  var lenTxt = document.getElementById('lengthInput').value.trim();
+  var advice = (mfg ? mfg.desc : '');
+  if (currentTab === 'orientation') {
+    advice += (advice ? '；' : '') + '平行度 / 垂直度 / 倾斜度同为 ' + tol + ' μm（GB/T 1184 表 B2，主参数取被测要素的长度 L）';
+  } else if (matchedApps.length > 0) {
+    advice += (advice ? '；' : '') + '适用场景：' + matchedApps.map(function (a) { return a.name + '（' + a.desc + '）'; }).join('、');
+  }
+  var card = '<div class="answer-card"><div class="answer-label">' + symbol + ' ' + param + '公差值</div>'
+    + '<div class="answer-title long">L = ' + formEsc(lenTxt) + ' mm、' + grade + ' 级 <span class="nw">→ ' + tol + ' μm</span></div>'
+    + '<div class="answer-line">长度范围 ' + range.label + ' · ' + grade + ' 级</div>'
+    + methodLines(mfg, meas, '')
+    + (advice ? '<div class="answer-advice">' + advice + '。</div>' : '')
+    + '</div>';
+  area.innerHTML = card + formDetails(html);
+  bindFormDetails();
 }
 
 function queryByScenario() {
@@ -569,7 +652,59 @@ function queryByScenario() {
   const mfg = getMfgMethod(app.grades[0]);
   const meas = getMeasMethod(app.grades[0]);
 
-  area.innerHTML = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+app.name+' · 推荐等级 '+app.grades[0]+'~'+app.grades[1]+' 级</div><div class="result-label" style="margin-top:4px">'+app.desc+'</div><div class="result-label" style="margin-top:4px">长度范围 '+range.label+'</div></div></div><table class="data-table" style="margin-top:12px"><tr><th>推荐等级</th><th>公差值</th></tr>'+gradeRows+'</table><div class="info-grid" style="margin-top:12px"><div class="info-item"><div class="info-label">推荐加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">推荐测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
+  const oldHtml = '<div class="result-highlight"><div><div class="result-label">'+symbol+' '+app.name+' · 推荐等级 '+app.grades[0]+'~'+app.grades[1]+' 级</div><div class="result-label" style="margin-top:4px">'+app.desc+'</div><div class="result-label" style="margin-top:4px">长度范围 '+range.label+'</div></div></div><table class="data-table" style="margin-top:12px"><tr><th>推荐等级</th><th>公差值</th></tr>'+gradeRows+'</table><div class="info-grid" style="margin-top:12px"><div class="info-item"><div class="info-label">推荐加工方法</div><div class="info-value">'+(mfg ? mfg.methods : '-')+'</div></div><div class="info-item"><div class="info-label">推荐测量方法</div><div class="info-value">'+(meas ? meas.methods : '-')+'</div></div></div>';
+  /* 结果卡：主推荐取区间里较严的一级（与原页「推荐加工 / 测量方法」取的同一级），区间内其余等级作备选 */
+  const g0 = app.grades[0];
+  let alts = '';
+  for (let g = g0 + 1; g <= app.grades[1] && g <= g0 + 2; g++) {
+    alts += '<li class="answer-alt"><span class="answer-alt-title">' + g + ' 级 · ' + range.grades[g] + ' μm</span>'
+      + '<span class="answer-alt-line muted">同一场景推荐区间内，可作放宽备选</span></li>';
+  }
+  const card = '<div class="answer-card"><div class="answer-label">' + symbol + ' ' + param + ' · ' + app.name + '</div>'
+    + '<div class="answer-title long">' + app.name + '、L = ' + formEsc(document.getElementById('lengthInput2').value.trim()) + ' mm → <span class="nw">建议 ' + g0 + ' 级：' + range.grades[g0] + ' μm</span></div>'
+    + '<div class="answer-line">长度范围 ' + range.label + ' · 场景推荐 ' + app.grades[0] + '~' + app.grades[1] + ' 级（' + app.desc + '）</div>'
+    + methodLines(mfg, meas, '推荐')
+    + '<div class="answer-advice">场景推荐 ' + app.grades[0] + '~' + app.grades[1] + ' 级，这里先给较严的 ' + g0 + ' 级' + (alts ? '；区间内其余等级见下方备选' : '') + '。</div>'
+    + '</div>'
+    + (alts ? '<p class="answer-sub">备选</p><ul class="answer-alts form-alts">' + alts + '</ul>' : '');
+  area.innerHTML = card + formDetails(oldHtml);
+  bindFormDetails();
+}
+
+/* 未注公差：按长度 + H/K/L 出一个数（取自同一张 GENERAL_TOL 表；区间按表头 ≤a / >a~b 解析，表外不给数） */
+function generalTolIndex(len) {
+  for (var i = 0; i < GENERAL_TOL.ranges.length; i++) {
+    var lab = GENERAL_TOL.ranges[i], lo, hi, m;
+    if ((m = /^≤(\d+(?:\.\d+)?)$/.exec(lab))) { lo = 0; hi = +m[1]; }
+    else if ((m = /^>(\d+(?:\.\d+)?)~(\d+(?:\.\d+)?)$/.exec(lab))) { lo = +m[1]; hi = +m[2]; }
+    else { continue; }
+    if (len > lo && len <= hi) { return i; }
+  }
+  return -1;
+}
+function queryGeneralTol() {
+  var box = document.getElementById('genAnswer');
+  if (!box) { return; }
+  var raw = (document.getElementById('genLen').value || '').trim();
+  var len = parseFloat(raw);
+  var cls = document.getElementById('genClass').value || 'K';
+  var last = GENERAL_TOL.ranges[GENERAL_TOL.ranges.length - 1];
+  var lastMax = (/(\d+(?:\.\d+)?)$/.exec(last) || ['', last])[1];
+  if (!raw || isNaN(len) || len <= 0) {
+    box.innerHTML = '<div class="answer-card none"><p class="error">请输入被测要素长度 L（大于 0）</p></div>';
+    return;
+  }
+  var i = generalTolIndex(len);
+  var c = GENERAL_TOL.classes[cls];
+  if (i < 0 || !c) {
+    box.innerHTML = '<div class="answer-card none"><div class="answer-none">L = ' + formEsc(raw) + ' mm：超出表列范围</div>'
+      + '<div class="answer-line">未注形状公差表只列到 ' + lastMax + ' mm（最后一档 ' + last + '），表外不做外推。</div></div>';
+    return;
+  }
+  box.innerHTML = '<div class="answer-card"><div class="answer-label">未注形状公差（ISO 2768-2 / GB/T 1184）</div>'
+    + '<div class="answer-title long">' + cls + ' 级、' + formEsc(raw) + ' mm <span class="nw">→ ' + c.values[i] + ' mm</span></div>'
+    + '<div class="answer-line">' + cls + '（' + c.name + '）· 长度范围 ' + GENERAL_TOL.ranges[i] + '</div>'
+    + '<div class="answer-advice">适用于图样上未单独标注公差的要素；图样已有单独标注时，先执行该标注。</div></div>';
 }
 
 function renderGeneralTol() {
