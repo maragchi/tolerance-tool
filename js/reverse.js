@@ -1,15 +1,16 @@
-/* 公差反查页 UI，数据与计算全部走 /js/iso286.js；这里只负责筛选、排序和展示 */
+/* 公差反查页 UI，数据与计算全部走 /js/iso286.js；卡片样式与格式化见 /css/result-card.css、/js/result-card.js */
 (function () {
   'use strict';
   var I = window.ISO286;
-  if (!I) return;
+  var RC = window.ResultCard;
+  if (!I || !RC) return;
 
   var MAX_ALTS = 3;
 
   function $(id) { return document.getElementById(id); }
   function val(id) { return $(id).value; }
   function num(id) { return parseFloat(val(id)); }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var esc = RC.esc;
 
   function setMode(mode) {
     document.querySelectorAll('.rev-tab').forEach(function (t) {
@@ -26,9 +27,9 @@
     return el ? el.value : 'hole';
   }
 
-  function r1(v) { var n = +(+v).toFixed(1); return n === 0 ? 0 : n; }
+  var r1 = RC.r1;
   function um(v) { return I.formatUm(r1(v)); }               /* 带符号：+21 / -13 / 0 */
-  function abs(v) { return String(Math.abs(r1(v))); }
+  var abs = RC.absUm;
   function pair(u, l) { return um(u) + ' / ' + um(l) + ' μm'; }
 
   function showError(box, msg) {
@@ -37,38 +38,20 @@
 
   function gradeOf(code) { return parseInt(String(code).replace(/\D/g, ''), 10); }
 
-  function typeClass(t) {
-    if (t === 'clearance') return 'clearance';
-    if (t === 'interference') return 'interference';
-    return 'transition';
-  }
 
-  /* 用工程上的说法描述一个间隙区间：间隙 a–b / 过盈 a–b / 过盈 a ~ 间隙 b */
-  function rangeText(min, max) {
-    min = r1(min); max = r1(max);
-    if (min >= 0) return '间隙 ' + abs(min) + '–' + abs(max) + ' μm';
-    if (max <= 0) return '过盈 ' + abs(max) + '–' + abs(min) + ' μm';
-    return '最大过盈 ' + abs(min) + ' μm ~ 最大间隙 ' + abs(max) + ' μm';
-  }
+  var typeClass = RC.typeClass;
+  var rangeText = RC.rangeText;
+  var bindToggle = RC.bindToggle;
 
-  function bindToggle(btnId, boxId, labelOpen, labelClosed) {
-    var btn = $(btnId), box = $(boxId);
-    if (!btn || !box) return;
-    btn.addEventListener('click', function () {
-      var open = box.hidden;
-      box.hidden = !open;
-      btn.textContent = open ? labelOpen : labelClosed;
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  }
+
 
   /* ---------- 模式 1：偏差 → 代号 ---------- */
 
   function zoneMini(row, showDelta) {
-    return '<li class="rev-alt">' +
-      '<span class="rev-alt-code">' + esc(row.code) + '</span>' +
-      '<span class="rev-alt-line">' + pair(row.upper, row.lower) + ' · IT' + row.grade + '</span>' +
-      (showDelta ? '<span class="rev-alt-line muted">相差 上 ' + um(row.dUpper) + ' / 下 ' + um(row.dLower) + ' μm</span>' : '') +
+    return '<li class="answer-alt">' +
+      '<span class="answer-alt-title">' + esc(row.code) + '</span>' +
+      '<span class="answer-alt-line">' + pair(row.upper, row.lower) + ' · IT' + row.grade + '</span>' +
+      (showDelta ? '<span class="answer-alt-line muted">相差 上 ' + um(row.dUpper) + ' / 下 ' + um(row.dLower) + ' μm</span>' : '') +
       '</li>';
   }
 
@@ -87,33 +70,33 @@
 
     if (r.exact.length) {
       var e = r.exact[0];
-      html += '<div class="rev-rec exact">' +
-        '<div class="rev-rec-label">匹配代号</div>' +
-        '<div class="rev-rec-code">' + esc(e.code) + '</div>' +
-        '<div class="rev-rec-line">上偏差 <b>' + um(e.upper) + ' μm</b>（' + I.formatDev(e.upper) + ' mm），下偏差 <b>' + um(e.lower) + ' μm</b>（' + I.formatDev(e.lower) + ' mm）</div>' +
-        '<div class="rev-rec-line">IT' + e.grade + ' = ' + e.it + ' μm · ' + esc(q) + '</div>' +
-        (r.exact.length > 1 ? '<div class="rev-rec-line">同样匹配：' + r.exact.slice(1).map(function (x) { return esc(x.code); }).join('、') + '</div>' : '') +
+      html += '<div class="answer-card exact">' +
+        '<div class="answer-label">匹配代号</div>' +
+        '<div class="answer-title">' + esc(e.code) + '</div>' +
+        '<div class="answer-line">上偏差 <b>' + um(e.upper) + ' μm</b>（' + I.formatDev(e.upper) + ' mm），下偏差 <b>' + um(e.lower) + ' μm</b>（' + I.formatDev(e.lower) + ' mm）</div>' +
+        '<div class="answer-line">IT' + e.grade + ' = ' + e.it + ' μm · ' + esc(q) + '</div>' +
+        (r.exact.length > 1 ? '<div class="answer-line">同样匹配：' + r.exact.slice(1).map(function (x) { return esc(x.code); }).join('、') + '</div>' : '') +
         '</div>';
     } else {
       var list = r.closest;
       if (!list.length) { box.innerHTML = '<p class="rev-msg">该尺寸下没有可比较的公差带。</p>'; return; }
       var c = list[0];
-      html += '<div class="rev-rec">' +
-        '<div class="rev-rec-label">没有完全一致的代号，最接近的是</div>' +
-        '<div class="rev-rec-code">' + esc(c.code) + '</div>' +
-        '<div class="rev-rec-line">' + esc(c.code) + ' 的偏差：上 <b>' + um(c.upper) + ' μm</b>（' + I.formatDev(c.upper) + ' mm），下 <b>' + um(c.lower) + ' μm</b>（' + I.formatDev(c.lower) + ' mm），IT' + c.grade + ' = ' + c.it + ' μm</div>' +
-        '<div class="rev-rec-line">与输入相差：上偏差 <b>' + um(c.dUpper) + ' μm</b>，下偏差 <b>' + um(c.dLower) + ' μm</b>（正值表示代号比输入大）</div>' +
-        '<div class="rev-rec-line muted">' + esc(q) + '</div>' +
+      html += '<div class="answer-card">' +
+        '<div class="answer-label">没有完全一致的代号，最接近的是</div>' +
+        '<div class="answer-title">' + esc(c.code) + '</div>' +
+        '<div class="answer-line">' + esc(c.code) + ' 的偏差：上 <b>' + um(c.upper) + ' μm</b>（' + I.formatDev(c.upper) + ' mm），下 <b>' + um(c.lower) + ' μm</b>（' + I.formatDev(c.lower) + ' mm），IT' + c.grade + ' = ' + c.it + ' μm</div>' +
+        '<div class="answer-line">与输入相差：上偏差 <b>' + um(c.dUpper) + ' μm</b>，下偏差 <b>' + um(c.dLower) + ' μm</b>（正值表示代号比输入大）</div>' +
+        '<div class="answer-line muted">' + esc(q) + '</div>' +
         '</div>';
       var alts = list.slice(1, 1 + MAX_ALTS);
       if (alts.length) {
-        html += '<p class="rev-sub">其他接近的代号</p><ul class="rev-alts">' + alts.map(function (x) { return zoneMini(x, true); }).join('') + '</ul>';
+        html += '<p class="answer-sub">其他接近的代号</p><ul class="answer-alts">' + alts.map(function (x) { return zoneMini(x, true); }).join('') + '</ul>';
       }
       var rest = list.slice(1 + MAX_ALTS);
       if (rest.length) {
         var lbl = '显示其余 ' + rest.length + ' 个';
-        html += '<p class="rev-more"><button type="button" class="rev-more-btn" id="devAllBtn" aria-expanded="false">' + lbl + '</button></p>' +
-          '<ul class="rev-all" id="devAll" hidden>' + rest.map(function (x) { return zoneMini(x, true); }).join('') + '</ul>';
+        html += '<p class="answer-more"><button type="button" class="answer-more-btn" id="devAllBtn" aria-expanded="false">' + lbl + '</button></p>' +
+          '<ul class="answer-all" id="devAll" hidden>' + rest.map(function (x) { return zoneMini(x, true); }).join('') + '</ul>';
       }
       html += '<p class="rev-note">接近程度：先看上、下偏差差值中较大的那个，再看两者之和，再看 IT 等级（细的在前）。</p>';
     }
@@ -150,13 +133,13 @@
 
   function fitMini(row) {
     var tags = '';
-    if (row.preferred) tags += '<span class="pref">常用</span>';
-    if (!row.holeBasis) tags += '<span class="tag-muted">非基孔制</span>';
-    else if (!isCommonCombo(row)) tags += '<span class="tag-muted">等级不常见</span>';
-    return '<li class="rev-alt">' +
-      '<span class="rev-alt-code">' + esc(row.code) + ' <span class="fit-type ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '</span>' + tags + '</span>' +
-      '<span class="rev-alt-line">' + rangeText(row.minClearance, row.maxClearance) + '</span>' +
-      '<span class="rev-alt-line muted">孔 ' + pair(row.holeUpper, row.holeLower) + ' · 轴 ' + pair(row.shaftUpper, row.shaftLower) + '</span>' +
+    if (row.preferred) tags += '<span class="answer-pref">常用</span>';
+    if (!row.holeBasis) tags += '<span class="answer-tag-muted">非基孔制</span>';
+    else if (!isCommonCombo(row)) tags += '<span class="answer-tag-muted">等级不常见</span>';
+    return '<li class="answer-alt">' +
+      '<span class="answer-alt-title">' + esc(row.code) + ' <span class="fit-badge ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '</span>' + tags + '</span>' +
+      '<span class="answer-alt-line">' + rangeText(row.minClearance, row.maxClearance) + '</span>' +
+      '<span class="answer-alt-line muted">孔 ' + pair(row.holeUpper, row.holeLower) + ' · 轴 ' + pair(row.shaftUpper, row.shaftLower) + '</span>' +
       '</li>';
   }
 
@@ -194,12 +177,12 @@
   }
 
   function recCard(row, label, reason) {
-    return '<div class="rev-rec">' +
-      '<div class="rev-rec-label">' + label + '</div>' +
-      '<div class="rev-rec-code">' + esc(row.code) + ' <span class="fit-type ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '配合</span></div>' +
-      '<div class="rev-rec-line">孔 ' + esc(row.holeCode) + '：<b>' + pair(row.holeUpper, row.holeLower) + '</b>　轴 ' + esc(row.shaftCode) + '：<b>' + pair(row.shaftUpper, row.shaftLower) + '</b></div>' +
-      '<div class="rev-rec-line">实际最小间隙 <b>' + um(row.minClearance) + ' μm</b>，最大间隙 <b>' + um(row.maxClearance) + ' μm</b>（负值为过盈）</div>' +
-      '<div class="rev-rec-why">' + reason + '</div>' +
+    return '<div class="answer-card">' +
+      '<div class="answer-label">' + label + '</div>' +
+      '<div class="answer-title">' + esc(row.code) + ' <span class="fit-badge ' + typeClass(row.fitType) + '">' + row.fitTypeShort + '配合</span></div>' +
+      '<div class="answer-line">孔 ' + esc(row.holeCode) + '：<b>' + pair(row.holeUpper, row.holeLower) + '</b>　轴 ' + esc(row.shaftCode) + '：<b>' + pair(row.shaftUpper, row.shaftLower) + '</b></div>' +
+      '<div class="answer-line">实际最小间隙 <b>' + um(row.minClearance) + ' μm</b>，最大间隙 <b>' + um(row.maxClearance) + ' μm</b>（负值为过盈）</div>' +
+      '<div class="answer-advice">' + reason + '</div>' +
       '</div>';
   }
 
@@ -224,20 +207,20 @@
       html += recCard(best, '推荐配合', why);
       var alts = common.slice(1, 1 + MAX_ALTS);
       if (alts.length) {
-        html += '<p class="rev-sub">备选</p><ul class="rev-alts">' + alts.map(fitMini).join('') + '</ul>';
+        html += '<p class="answer-sub">备选</p><ul class="answer-alts">' + alts.map(fitMini).join('') + '</ul>';
       }
     } else {
-      html += '<div class="rev-rec none"><div class="rev-rec-label">结论</div>' +
-        '<div class="rev-rec-none">没有常见配合满足</div>' +
-        '<div class="rev-rec-line">基孔制、孔轴等级相同或孔粗一级的组合里，没有一组的实际间隙完全落在要求范围内。下面是最接近的常用配合：</div></div>';
+      html += '<div class="answer-card none"><div class="answer-label">结论</div>' +
+        '<div class="answer-none">没有常见配合满足</div>' +
+        '<div class="answer-line">基孔制、孔轴等级相同或孔粗一级的组合里，没有一组的实际间隙完全落在要求范围内。下面是最接近的常用配合：</div></div>';
       var near = nearestQuick(r.dim, reqMin, reqMax);
       if (near.length) {
-        html += '<ul class="rev-alts">' + near.map(function (n) {
-          return '<li class="rev-alt">' +
-            '<span class="rev-alt-code">' + esc(n.code) + ' <span class="fit-type ' + typeClass(n.fitType) + '">' + n.fitTypeShort + '</span><span class="pref">常用</span></span>' +
-            '<span class="rev-alt-line">' + rangeText(n.minClearance, n.maxClearance) + '</span>' +
-            '<span class="rev-alt-line warn">差在：' + n.miss.join('；') + '</span>' +
-            '<span class="rev-alt-line muted">孔 ' + pair(n.holeUpper, n.holeLower) + ' · 轴 ' + pair(n.shaftUpper, n.shaftLower) + '</span>' +
+        html += '<ul class="answer-alts">' + near.map(function (n) {
+          return '<li class="answer-alt">' +
+            '<span class="answer-alt-title">' + esc(n.code) + ' <span class="fit-badge ' + typeClass(n.fitType) + '">' + n.fitTypeShort + '</span><span class="answer-pref">常用</span></span>' +
+            '<span class="answer-alt-line">' + rangeText(n.minClearance, n.maxClearance) + '</span>' +
+            '<span class="answer-alt-line warn">差在：' + n.miss.join('；') + '</span>' +
+            '<span class="answer-alt-line muted">孔 ' + pair(n.holeUpper, n.holeLower) + ' · 轴 ' + pair(n.shaftUpper, n.shaftLower) + '</span>' +
             '</li>';
         }).join('') + '</ul>';
       }
@@ -249,9 +232,9 @@
         if (a.group !== b.group) return a.group - b.group;
         return byRecommend(a, b);
       });
-      html += '<p class="rev-more"><button type="button" class="rev-more-btn" id="fitAllBtn" aria-expanded="false">' + lbl + '</button></p>' +
-        '<div id="fitAll" hidden><p class="rev-note" style="margin:0 0 8px">满足要求的全部组合（含非基孔制和等级不常见的组合），常用配合在前，其余按富余从小到大。</p>' +
-        '<ul class="rev-all">' + full.map(fitMini).join('') + '</ul></div>';
+      html += '<p class="answer-more"><button type="button" class="answer-more-btn" id="fitAllBtn" aria-expanded="false">' + lbl + '</button></p>' +
+        '<div id="fitAll" class="answer-all-box" hidden><p class="rev-note" style="margin:0 0 8px">满足要求的全部组合（含非基孔制和等级不常见的组合），常用配合在前，其余按富余从小到大。</p>' +
+        '<ul class="answer-all">' + full.map(fitMini).join('') + '</ul></div>';
       html += '<p class="rev-note">排序：常用配合优先，其次按「富余」从小到大。富余 =（实际最小间隙 − 要求最小）+（要求最大 − 实际最大间隙），富余越小，孔轴公差越宽、越好加工。数值与「<a href="/fit/">公差配合查询</a>」同源。</p>';
     } else {
       html += '<p class="rev-note">任何孔轴组合都无法满足该范围，可放宽最小 / 最大间隙后再查。</p>';

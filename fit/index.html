@@ -26,6 +26,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/result-card.css">
 <link rel="stylesheet" href="/css/editorial.css">
 <!--CAD-CSS-START-->
 <style>
@@ -610,6 +611,17 @@ select.code-select{
 <meta name="apple-mobile-web-app-title" content="公差工具">
 <style>.reverse-entry{margin:0 0 16px;padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:13.5px;color:#334155;line-height:1.65}.reverse-entry a{color:#1d4ed8;font-weight:600;text-decoration:none}.reverse-entry a:hover{text-decoration:underline}
 </style>
+<style>
+/* ===== 结果优先：结果卡（组件见 /css/result-card.css）+ 详细数据折叠 ===== */
+.answer-slot{margin-top:14px}
+.fit-sel-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.fit-sel{min-width:0}
+.fit-sel .member-head{padding:0;margin:0}
+.answer-card .copy-btn{margin:0}
+#fitDetails .member-head .input-group label{margin-bottom:0}
+#fitDetails .member-head{padding:10px 16px}
+#singleDetails .single-body{margin-top:0}
+</style>
 </head>
 <body>
 
@@ -656,6 +668,11 @@ select.code-select{
   </div>
   <div class="quick-picks" id="quickSingle"></div>
   <p class="hint">输入框可直接打字，或点右侧箭头从列表选 ｜ 选好立即出结果</p>
+  <!-- 结果优先：先给一张结果卡；结果表 / CAD 标注图 / 公差带图收进「显示详细数据」 -->
+  <div class="answer-slot" id="singleAnswer" aria-live="polite"></div>
+  <details class="answer-details" id="singleDetails">
+  <summary>显示详细数据</summary>
+  <div class="answer-details-body">
   <!-- 单要素形状图 + 结果表：左右并排（用户："把类型、上下偏差、公差值这一列放在图右侧，
        减少上下页面的长度"） -->
   <div class="single-body">
@@ -663,6 +680,8 @@ select.code-select{
     <div id="singleResult"></div>
     <div id="singleChart"></div>
   </div>
+  </div>
+  </details>
 </div>
 
 <div class="card" id="fitQuery">
@@ -683,16 +702,41 @@ select.code-select{
   <div class="quick-picks" id="quickFit"></div>
   <!-- 结果在左、断面图在右（两栏并排），避免上下堆叠把页面拉长 -->
   <!-- 配合结果：孔 / 轴 各一张「成员卡」——代号胶囊 + 公差带 + 偏差/极限 + 断面图，一个零件从上看到下 -->
-  <div id="fitBanner"></div>
-
-  <div class="member-grid">
-    <section class="member-card member-hole">
+  <!-- 孔 / 轴代号选择放在结果卡上方（原在两张成员卡的标题行里，成员卡现收进「显示详细数据」） -->
+  <div class="fit-sel-row">
+    <div class="fit-sel member-hole">
       <div class="member-head">
         <div class="input-group">
           <label>孔公差（大写）</label>
           <select id="holeSel" class="code-select"></select>
         </div>
         <span class="member-tag">孔</span>
+      </div>
+    </div>
+    <div class="fit-sel member-shaft">
+      <div class="member-head">
+        <div class="input-group">
+          <label>轴公差（小写）</label>
+          <select id="shaftSel" class="code-select"></select>
+        </div>
+        <span class="member-tag">轴</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="answer-slot" id="fitAnswer" aria-live="polite"></div>
+
+  <details class="answer-details" id="fitDetails">
+  <summary>显示详细数据</summary>
+  <div class="answer-details-body">
+  <div id="fitBanner"></div>
+
+  <div class="member-grid">
+    <section class="member-card member-hole">
+      <div class="member-head">
+        <div class="input-group">
+          <label>孔</label>
+        </div>
       </div>
       <div class="member-info" id="holeInfo"></div>
       <div class="member-fig" id="holeFig"></div>
@@ -701,10 +745,8 @@ select.code-select{
     <section class="member-card member-shaft">
       <div class="member-head">
         <div class="input-group">
-          <label>轴公差（小写）</label>
-          <select id="shaftSel" class="code-select"></select>
+          <label>轴</label>
         </div>
-        <span class="member-tag">轴</span>
       </div>
       <div class="member-info" id="shaftInfo"></div>
       <div class="member-fig" id="shaftFig"></div>
@@ -1091,6 +1133,8 @@ z
 <!--CAD-FIGS-END-->
     </div>
   </div>
+  </div>
+  </details>
   <div class="help-panel" id="helpPanel" style="display:none">
     <div class="help-item clearance">
       <h4><span class="dot"></span>间隙配合</h4>
@@ -1210,6 +1254,7 @@ z
 <script src="/js/nav.js"></script>
 <script src="/js/usage-events.js"></script>
 <script src="/js/iso286.js"></script>
+<script src="/js/result-card.js"></script>
 <script>
 // === 车间友好：密集尺寸下拉 + 公差代号下拉 + 快捷点选 ===
 const DIMS = (function(){
@@ -1432,6 +1477,76 @@ function buildToleranceChart(dim, bands) {
 /* 图纸标注（工程图样式）那套自绘 SVG 已删除 —— 右上角那个「图纸标注 · 实时」框也一并去掉，
    改用下面真实的 CAD 断面图（孔 / 轴）。 */
 
+/* ============ 结果卡（结果优先）：只换展示，数值全部取自 calcTolerance / calcFit 的同一份结果 ============ */
+/* 用法一句：H7 基孔制 7 组常用配合直接取自下方「常用配合推荐」表（特点 / 典型应用 / 装配）；
+   其它组合只给按配合类型的装入方式（与详细数据里的装配说明同一套文字），不另造用途。
+   表里的类型与本次实算类型不一致时（例如小尺寸下 H7/p6 实为过渡），退回按实算类型的说法。 */
+var FIT_ADVICE = {
+  'H7/g6':  { type: 'clearance',    text: '最小间隙不为 0，能相对运动；常用于滑动轴承、机床导轨、导向柱、传动轴与齿轮滑移；装配：手装 / 轻推。' },
+  'H7/h6':  { type: 'clearance',    text: '定位准确，可反复拆装；常用于定位销、法兰对中、皮带轮与轴、可拆定位件；装配：手装。' },
+  'H7/js6': { type: 'transition',   text: '以定位为主，偶尔拆装；常用于齿轮与轴、联轴器、蜗轮与轴；装配：木锤 / 轻压。' },
+  'H7/k6':  { type: 'transition',   text: '定位并传递较小扭矩；常用于齿轮、蜗轮、飞轮、带轮与轴；装配：压装。' },
+  'H7/n6':  { type: 'transition',   text: '紧定位，能承受较大载荷；常用于齿圈、衬套、定位套、承受冲击的定位件；装配：压装。' },
+  'H7/p6':  { type: 'interference', text: '靠过盈传力，不常拆；常用于滚动轴承内圈与轴、联轴器、销钉固定；装配：压装 / 热装。' },
+  'H7/s6':  { type: 'interference', text: '重载，不拆连接；常用于大型联轴器、车轮与轴、重载齿轮；装配：热装 / 冷装。' }
+};
+var FIT_ASM_GENERIC = {
+  clearance: '装入方式：手推即可，或轻轻转动就能装进，不需要工装。',
+  transition: '装入方式：木锤（铜棒垫着）轻敲，或手扳压机轻压。',
+  interference: '装入方式：压床压入 / 锤击（垫铜棒），或加热孔件、冷却轴件后装配。'
+};
+var COPY_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+
+function answerError(id, msg) {
+  var box = document.getElementById(id);
+  if (box) { box.innerHTML = '<div class="answer-card none"><p class="error">' + msg + '</p></div>'; }
+}
+
+function renderFitAnswer(dim, holeCode, shaftCode, result) {
+  var box = document.getElementById('fitAnswer');
+  var RC = window.ResultCard;
+  if (!box || !RC) { return; }
+  var code = holeCode + '/' + shaftCode;
+  var known = FIT_ADVICE[code];
+  /* 常用配合表里的说法加「用法：」前缀；按类型的通用装入方式本身以「装入方式：」开头，不再加前缀 */
+  var advice = (known && known.type === result.fitType) ? ('用法：' + known.text) : FIT_ASM_GENERIC[result.fitType];
+  box.innerHTML = '<div class="answer-card">'
+    + '<div class="answer-label">配合结果</div>'
+    + '<div class="answer-title long">Φ' + dim + ' ' + RC.esc(code) + '：' + RC.rangeText(result.minClearance, result.maxClearance) + '，' + result.fitTypeCN
+    + ' ' + RC.badge(result.fitType, result.fitTypeShort) + '</div>'
+    + '<div class="answer-line">孔 ' + RC.esc(holeCode) + ' <b>' + formatDev(result.hole.upper) + ' / ' + formatDev(result.hole.lower) + '</b>'
+    + '　轴 ' + RC.esc(shaftCode) + ' <b>' + formatDev(result.shaft.upper) + ' / ' + formatDev(result.shaft.lower) + '</b> mm</div>'
+    + '<div class="answer-line muted">最大间隙/过盈 ' + formatMM(result.maxClearance) + ' mm，最小间隙/过盈 ' + formatMM(result.minClearance) + ' mm（负值为过盈）</div>'
+    + '<div class="answer-advice">' + advice + '</div>'
+    + '<div class="answer-actions"><button type="button" class="copy-btn" onclick="copyFit()">' + COPY_ICON + '复制结果</button></div>'
+    + '</div>';
+}
+
+function renderSingleAnswer(dim, code, result) {
+  var box = document.getElementById('singleAnswer');
+  var RC = window.ResultCard;
+  if (!box || !RC) { return; }
+  var isHole = result.isHole;
+  var maxLimit = (dim * 1000 + result.upper) / 1000;
+  var minLimit = (dim * 1000 + result.lower) / 1000;
+  var letter = String(result.letter);
+  var note = '这是' + (isHole ? '孔' : '轴') + '，IT' + result.grade + ' 级';
+  if (letter === 'H') { note += '；H 为基孔制的基准孔，下偏差为 0'; }
+  else if (letter === 'h') { note += '；h 为基轴制的基准轴，上偏差为 0'; }
+  else if (letter.toLowerCase() === 'js') { note += '；' + letter + ' 的上下偏差对称，各为公差值的一半'; }
+  note += '。';
+  var warn = result.deltaUnavailable
+    ? '<div class="answer-line muted">提示：IT5 的 K~U 孔需要 IT4 才能算 Δ 修正，本站只收录 IT5 起的公差表，此处按 ES = -ei 计算，请核对标准原文。</div>' : '';
+  box.innerHTML = '<div class="answer-card">'
+    + '<div class="answer-label">单要素公差</div>'
+    + '<div class="answer-title long">Φ' + dim + ' ' + RC.esc(code) + '（' + (isHole ? '孔' : '轴') + '）：' + formatDev(result.upper) + ' / ' + formatDev(result.lower) + ' mm</div>'
+    + '<div class="answer-line">极限尺寸 <b>' + minLimit.toFixed(4) + ' ~ ' + maxLimit.toFixed(4) + '</b> mm · 公差值 ' + formatMM(result.it) + ' mm</div>'
+    + warn
+    + '<div class="answer-advice">' + note + '</div>'
+    + '<div class="answer-actions"><button type="button" class="copy-btn" onclick="copySingle()">' + COPY_ICON + '复制结果</button></div>'
+    + '</div>';
+}
+
 function querySingle(source) {
   const dim = parseFloat(document.getElementById('dim').value);
   const code = document.getElementById('codeSel').value;
@@ -1440,6 +1555,7 @@ function querySingle(source) {
 
   if (result.error) {
     container.innerHTML = '<p class="error">' + result.error + '</p>';
+    answerError('singleAnswer', result.error);
     document.getElementById('singleFig').hidden = true;
     var cb = document.getElementById('singleChart');
     if (cb) { cb.innerHTML = ''; }
@@ -1504,6 +1620,7 @@ function querySingle(source) {
     + '公差值 ' + formatMM(result.it) + ' mm（毫米）\n'
     + '极限尺寸 ' + minLimit.toFixed(4) + ' ~ ' + maxLimit.toFixed(4) + ' mm（毫米）\n'
     + '依据 ISO 286 / GB/T 1800';
+  renderSingleAnswer(dim, code, result);
   if (window.ToolUsage) { window.ToolUsage.query('single', [dim, code].join('|'), source); }
 }
 
@@ -1603,6 +1720,7 @@ function queryFit(source) {
 
   if (result.error) {
     banner.innerHTML = '<p class="error">' + result.error + '</p>';
+    answerError('fitAnswer', result.error);
     holeInfo.innerHTML = '';
     shaftInfo.innerHTML = '';
     summary.innerHTML = '';
@@ -1674,6 +1792,7 @@ function queryFit(source) {
     + '，极限 ' + shaftMin.toFixed(4) + ' ~ ' + shaftMax.toFixed(4) + '\n'
     + '最大间隙/过盈 ' + formatMM(result.maxClearance) + ' mm，最小 ' + formatMM(result.minClearance) + ' mm\n'
     + '依据 ISO 286 / GB/T 1800';
+  renderFitAnswer(dim, holeCode, shaftCode, result);
   if (window.ToolUsage) { window.ToolUsage.query('fit', [dim, holeCode, shaftCode].join('|'), source); }
 
   // 断面图：只改图上的文字（图是静态的，见 cadFitSync）
@@ -1766,6 +1885,13 @@ queryFit();
 /* cad-live.js（断面图运行时）在本段脚本之后注入，要等 DOMContentLoaded 才初始化完；
    所以 load 时按当前输入再刷一遍 —— 单要素那张克隆图也要等运行时给出排版原语才能填偏差。 */
 window.addEventListener('load', function () { querySingle(); queryFit(); });
+/* 「显示详细数据」：断面图在折叠里时量不到文字位置，展开后让运行时按当前参数重排一次（不重算、不计入查询统计） */
+if (window.ResultCard) {
+  window.ResultCard.bindDetails('fitDetails', function () {
+    if (window.CAD_DEBUG && window.CAD_DEBUG.paint) { window.CAD_DEBUG.paint(); }
+  });
+  window.ResultCard.bindDetails('singleDetails');
+}
 </script>
 <script>
 /* ===== 下拉列表增强（滚轮 / 打字过滤）===== */

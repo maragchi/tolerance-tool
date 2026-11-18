@@ -1,0 +1,53 @@
+/* 结果优先 · 共用组件（公差反查 /reverse/ 定型，/fit/ 复用）
+ * answer-card     结果卡：标签 + 大号结论 + 类型徽标 + 说明行 + 用法一句 + 复制
+ * answer-alts     备选条（最多 3 条）；answer-all 为「显示全部」展开后的列表
+ * answer-details  「显示详细数据」折叠（<details>）；answer-more-btn 为按钮式展开
+ * fit-badge       间隙 / 过渡 / 过盈 徽标
+ * answer-advice   结果卡内的一行用法说明
+ */
+.answer-pref{display:inline-block;margin-left:4px;padding:0 6px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:600}
+.fit-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.fit-badge.clearance{background:#ecfdf5;color:#047857}
+.fit-badge.transition{background:#fffbeb;color:#b45309}
+.fit-badge.interference{background:#fef2f2;color:#b91c1c}
+.answer-more{margin:12px 0 0}
+.answer-more-btn{padding:7px 14px;border:1px solid #2563eb;background:#fff;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600}
+.answer-more-btn:hover{background:#eff6ff;color:#1d4ed8}
+.answer-sub{margin:14px 0 6px;font-size:13px;color:#64748b;font-weight:600}
+.answer-card{border:2px solid #2563eb;background:#f8fbff;border-radius:12px;padding:14px 16px;margin:0 0 4px;overflow-wrap:anywhere}
+.answer-card.exact{border-color:#16a34a;background:#f6fdf8}
+.answer-card.none{border-color:#f59e0b;background:#fffbeb}
+.answer-label{font-size:12.5px;color:#475569;font-weight:600;margin:0 0 4px}
+.answer-title{font-family:ui-monospace,Consolas,monospace;font-size:30px;font-weight:700;color:#0f172a;line-height:1.25;margin:0 0 6px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.answer-title .fit-badge{font-family:inherit;font-size:13px}
+.answer-none{font-size:20px;font-weight:700;color:#b45309;margin:0 0 6px}
+.answer-line{font-size:14px;color:#334155;line-height:1.7}
+.answer-line.muted{color:#64748b;font-size:13px}
+.answer-advice{margin-top:8px;padding-top:8px;border-top:1px dashed #cbd5e1;font-size:14px;color:#1e3a8a;line-height:1.7}
+.answer-alts,.answer-all{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.answer-all{margin-top:4px}
+.answer-all[hidden],.answer-all-box[hidden]{display:none!important}
+.answer-alt{border:1px solid #e2e8f0;border-radius:10px;padding:9px 12px;background:#fff;display:flex;flex-direction:column;gap:2px;min-width:0;overflow-wrap:anywhere}
+.answer-alt-title{font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:15px;color:#0f172a;display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.answer-alt-line{font-size:13px;color:#334155;line-height:1.6}
+.answer-alt-line.muted{color:#64748b;font-size:12.5px}
+.answer-alt-line.warn{color:#b45309}
+.answer-tag-muted{display:inline-block;padding:0 6px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:11px;font-weight:600;font-family:system-ui,sans-serif}
+.answer-alt-title .answer-pref,.answer-alt-title .fit-badge{font-family:system-ui,sans-serif;margin-left:0}
+
+/* 句子式标题（如「Φ50 H7/g6：间隙 9–50 μm，间隙配合」）：比代号标题小一号、不用等宽字 */
+.answer-title.long{font-family:inherit;font-size:22px;line-height:1.4}
+.answer-title.long .fit-badge{font-size:13px}
+.answer-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.answer-card .error{margin:0;color:#b91c1c}
+
+/* 「显示详细数据」折叠 */
+.answer-details{margin:12px 0 0;min-width:0}
+.answer-details > summary{display:inline-flex;align-items:center;gap:6px;list-style:none;padding:7px 14px;border:1px solid #2563eb;background:#fff;color:#1d4ed8;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600;user-select:none}
+.answer-details > summary::-webkit-details-marker{display:none}
+.answer-details > summary::before{content:"▸";font-size:12px;line-height:1}
+.answer-details[open] > summary::before{content:"▾"}
+.answer-details > summary:hover{background:#eff6ff}
+.answer-details-body{margin-top:12px;min-width:0}
+
+@media(max-width:600px){.answer-title{font-size:26px}.answer-title.long{font-size:19px}.answer-alts,.answer-all{grid-template-columns:1fr}}
