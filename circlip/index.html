@@ -271,7 +271,7 @@ body.cad-zoom-open{overflow:hidden}
       <button type="button" class="fit-btn" data-type="shaft">轴用 A 型<small>GB/T 894-2017</small></button>
     </div>
     <div class="input-group">
-      <label id="sizeLabel" for="sizeInput">孔径 d0 (mm/毫米)</label>
+      <label id="sizeLabel" for="sizeInput">孔径 d1 (mm/毫米)</label>
       <div class="picker">
         <input type="number" id="sizeInput" min="0" step="any" inputmode="decimal" class="dim-input" placeholder="输入或点箭头选" autocomplete="off">
         <button type="button" class="picker-toggle" aria-label="展开规格列表">▼</button>
@@ -2165,7 +2165,7 @@ z
     var table = ''
       + '<table class="data-table clip-table">'
       + '<tr><th>项目</th><th>数值</th><th>说明</th></tr>'
-      + (hole ? '<tr><td>挡圈外径 d3</td><td>' + t(row.ring) + '</td><td>挡圈自由状态外径</td></tr>'
+      + (hole ? '<tr><td>自由状态外径 d3</td><td>' + t(row.ring) + '</td><td>挡圈自由状态外径</td></tr>'
               : '<tr><td>自由状态内径 d3</td><td>' + t(row.ring) + '</td><td>挡圈未装入时的内径（GB/T 894-2017）</td></tr>')
       + '<tr><td>挡圈厚度 s</td><td>' + t(row.thick) + '</td><td>槽宽 m 要比它略大</td></tr>'
       + '<tr><td><b>沟槽直径 d2</b></td><td><b>' + t(row.d2) + '</b>'
@@ -2178,7 +2178,7 @@ z
       + (row.t !== null && row.t !== undefined
           ? '<tr><td>沟槽深度 t</td><td>' + t(row.t) + '</td><td>2017 版新增的槽深控制</td></tr>' : '')
       + '<tr><td><b>槽边到端面 n</b></td><td><b>' + t(row.n) + '</b>（min）</td><td>小于它装不进工具</td></tr>'
-      + '<tr><td>槽深 (d2−d1)/2</td><td>' + t(depth) + '</td><td>由 d2 与 d1 算出</td></tr>'
+      + '<tr><td>槽深 ' + (hole ? '(d2−d1)/2' : '(d0−d2)/2') + '</td><td>' + t(depth) + '</td><td>' + (hole ? '由 d2 与 d1 算出' : '由 d0 与 d2 算出') + '</td></tr>'
       + '<tr><td>允许套入的' + (hole ? '最大轴径 d4' : '最小孔径 d4') + '</td><td>' + t(row.allow) + '</td>'
       + '<td>校核装配通过性</td></tr>'
       + (row.FN ? '<tr><td>承载能力 F<sub>N</sub> / F<sub>R</sub></td><td>' + t(row.FN) + ' / ' + t(row.FR)
@@ -2244,7 +2244,7 @@ z
     var r = rows(), h = '';
     var head = isHole()
       ? ['d1 孔径', 's 厚度', 'd3 挡圈外径', 'd2 槽径', 'm 槽宽(H13)', 't 槽深', 'n≥', 'd4 轴≤']
-      : ['d0 轴径', 'S 厚度', 'd3 自由内径', 'd2 槽径', 'm 槽宽', 'n≥', 'd4 孔≥'];
+      : ['d0 轴径', 's 厚度', 'd3 自由内径', 'd2 槽径', 'm 槽宽', 'n≥', 'd4 孔≥'];
     h += '<table class="data-table clip-table"><tr>';
     for (var j = 0; j < head.length; j++) h += '<th>' + head[j] + '</th>';
     h += '</tr>';
