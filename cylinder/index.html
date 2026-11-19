@@ -26,6 +26,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <meta property="og:locale" content="zh_CN">
 <link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/editorial.css">
+<link rel="stylesheet" href="/css/result-card.css">
 <script>if(location.hostname==="localhost"||location.hostname==="127.0.0.1"||location.protocol==="file:"){window["ga-disable-G-QNG5GE6S5Z"]=true;window.__NO_ANALYTICS__=1;}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNG5GE6S5Z"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QNG5GE6S5Z');</script>
@@ -122,6 +123,14 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
   .breadcrumb a{color:#2563eb}
   @media(max-width:900px){ .layout{flex-direction:column} #nav{width:100%!important;border-right:none;border-bottom:1px solid var(--line);display:flex;overflow-x:auto} #nav a{white-space:nowrap;border-left:none;border-bottom:3px solid transparent} #nav a.active{border-left:none;border-bottom-color:var(--primary)} }
   @media print{ .site-header,.breadcrumb{display:none!important} }
+  /* ===== 结果优先：向导先给结果卡（组件见 /css/result-card.css），11 行参数清单、出力总表、知识库收进「显示详细数据」 ===== */
+  #r-card .answer-card{margin:0}
+  #r-card .answer-title .tag{font-family:inherit;font-size:13px}
+  #r-card .answer-line .tag{font-size:12px;padding:1px 8px;white-space:normal}
+  #wizDetails .answer-details-body>.result{margin-top:0}
+  #knowDetails .answer-details-body>.card:last-child,#forceDetails .answer-details-body>.card:last-child{margin-bottom:0}
+  #knowDetails table.data td.l{overflow-wrap:anywhere}
+  #forceDetails{margin-bottom:18px}
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#2563eb">
@@ -269,6 +278,10 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
     <div>
       <div class="card" style="position:sticky;top:16px">
         <h3>🧮 实时计算结果</h3>
+        <div id="r-card" aria-live="polite"></div>
+        <details class="answer-details" id="wizDetails">
+        <summary>显示详细数据</summary>
+        <div class="answer-details-body">
         <div class="result">
           <div class="row"><span class="k">实际轴向负载 F</span><span class="v" id="r-f">-</span></div>
           <div class="row"><span class="k">负载率 η</span><span class="v" id="r-eta">-</span></div>
@@ -283,6 +296,8 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
           <div class="row"><span class="k">★ 推荐标准行程</span><span class="v big" id="r-stroke">-</span></div>
         </div>
         <div class="formula" id="r-formula"></div>
+        </div>
+        </details>
         <div id="r-warn"></div>
         <div style="margin-top:14px;display:flex;gap:10px" class="noprint">
           <button class="btn" onclick="buildReport()">📄 生成/更新选型报告</button>
@@ -482,18 +497,26 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 <div class="page" id="page-force">
   <h2>气缸理论出力查询表</h2>
   <p class="sub">标准缸径在各工作压力下的理论推力/拉力（单位：N；kgf ≈ N ÷ 9.8）。实际可用出力 = 理论值 × 负载率η。</p>
+  <details class="answer-details" id="forceDetails">
+  <summary>显示详细数据</summary>
+  <div class="answer-details-body">
   <div class="card">
     <div class="fld" style="max-width:260px;margin-bottom:12px"><label>查看缸径分类</label>
       <select id="f-cat" class="code-select"><option value="all">全部缸径</option><option value="small">小型 Φ8~25</option><option value="mid" selected>中型 Φ32~320</option></select>
     </div>
     <div id="f-table" style="overflow-x:auto"></div>
   </div>
+  </div>
+  </details>
 </div>
 
 <!-- ============ 7. 知识库 ============ -->
 <div class="page" id="page-know">
   <h2>选型知识库</h2>
   <p class="sub">摘自教程资料的核心选型方法、公式与气缸分类。</p>
+  <details class="answer-details" id="knowDetails">
+  <summary>显示详细数据</summary>
+  <div class="answer-details-body">
   <div class="card">
     <h3>一、双作用气缸选型六步法</h3>
     <table class="data">
@@ -548,6 +571,8 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
       <tr><td>大型气缸</td><td>&gt; Φ320</td></tr>
     </table>
   </div>
+  </div>
+  </details>
 </div>
 
 <!-- ============ 8. 报告 ============ -->
@@ -577,6 +602,7 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 </nav>
 </div>
 <script src="/js/nav.js"></script>
+<script src="/js/result-card.js"></script>
 
 <script>
 /* ================= 基础数据 ================= */
@@ -679,7 +705,23 @@ function calcWizard(){
   if(P>0.7)warn+='<div class="note">使用压力偏高，请确认减压阀进口压力 ≥ '+fmt(P/0.85,2)+' MPa。</div>';
   if(need>800&&(wDir==='vu'||wDir==='vd'))warn+='<div class="note">长行程垂直使用注意活塞杆刚度与导向。</div>';
   $('r-warn').innerHTML=warn;
+  renderWizCard({F,eta,Ft,D0,D,rod,push,pull,sRec,P,ckCls,margin});
   return {F,eta,Ft,D0,D,rod,push,pull,stroke:need,sRec,v,m,mu,f0,P,L,t,ck,dir:wDir};
+}
+/* ============ 结果卡（结果优先）：数值与文字全部取自上面 calcWizard 的计算和右侧清单 ============ */
+function renderWizCard(c){
+  const box=$('r-card'); if(!box)return;
+  const st=c.margin===Infinity?['warn','负载为 0']:c.ckCls==='ok'?['ok','余量合格']:c.ckCls==='warn'?['warn','余量偏小']:['bad','出力不足'];
+  const buckBad=!!$('r-buck').querySelector('.tag.bad');
+  const strokeTxt=typeof c.sRec==='number'?String(c.sRec):'行程 '+c.sRec;
+  box.innerHTML='<div class="answer-card'+(st[0]==='ok'&&!buckBad?'':' none')+'">'
+    +'<div class="answer-label">推荐标准气缸 · 缸径 × 行程</div>'
+    +'<div class="answer-title long">Φ'+c.D+' × '+strokeTxt+' <span class="tag '+st[0]+'">'+st[1]+'</span>'+(buckBad?' <span class="tag bad">屈曲风险</span>':'')+'</div>'
+    +'<div class="answer-line">出力余量校核：'+$('r-check').innerHTML+'</div>'
+    +'<div class="answer-line">活塞杆 Φ'+c.rod+' · 理论推力 '+$('r-push').textContent+' · 理论拉力 '+$('r-pull').textContent+'（P = '+c.P+' MPa）</div>'
+    +'<div class="answer-line">杆屈曲校核：'+$('r-buck').innerHTML+'</div>'
+    +'<div class="answer-line muted">依据：实际轴向负载 F = '+$('r-f').textContent+' · 负载率 η = '+c.eta+' · 所需理论出力 F/η = '+$('r-ft').textContent+' · 计算最小缸径 '+$('r-d0').textContent+' → 取标准缸径 Φ'+c.D+'</div>'
+    +'<div class="answer-advice">计算结果供设计参考，最终请以厂家样本校核。</div></div>';
 }
 ['w-m','w-mu','w-f0','w-p','w-l','w-t','w-stroke','w-bite'].forEach(id=>$(id).addEventListener('input',calcWizard));
 calcWizard();
@@ -879,6 +921,7 @@ function calcForce(){
   $('f-table').innerHTML=h;
 }
 $('f-cat').addEventListener('change',calcForce);
+if(window.ResultCard){['wizDetails','forceDetails','knowDetails'].forEach(id=>window.ResultCard.bindDetails(id));}
 calcForce();
 </script>
 <script src="/js/code-select.js"></script>
