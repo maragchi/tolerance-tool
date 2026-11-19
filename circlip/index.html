@@ -1911,18 +1911,18 @@ z
 </div>
 
 <div class="card">
-  <h2>尺寸怎么用（先看这一条）</h2>
+  <h2>尺寸怎么用</h2>
   <details class="answer-details" id="usageDetails">
   <summary>显示详细数据</summary>
   <div class="answer-details-body">
   <div class="hint" style="line-height:1.9">
-    <p><b>孔用挡圈</b>：在孔壁上车一圈槽，槽径 d2 比孔径 d0 <b>大</b>；挡圈外径 D 也大于孔径，
-    装配后卡进槽里挡住外圈零件。槽宽 m 要略大于挡圈厚度 S，装配时挡圈才有活动量。</p>
-    <p><b>轴用挡圈</b>：在轴颈上车一圈槽，槽径 d2 比轴径 d0 <b>小</b>；挡圈内径 d 小于轴径，
+    <p><b>孔用挡圈</b>：在孔壁上车一圈槽，槽径 d2 比孔径 d1 <b>大</b>；自由状态外径 d3 也大于孔径，
+    装配后卡进槽里挡住外圈零件。槽宽 m 要略大于挡圈厚度 s，装配时挡圈才有活动量。</p>
+    <p><b>轴用挡圈</b>：在轴颈上车一圈槽，槽径 d2 比轴径 d0 <b>小</b>；自由状态内径 d3 小于轴径，
     靠弹性张开后卡进槽里，挡住内圈零件。</p>
     <p><b>n 是"槽边到端面的最小距离"</b>：小于这个值，挡圈张开的工具就伸不进去，装不上。
     表里给的是 <b>n ≥</b>，实际画图取等于或略大。</p>
-    <p><b>d3 是装配允许尺寸</b>：孔用给"轴径 ≤ d3"（挡圈内孔能通过的轴），轴用给"孔径 ≥ d3"
+    <p><b>d4 是装配允许尺寸</b>：孔用给"轴径 ≤ d4"（挡圈内孔能通过的轴），轴用给"孔径 ≥ d4"
     （挡圈能套进去的孔）—— 校核装配通过性时用这一列。</p>
   </div>
   </div>
@@ -2135,7 +2135,7 @@ z
       + '<div class="answer-line muted">槽深 = ' + t(depth) + '（由 d2 与 ' + (hole ? 'd1' : 'd0') + ' 算出）'
       + (hasV(row.t) ? ' · 表列槽深 t = ' + t(row.t) : '') + '</div>'
       + '<div class="answer-advice">按此车槽、配挡圈 ' + std + ' ' + t(row.size) + (hole ? '（外径 ' + t(row.ring) + '、厚度 ' + t(row.thick) + '）' : '（厚度 ' + t(row.thick) + '）') + '即可装配；'
-      + (hole ? '穿过挡圈的轴径不大于 d4 = ' : '套在挡圈外的孔径不小于 d3 = ') + t(row.allow) + '。</div></div>';
+      + (hole ? '穿过挡圈的轴径不大于 d4 = ' : '套在挡圈外的孔径不小于 d4 = ') + t(row.allow) + '。</div></div>';
   }
 
   function buildSelect() {
@@ -2165,8 +2165,9 @@ z
     var table = ''
       + '<table class="data-table clip-table">'
       + '<tr><th>项目</th><th>数值</th><th>说明</th></tr>'
-      + '<tr><td>挡圈外径 ' + (hole ? 'd3' : 'D') + '</td><td>' + t(row.ring) + '</td><td>挡圈装在槽里的外径</td></tr>'
-      + '<tr><td>挡圈厚度 ' + (hole ? 's' : 'S') + '</td><td>' + t(row.thick) + '</td><td>槽宽 m 要比它略大</td></tr>'
+      + (hole ? '<tr><td>挡圈外径 d3</td><td>' + t(row.ring) + '</td><td>挡圈自由状态外径</td></tr>'
+              : '<tr><td>自由状态内径 d3</td><td>' + t(row.ring) + '</td><td>挡圈未装入时的内径（GB/T 894-2017）</td></tr>')
+      + '<tr><td>挡圈厚度 s</td><td>' + t(row.thick) + '</td><td>槽宽 m 要比它略大</td></tr>'
       + '<tr><td><b>沟槽直径 d2</b></td><td><b>' + t(row.d2) + '</b>'
       + (row.d2Up !== null && row.d2Up !== undefined
           ? '（' + dev2(row.d2Up, row.d2Lo) + '）' : '') + '</td>'
@@ -2178,7 +2179,7 @@ z
           ? '<tr><td>沟槽深度 t</td><td>' + t(row.t) + '</td><td>2017 版新增的槽深控制</td></tr>' : '')
       + '<tr><td><b>槽边到端面 n</b></td><td><b>' + t(row.n) + '</b>（min）</td><td>小于它装不进工具</td></tr>'
       + '<tr><td>槽深 (d2−d1)/2</td><td>' + t(depth) + '</td><td>由 d2 与 d1 算出</td></tr>'
-      + '<tr><td>允许套入的' + (hole ? '最大轴径 d4' : '最小孔径 d3') + '</td><td>' + t(row.allow) + '</td>'
+      + '<tr><td>允许套入的' + (hole ? '最大轴径 d4' : '最小孔径 d4') + '</td><td>' + t(row.allow) + '</td>'
       + '<td>校核装配通过性</td></tr>'
       + (row.FN ? '<tr><td>承载能力 F<sub>N</sub> / F<sub>R</sub></td><td>' + t(row.FN) + ' / ' + t(row.FR)
               + ' kN</td><td>2017 版新增（材料 R<sub>eL</sub>≥200 MPa）</td></tr>' : '')
@@ -2243,7 +2244,7 @@ z
     var r = rows(), h = '';
     var head = isHole()
       ? ['d1 孔径', 's 厚度', 'd3 挡圈外径', 'd2 槽径', 'm 槽宽(H13)', 't 槽深', 'n≥', 'd4 轴≤']
-      : ['d0 轴径', 'S 厚度', 'D 挡圈外径', 'd2 槽径', 'm 槽宽', 'n≥', 'd3 孔≥'];
+      : ['d0 轴径', 'S 厚度', 'd3 自由内径', 'd2 槽径', 'm 槽宽', 'n≥', 'd4 孔≥'];
     h += '<table class="data-table clip-table"><tr>';
     for (var j = 0; j < head.length; j++) h += '<th>' + head[j] + '</th>';
     h += '</tr>';
@@ -2374,7 +2375,7 @@ z
       + '槽宽 m = ' + t(row.m) + (hole ? '（H13）' : '') + '\n'
       + (row.t ? '槽深 t = ' + t(row.t) + '\n' : '')
       + '槽边到端面 n ≥ ' + t(row.n) + '\n'
-      + '挡圈 ' + std + ' ' + t(row.size) + '：外径 ' + t(row.ring) + '，厚度 ' + t(row.thick)
+      + '挡圈 ' + std + ' ' + t(row.size) + (hole ? '：外径 ' : '：自由状态内径 d3 ') + t(row.ring) + '，厚度 ' + t(row.thick)
       + '，允许 ' + (hole ? '轴径 ≤ ' : '孔径 ≥ ') + t(row.allow);
     function done() {
       var b = document.getElementById('copyBtn');
