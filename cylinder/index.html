@@ -603,13 +603,10 @@ h.className=h.className.replace(" has-drawer","");}},1200);})();</script>
 </div>
 <script src="/js/nav.js"></script>
 <script src="/js/result-card.js"></script>
+<script src="/js/cylinder-calc.js"></script>
 
 <script>
 /* ================= 基础数据 ================= */
-const STD_BORES=[8,10,12,16,20,25,32,40,50,63,80,100,125,160,200,250,320];
-const ROD={8:4,10:4,12:6,16:6,20:8,25:10,32:12,40:16,50:20,63:20,80:25,100:30,125:32,160:40,200:40,250:50,320:63};
-const STD_STROKES=[25,50,75,100,125,150,160,175,200,250,300,350,400,450,500,600,700,800,900,1000,1100,1200,1250,1400,1500];
-const P0=0.1013, G=9.81;
 /* HRQ 回转气缸参考数据（0.5MPa 转矩 N·m / 允许动能 J(带缓冲)），最终以样本为准 */
 const HRQ=[["HRQ2",0.16,0.004],["HRQ3",0.28,0.008],["HRQ7",0.63,0.02],["HRQ10",1.1,0.04],["HRQ20",2.0,0.08],["HRQ30",2.8,0.12],["HRQ50",5.2,0.3],["HRQ70",7.5,0.5],["HRQ100",10.5,0.8],["HRQ200",20,1.5]];
 /* HFZ 平行气爪参考夹持力（0.5MPa, 单指 N） */
@@ -645,25 +642,10 @@ function calcWizard(){
         stroke=parseFloat($('w-stroke').value)||0, bite=parseFloat($('w-bite').value)||0;
   // 速度
   const v=t>0?L/t:0; $('w-v').value=fmt(v,0);
-  // 负载
-  let F, fDesc;
-  if(wDir==='h'||wDir==='hp'){F=mu*m*G+f0;fDesc=`F = μmg + F₀ = ${fmt(mu)}×${fmt(m)}×9.81 + ${fmt(f0)}`;}
-  else{F=m*G+f0;fDesc=`F = mg + F₀ = ${fmt(m)}×9.81 + ${fmt(f0)}`;}
-  const eta=wEta;
-  const Ft=eta>0?F/eta:0;
-  // 计算缸径：推力侧 / 拉力侧（杆径比≈0.35估算）
-  let D0;
-  if(wDir==='hp'||wDir==='vd'){D0=Math.sqrt(4*Ft/(Math.PI*P*(1-0.35*0.35)));}
-  else{D0=Math.sqrt(4*Ft/(Math.PI*P));}
-  // 选标准缸径
-  let D=STD_BORES.find(b=>b>=D0)||STD_BORES[STD_BORES.length-1];
-  const rod=ROD[D];
-  const push=P*Math.PI*D*D/4, pull=P*Math.PI*(D*D-rod*rod)/4;
-  const usable=(wDir==='hp'||wDir==='vd')?pull*eta:push*eta;
-  const margin=F>0?(usable/F-1)*100:Infinity;
-  // 标准行程
-  const need=stroke+bite;
-  const sRec=STD_STROKES.find(s=>s>=need)||'>1250（定做）';
+  // 负载 / 缸径 / 行程 / 校核：计算在 /js/cylinder-calc.js 的 cylCore（与首页仪表盘同一份）
+  const fDesc=(wDir==='h'||wDir==='hp')?`F = μmg + F₀ = ${fmt(mu)}×${fmt(m)}×9.81 + ${fmt(f0)}`:`F = mg + F₀ = ${fmt(m)}×9.81 + ${fmt(f0)}`;
+  const cc=cylCore({dir:wDir,m:m,mu:mu,f0:f0,P:P,eta:wEta,stroke:stroke,bite:bite});
+  const F=cc.F, eta=cc.eta, Ft=cc.Ft, D0=cc.D0, D=cc.D, rod=cc.rod, push=cc.push, pull=cc.pull, margin=cc.margin, need=cc.need, sRec=cc.sRec;
   // 输出
   $('r-f').textContent=fmt(F)+' N';
   $('r-eta').textContent=eta;
@@ -678,22 +660,19 @@ function calcWizard(){
     +((wDir==='hp'||wDir==='vd')?'<br><span style="font-size:11px;color:#8a97a8">拉力侧初选按杆径比≈0.35 估算，选定标准缸径后已按实际杆径 Φ'+rod+' 校核</span>':'');
   // 校核
   let ck,ckCls;
-  if(margin===Infinity){ck='负载为0，请检查输入';ckCls='warn';}
-  else if(margin>=10){ck='✔ 合格（余量 '+fmt(margin,0)+'%）';ckCls='ok';}
-  else if(margin>=0){ck='⚠ 余量偏小（'+fmt(margin,0)+'%），建议加大一档缸径';ckCls='warn';}
+  if(cc.state==='zero'){ck='负载为0，请检查输入';ckCls='warn';}
+  else if(cc.state==='ok'){ck='✔ 合格（余量 '+fmt(margin,0)+'%）';ckCls='ok';}
+  else if(cc.state==='low'){ck='⚠ 余量偏小（'+fmt(margin,0)+'%），建议加大一档缸径';ckCls='warn';}
   else{ck='✘ 出力不足，请加大缸径';ckCls='bad';}
   $('r-check').innerHTML='<span class="tag '+ckCls+'">'+ck+'</span>';
   // 屈曲校核：杆受压工况（欧拉公式，两端铰支假设，E=206000MPa，安全系数 n=4）
-  const isCompress=(wDir==='h'||wDir==='vu'||wDir==='vdp');
-  if(isCompress&&stroke>0&&rod>0&&F>0){
-    const Im=Math.PI*Math.pow(rod,4)/64;
-    const Pcr=Math.PI*Math.PI*206000*Im/(stroke*stroke);
-    const safe=Pcr/4;
-    if(safe>=F){$('r-buck').innerHTML='<span class="tag ok">✔ 安全（Pcr='+fmt(Pcr,0)+' N，安全载荷 '+fmt(safe,0)+' N ≥ F='+fmt(F,0)+' N）</span>';}
+  const Pcr=cc.Pcr, safe=cc.safe;
+  if(cc.buck==='safe'||cc.buck==='risk'){
+    if(cc.buck==='safe'){$('r-buck').innerHTML='<span class="tag ok">✔ 安全（Pcr='+fmt(Pcr,0)+' N，安全载荷 '+fmt(safe,0)+' N ≥ F='+fmt(F,0)+' N）</span>';}
     else{$('r-buck').innerHTML='<span class="tag bad">✘ 屈曲风险（安全载荷 '+fmt(safe,0)+' N &lt; F='+fmt(F,0)+' N），请加大杆径/缸径或缩短行程</span>';}
-  }else if(isCompress&&stroke<=0){
+  }else if(cc.buck==='nostroke'){
     $('r-buck').textContent='请输入行程后校核';
-  }else if(isCompress&&F<=0){
+  }else if(cc.buck==='noload'){
     $('r-buck').textContent='负载为 0，无法校核';
   }else{
     $('r-buck').textContent='—（杆受拉，无屈曲风险）';

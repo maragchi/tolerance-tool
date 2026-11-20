@@ -310,69 +310,9 @@ details.fold .fold-body{padding:0 16px 14px;font-size:13px;color:#555;line-heigh
 
 <script src="/js/nav.js"></script>
 <script src="/js/result-card.js"></script>
+<script src="/js/roughness-data.js"></script>
 <script>
 // ===== 数据（经验值初稿，待豆包/手册核对）=====
-const SCENARIOS = [
-  {name:'动密封面（O型圈/油封）', raMin:0.4, raMax:0.8, cost:'high', methods:'精磨', note:'防泄漏，要求严，需磨削'},
-  {name:'静密封面（垫片密封）', raMin:1.6, raMax:3.2, cost:'mid', methods:'精车/精铣', note:'一般静密封'},
-  {name:'滚动轴承配合面（轴颈/箱体孔）', raMin:0.4, raMax:1.6, cost:'high', methods:'精磨', note:'0级：轴颈Ra0.8/箱体孔Ra1.6；6级高精度：轴颈0.4/箱体孔0.8'},
-  {name:'滑动轴承/轴颈（高速）', raMin:0.2, raMax:0.4, cost:'high', methods:'精磨', note:'减摩耐磨'},
-  {name:'精密配合面（IT5-IT6）', raMin:0.4, raMax:0.8, cost:'high', methods:'精磨', note:'高精度孔轴配合'},
-  {name:'普通间隙配合面（IT7-IT9）', raMin:1.6, raMax:3.2, cost:'mid', methods:'精车/精铣', note:'间隙配合，如滑动配合、低相对运动面'},
-  {name:'一般配合面（IT7-IT8）/ 键槽工作面', raMin:0.8, raMax:1.6, cost:'mid', methods:'精车/精铣/磨', note:'最常用配合'},
-  {name:'导轨/滑块工作面', raMin:0.4, raMax:0.8, cost:'high', methods:'精磨/刮研', note:'滑动导向'},
-  {name:'安装基准面/定位面', raMin:1.6, raMax:3.2, cost:'mid', methods:'精铣/精车', note:'装配定位'},
-  {name:'齿轮齿面', raMin:0.8, raMax:1.6, cost:'mid', methods:'剃齿/磨齿', note:'传动面'},
-  {name:'螺纹工作牙面', raMin:1.6, raMax:3.2, cost:'mid', methods:'车/滚压', note:'连接螺纹'},
-  {name:'外观装饰面（高要求）', raMin:0.4, raMax:0.8, cost:'high', methods:'抛光/精磨', note:'可见美观面'},
-  {name:'一般外观面', raMin:1.6, raMax:3.2, cost:'mid', methods:'精车/精铣', note:'普通可见面'},
-  {name:'半精配合面/不重要配合', raMin:3.2, raMax:6.3, cost:'low', methods:'车/铣', note:'一般机械零件'},
-  {name:'非配合面/非接触面', raMin:6.3, raMax:12.5, cost:'low', methods:'粗加工', note:'自由表面'},
-  {name:'粗加工面/结构件非配合', raMin:12.5, raMax:25, cost:'low', methods:'粗车/粗铣', note:'非配合结构面'},
-  {name:'铸锻毛坯面', raMin:25, raMax:50, cost:'low', methods:'铸造/锻造', note:'毛坯未加工面'}
-];
-
-const METHODS = [
-  {name:'砂型铸造', cat:'毛坯成型', raMin:12.5, raMax:50, cost:'low', note:'毛坯面'},
-  {name:'锻造（模锻）', cat:'毛坯成型', raMin:12.5, raMax:25, cost:'low', note:'毛坯'},
-  {name:'气割/锯切', cat:'毛坯成型', raMin:12.5, raMax:50, cost:'low', note:'粗分离'},
-  {name:'钻孔', cat:'切削加工', raMin:6.3, raMax:25, cost:'low', note:'经济6.3~25，精密钻头极限3.2（不易稳定）'},
-  {name:'粗车/粗铣/粗刨', cat:'切削加工', raMin:6.3, raMax:25, cost:'low', note:'粗加工'},
-  {name:'半精车/铣', cat:'切削加工', raMin:3.2, raMax:12.5, cost:'mid', note:'半精加工（IT9~IT10）'},
-  {name:'精车/精铣/精刨', cat:'切削加工', raMin:0.8, raMax:3.2, cost:'mid', note:'精加工'},
-  {name:'铰孔', cat:'切削加工', raMin:0.8, raMax:3.2, cost:'mid', note:'精孔'},
-  {name:'镗孔', cat:'切削加工', raMin:0.4, raMax:6.3, cost:'mid', note:'孔精加工'},
-  {name:'粗磨', cat:'磨削与光整', raMin:0.4, raMax:1.6, cost:'mid', note:'磨削'},
-  {name:'精磨', cat:'磨削与光整', raMin:0.1, raMax:0.4, cost:'high', note:'高精度面'},
-  {name:'珩磨', cat:'磨削与光整', raMin:0.05, raMax:0.4, cost:'high', note:'孔超精'},
-  {name:'超精加工', cat:'磨削与光整', raMin:0.012, raMax:0.1, cost:'vhigh', note:'超精密'},
-  {name:'研磨', cat:'磨削与光整', raMin:0.012, raMax:0.1, cost:'vhigh', note:'手工/机精'},
-  {name:'抛光', cat:'磨削与光整', raMin:0.025, raMax:0.8, cost:'high', note:'机械抛光，镜面可达 Ra 0.01'},
-  {name:'电火花加工', cat:'特种加工', raMin:0.8, raMax:12.5, cost:'mid', note:'成型放电，精规准可达0.8'},
-  {name:'线切割', cat:'特种加工', raMin:0.2, raMax:6.3, cost:'mid', note:'快走丝1.6~6.3，慢走丝0.2~1.6'},
-  {name:'拉削', cat:'切削加工', raMin:0.4, raMax:3.2, cost:'mid', note:'高精度孔/键槽'},
-  {name:'喷砂/喷丸', cat:'表面处理', raMin:1.6, raMax:12.5, cost:'low', note:'毛坯/装饰面强化'}
-];
-
-// Ra → 取样长度 lr / 评定长度 ln（GB/T 1031 表6，标准数据）
-function findLrForRa(ra) {
-  const map = [
-    {min:0.008, max:0.02, minIn:true, lr:0.08, ln:0.4},
-    {min:0.02, max:0.1, minIn:false, lr:0.25, ln:1.25},
-    {min:0.1, max:2.0, minIn:false, lr:0.8, ln:4.0},
-    {min:2.0, max:10.0, minIn:false, lr:2.5, ln:12.5},
-    {min:10.0, max:80.0, minIn:false, lr:8.0, ln:40.0}
-  ];
-  for (const m of map) {
-    const inRange = m.minIn ? (ra >= m.min && ra <= m.max) : (ra > m.min && ra <= m.max);
-    if (inRange) return m;
-  }
-  return null;
-}
-
-const COST_LABEL = {low:'低成本', mid:'中等成本', high:'较高成本', vhigh:'极高成本'};
-const COST_CLASS = {low:'cost-low', mid:'cost-mid', high:'cost-high', vhigh:'cost-vhigh'};
-
 // μm → 毫米 换算（1 μm = 0.001 mm）
 function umToMm(v){
   var mm = parseFloat(v) * 0.001;
@@ -383,10 +323,6 @@ function umToMm(v){
 const ROUGH_OPEN = {};          /* 「显示详细数据」展开状态跨重算保留 */
 const ROUGH_FOOT = '推荐 Ra 为工程经验值，默认针对典型钢件、中等批量；场景推荐是选型起点，不是验收保证。';
 const METHOD_FOOT = '加工方法可达 Ra 为经验区间，受机床精度、刀具、参数、材料影响，实际以试加工为准。';
-const COST_RANK = {low:0, mid:1, high:2, vhigh:3};
-/* 按图纸 Ra 推荐加工方法时不参与推荐（首选与备选都不出现）；对照表与「现有加工方法」下拉里照常保留 */
-const RA_NOT_RECOMMEND = ['喷砂/喷丸'];
-function raRecommendable(m) { return RA_NOT_RECOMMEND.indexOf(m.name) < 0; }
 function costBadge(c) { return '<span class="cost-badge '+COST_CLASS[c]+'">'+COST_LABEL[c]+'</span>'; }
 function roughDetails(id, body, label) {
   const open = !!ROUGH_OPEN[id];
@@ -410,14 +346,6 @@ function scenarioCardHTML(s, lr) {
     + '<div class="answer-line muted">换算 ≈ '+umToMm(s.raMin)+' ~ '+umToMm(s.raMax)+' 毫米 · 取样长度 lr '+(lr ? lr.lr+' mm' : '—')+' · 评定长度 ln '+(lr ? lr.ln+' mm' : '—')+'（按 Ra '+s.raMax+'）</div>'
     + '<div class="answer-advice">'+(hard ? '该 Ra 范围要求较高，加工成本显著。若该面非关键功能面，可考虑放宽 Ra 以降本。' : '')+ROUGH_FOOT+'</div></div>';
 }
-/* 目标 Ra 与某加工方法可达区间的关系（只按页面 METHODS 的 raMin / raMax 判断，不另造数）：
-   stable = 可达区间整体 ≤ 目标；ok = 区间跨过目标；limit = 目标恰为可达下限；no = 达不到 */
-function raFit(m, r) {
-  if (m.raMax <= r) return 'stable';
-  if (m.raMin < r) return 'ok';
-  if (m.raMin === r) return 'limit';
-  return 'no';
-}
 const FIT_TXT = {stable:'稳妥：整个可达区间都不超过要求', ok:'可达：区间跨过要求，需控制参数、试切确认', limit:'已到可达下限：不易稳定'};
 function methodAltHTML(m, r) {
   const f = raFit(m, r);
@@ -426,19 +354,12 @@ function methodAltHTML(m, r) {
     + '<span class="answer-alt-line muted">'+COST_LABEL[m.cost]+' · '+m.note+'</span></li>';
 }
 function raCardHTML(r) {
-  const order = (a, b) => COST_RANK[a.cost] - COST_RANK[b.cost] || METHODS.indexOf(a) - METHODS.indexOf(b);
-  const pool = METHODS.filter(raRecommendable);
-  const stable = pool.filter(m => raFit(m, r) === 'stable').sort(order);
-  const ok = pool.filter(m => raFit(m, r) === 'ok').sort(order);
-  const limit = pool.filter(m => raFit(m, r) === 'limit').sort(order);
-  const reach = stable.length + ok.length + limit.length;
+  const pk = raPick(r), stable = pk.stable, ok = pk.ok, limit = pk.limit, reach = pk.reach;
   const skipped = METHODS.filter(m => !raRecommendable(m) && raFit(m, r) !== 'no').map(m => m.name);
   if (!reach) {
     return '<div class="answer-card none"><div class="answer-label">加工对照 · 图纸要求 Ra '+r+'</div><div class="answer-none">页面所列加工方法都达不到 Ra '+r+'</div></div>';
   }
-  const main = stable[0] || ok[0] || limit[0];
-  const mf = raFit(main, r);
-  const verdict = mf === 'stable' ? main.name+'即可' : mf === 'ok' ? '可用'+main.name+'，需控制参数' : main.name+'已到可达下限';
+  const main = pk.main, mf = pk.mf, verdict = pk.verdict;
   let html = '<div class="answer-card"><div class="answer-label">加工对照 · 图纸要求 Ra '+r+' μm</div>'
     + '<div class="answer-title long">标 Ra '+r+'：<span class="nw">'+verdict+'</span></div>'
     + '<div class="answer-line">'+costBadge(main.cost)+' '+main.name+' 可达 Ra '+main.raMin+' ~ '+main.raMax+' μm · '+main.note+'</div>'
