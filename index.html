@@ -104,9 +104,9 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   box-shadow:0 1px 3px rgba(0,0,0,.1);border-top:3px solid #2563eb}
 .quick-fit .qf-title{font-size:14.5px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
 .quick-fit .qf-sub{font-size:12.5px;color:#888;margin-bottom:14px}
-.quick-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end}
-.qf-field{display:flex;flex-direction:column;gap:5px;min-width:0}
-.qf-field label{font-size:12.5px;color:#555}
+.quick-form{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:14px 20px;align-items:flex-end}   /* 三个胶囊不再均分整行：定宽、靠左，查询按钮紧跟其后 */
+.qf-field{display:flex;flex-direction:column;gap:3px;min-width:0;flex:0 1 190px;width:190px;max-width:190px}
+.qf-field label{font-size:12px;font-weight:600;color:#64748b;text-align:center;letter-spacing:.2px;line-height:1.4}
 .qf-field select.csel-native{display:none}
 .qf-field .csel{width:100%}
 .qf-field .csel-btn{height:44px}
@@ -135,7 +135,8 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 .qf-hint{font-size:12.5px;color:#888;margin-top:12px;line-height:1.6}
 .qf-hint a{color:#2563eb;text-decoration:none}
 @media(max-width:640px){
-  .quick-form{grid-template-columns:1fr 1fr}
+  .quick-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .qf-field{width:auto;max-width:none}
   .qf-go{grid-column:1 / -1}
 }
 </style>
