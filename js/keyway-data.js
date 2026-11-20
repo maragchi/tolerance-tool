@@ -78,3 +78,10 @@ function getTolValues(tol){
   return {upper:tol,lower:-tol,symmetric:true};
 }
 
+/* ============ 车间友好：轴径可输入 + 下拉候选（每 1mm） ============ */
+/* /keyway/ 的 setupPicker 与首页键槽卡的 ▼ 列表共用 */
+const DIAS = (function(){
+  var a = [];
+  for (var i = 6; i <= 500; i++) a.push(i);
+  return a;
+})();

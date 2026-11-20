@@ -74,6 +74,13 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 .dash-f .csel-btn{height:38px;font-size:14px}
 .dash-f input{height:38px;width:100%;padding:0 12px;font:inherit;font-size:14.5px;font-weight:600;font-family:var(--mono);
   border:1px solid #cbd5e1;border-radius:999px;background:#fff;color:#1a1a1a;text-align:center;min-width:0}
+/* 卡内「输入 + ▼ 列表」：箭头、圆角、弹出列表与卡内小号 code-select 胶囊一致（列表直接用 .csel-list / .csel-item） */
+.dash-pick{position:relative;display:flex;width:100%;min-width:0}
+.dash-f .dash-pick input{padding:0 46px 0 14px}
+.dash-pick .dash-pick-tg{position:absolute;top:1px;right:1px;bottom:1px;width:44px;height:auto;padding:0;margin:0;border:0;border-left:1px solid #e2e8f0;
+  border-radius:0 999px 999px 0;background:#f1f5f9;color:#475569;font-size:11px;line-height:1;cursor:pointer}
+.dash-pick .dash-pick-tg:hover{background:#e2e8f0}
+.dash-pick-list{max-height:min(300px,50vh)}
 .dash-f input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.16)}
 .dash-seg{display:inline-flex;gap:2px;height:38px;padding:2px;border:1px solid #cbd5e1;border-radius:999px;background:#f8fafc}
 .dash-seg button{width:auto;height:32px;padding:0 13px;border:0;border-radius:999px;background:transparent;color:#475569;
@@ -343,7 +350,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 <article class="dash-card" id="dashKeyway">
   <div class="dash-head"><h2><a href="/keyway/">键槽查询</a></h2><a class="dash-more" href="/keyway/">查看详细 →</a></div>
   <div class="dash-form">
-    <div class="dash-f"><label for="dkD">轴径 d (mm)</label><input type="number" id="dkD" value="50" min="6" max="500" step="1" inputmode="decimal"></div>
+    <div class="dash-f"><label for="dkD">轴径 d (mm)</label><div class="dash-pick"><input type="number" id="dkD" value="50" min="6" max="500" step="1" inputmode="decimal" autocomplete="off"><button type="button" class="dash-pick-tg" id="dkDTg" aria-label="常用轴径列表" aria-haspopup="listbox" aria-expanded="false" aria-controls="dkDList">▼</button><div class="csel-list dash-pick-list" id="dkDList" role="listbox"></div></div></div>
     <div class="dash-f"><label for="dkFit">联结</label><select id="dkFit" class="code-select"><option value="loose">较松联结</option><option value="normal" selected>一般联结</option><option value="tight">较紧联结</option></select></div>
   </div>
   <div class="dash-res" id="dkRes" aria-live="polite"></div>
@@ -379,7 +386,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 <article class="dash-card" id="dashReverse">
   <div class="dash-head"><h2><a href="/reverse/">公差反查</a></h2><a class="dash-more" href="/reverse/">查看详细 →</a></div>
   <div class="dash-form">
-    <div class="dash-f"><label for="dvDim">基本尺寸 (mm)</label><input type="number" id="dvDim" value="25" min="1" max="500" step="1" inputmode="decimal"></div>
+    <div class="dash-f"><label for="dvDim">基本尺寸 (mm)</label><div class="dash-pick"><input type="number" id="dvDim" value="25" min="1" max="500" step="1" inputmode="decimal" autocomplete="off"><button type="button" class="dash-pick-tg" id="dvDimTg" aria-label="常用尺寸列表" aria-haspopup="listbox" aria-expanded="false" aria-controls="dvDimList">▼</button><div class="csel-list dash-pick-list" id="dvDimList" role="listbox"></div></div></div>
     <div class="dash-f seg"><span class="dash-lab">孔 / 轴</span><div class="dash-seg" id="dvKind" role="group" aria-label="孔 / 轴"><button type="button" data-v="hole" class="on" aria-pressed="true">孔</button><button type="button" data-v="shaft" aria-pressed="false">轴</button></div></div>
     <div class="dash-f"><label for="dvUp">上偏差 (mm)</label><input type="number" id="dvUp" value="0.021" step="0.001" inputmode="decimal"></div>
     <div class="dash-f"><label for="dvLo">下偏差 (mm)</label><input type="number" id="dvLo" value="0" step="0.001" inputmode="decimal"></div>
@@ -533,6 +540,12 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 <script src="/js/form-data.js"></script>
 <script src="/js/roughness-data.js"></script>
 <script src="/js/cylinder-calc.js"></script>
+<script>
+/* 首页常用基本尺寸：快速查配合「基本尺寸」▼ 列表与「公差反查」卡共用这一份 */
+var QF_SIZES = [6, 8, 10, 12, 14, 16, 18, 20, 22, 25, 28, 30, 32, 35, 38, 40, 42, 45, 48, 50,
+                55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 110, 120, 130, 140, 150, 160, 180, 200,
+                250, 300, 350, 400, 450, 500];
+</script>
 <script src="/js/home-dash.js"></script>
 <script src="/js/pwa.js" defer></script>
 <script>
@@ -602,9 +615,7 @@ function quickGo(e) {
 <script>
 /* 快速查配合：基本尺寸的 ▼ 常用尺寸列表（尺寸是任意数值，只做快捷取用，不锁死） */
 (function () {
-  var SIZES = [6, 8, 10, 12, 14, 16, 18, 20, 22, 25, 28, 30, 32, 35, 38, 40, 42, 45, 48, 50,
-               55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 110, 120, 130, 140, 150, 160, 180, 200,
-               250, 300, 350, 400, 450, 500];
+  var SIZES = QF_SIZES;   /* 定义在 home-dash.js 之前的共享脚本里，「公差反查」卡的 ▼ 列表也用它 */
   function ready() {
     var inp = document.getElementById('qDim');
     var tg = document.getElementById('qDimToggle');

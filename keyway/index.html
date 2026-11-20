@@ -1145,13 +1145,6 @@ z
 <script src="/js/result-card.js"></script>
 <script src="/js/keyway-data.js"></script>
 <script>
-/* ============ 车间友好：轴径可输入 + 下拉候选（每 1mm） ============ */
-const DIAS = (function(){
-  var a = [];
-  for (var i = 6; i <= 500; i++) a.push(i);
-  return a;
-})();
-
 /* ============ 数据（GB/T 1095-2003 + ISO 286-2）============ */
 /* 键槽断面图的档位映射：[d1, d2, 代表图号]，与 GB/T 1095 档位一一对应 */
 var SHOT_ROWS=[[6,8,7],[8,10,9],[10,12,11],[12,17,14],[17,22,20],[22,30,26],[30,38,34],

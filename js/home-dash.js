@@ -40,6 +40,48 @@
     return (Math.round(v * 1000) / 1000).toString();
   }
 
+  /* 卡内「输入 + ▼ 列表」：列表只做快捷取用，仍可输入任意值；点选后发 input 事件，结果与图立即刷新 */
+  function dashPicker(id, values) {
+    var inp = $(id), tg = $(id + 'Tg'), list = $(id + 'List');
+    if (!inp || !tg || !list) return;
+    var wrap = inp.parentNode;
+    list.innerHTML = values.map(function (v) {
+      return '<div class="csel-item" role="option" data-v="' + v + '">' + v + '</div>';
+    }).join('');
+    function mark() {
+      var it = list.children;
+      for (var i = 0; i < it.length; i++) {
+        var on = it[i].getAttribute('data-v') === inp.value;
+        it[i].classList.toggle('sel', on);
+        it[i].setAttribute('aria-selected', on ? 'true' : 'false');
+      }
+    }
+    function close() { list.classList.remove('open'); tg.setAttribute('aria-expanded', 'false'); }
+    function open() {
+      var others = document.querySelectorAll('.dash-pick-list.open');
+      for (var i = 0; i < others.length; i++) if (others[i] !== list) others[i].classList.remove('open');
+      mark(); list.classList.add('open'); tg.setAttribute('aria-expanded', 'true');
+      var cur = list.querySelector('.csel-item.sel');
+      if (cur) list.scrollTop = Math.max(0, cur.offsetTop - list.clientHeight / 2 + cur.offsetHeight / 2);
+    }
+    tg.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (list.classList.contains('open')) close(); else open();
+    });
+    inp.addEventListener('click', open);
+    inp.addEventListener('input', function () { if (list.classList.contains('open')) mark(); });
+    list.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var it = e.target.closest ? e.target.closest('.csel-item') : null;
+      if (!it) return;
+      inp.value = it.getAttribute('data-v');
+      close();
+      inp.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  }
+
   /* ================= 断面图（取工具页原图） ================= */
   var FIG = { k: null, c: null };          /* {dbg, root} */
   function prefixIds(html, p) {
@@ -126,6 +168,7 @@
     }
   }
   kw.d.addEventListener('input', kwRender);
+  dashPicker('dkD', DIAS);                 /* 与 /keyway/ 轴径列表同一份（keyway-data.js） */
   kw.fit.addEventListener('change', kwRender);
 
   /* ================= 卡簧槽 ================= */
@@ -276,6 +319,7 @@
   }
   segInit('dvKind', rvRender);
   [rv.dim, rv.up, rv.lo].forEach(function (el) { el.addEventListener('input', rvRender); });
+  dashPicker('dvDim', window.QF_SIZES || []);   /* 与快速查配合「基本尺寸」列表同一份 */
 
   /* ================= 气缸选型（只改负载与行程，其余取 /cylinder/ 默认） ================= */
   var CY_DEF = { dir: 'h', mu: 0.1, f0: 0, P: 0.5, eta: 0.5, bite: 0 };
