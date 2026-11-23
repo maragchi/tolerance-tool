@@ -130,6 +130,39 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   .dash-seg button{flex:1 1 0;padding:0 8px}
   .dash-figs{grid-template-columns:minmax(0,260px);gap:14px}
 }
+/* ===== 手机（≤640px）：6 张小卡可折叠。仅 JS 给 .dash-grid 加 .dash-js 后生效；无 JS 不隐藏任何内容 =====
+   折叠：只留标题栏（标题、渐变、字体不变）+ 一行实时答案；整条标题栏是 <button>，▼ 在左侧空列；
+   「查看详细 →」叠在按钮之上单独可点。展开动画 grid-template-rows 0fr↔1fr 200ms，尊重 prefers-reduced-motion。
+   >640px：按钮与摘要不显示，包裹层 display:contents，桌面布局与以前一致。 */
+.dash-tg,.dash-sum{display:none}
+.dash-body,.dash-body-in{display:contents}
+@media(max-width:640px){
+  .dash-js .dash-head{position:relative;min-height:48px;transition:margin-bottom .2s ease}
+  .dash-js .dash-tg{display:block;position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;width:100%;height:100%;margin:0;padding:0;border:0;
+    border-radius:10px 10px 0 0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .dash-js .dash-tg:focus-visible{outline:2px solid #1d4ed8;outline-offset:-2px}
+  .dash-js .dash-tg-ic{position:absolute;left:14px;top:50%;margin-top:-8px;width:16px;height:16px;font-size:12px;line-height:16px;text-align:center;
+    color:#1d4ed8;transition:transform .2s ease}
+  .dash-js .dash-card:not(.is-closed) .dash-tg-ic{transform:rotate(180deg)}
+  .dash-js .dash-head h2 a{pointer-events:none}
+  .dash-js .dash-more{position:relative;z-index:2;padding:14px 4px;margin:-14px -4px}
+  .dash-js .dash-card{transition:padding-bottom .2s ease}
+  .dash-js .dash-card.is-closed{padding-bottom:14px}
+  .dash-js .dash-card.is-closed .dash-head{margin-bottom:0}
+  .dash-js .dash-sum,.dash-js .dash-body{display:grid;transition:grid-template-rows .2s ease}
+  .dash-js .dash-sum{grid-template-rows:0fr}
+  .dash-js .is-closed .dash-sum{grid-template-rows:1fr}
+  .dash-js .dash-body{grid-template-rows:1fr}
+  .dash-js .is-closed .dash-body{grid-template-rows:0fr}
+  .dash-js .dash-sum-in,.dash-js .dash-body-in{display:block;min-height:0;overflow:hidden}
+  .dash-js .dash-card:not(.is-closed):not(.dash-anim) .dash-body-in{overflow:visible}
+  .dash-js .dash-card:not(.is-closed) .dash-sum-in,.dash-js .is-closed .dash-body-in{visibility:hidden;transition:visibility 0s .2s}
+  .dash-js .dash-sum-t{margin:0;padding:6px 0 0;font-size:15px;font-weight:600;line-height:1.45;color:#0f172a;text-align:center;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+}
+@media(max-width:640px) and (prefers-reduced-motion:reduce){
+  .dash-js .dash-head,.dash-js .dash-card,.dash-js .dash-sum,.dash-js .dash-body,.dash-js .dash-tg-ic{transition:none}
+}
 
 /* 快速查询 */
 .quick-fit{background:#fff;border-radius:10px;padding:18px 20px;margin-bottom:20px;
@@ -559,6 +592,7 @@ var QF_SIZES = [6, 8, 10, 12, 14, 16, 18, 20, 22, 25, 28, 30, 32, 35, 38, 40, 42
                 250, 300, 350, 400, 450, 500];
 </script>
 <script src="/js/home-dash.js"></script>
+<script src="/js/home-collapse.js"></script>
 <script src="/js/pwa.js" defer></script>
 <script>
 /* 首页快速查询：本页直接出一张迷你结果卡（计算与 /fit/ 同一套 /js/iso286.js），
