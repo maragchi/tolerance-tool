@@ -63,6 +63,11 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
    缓出曲线多色标），越过标题栏淡入卡片白底，无硬边；标题栏本身透明。 */
 .dash-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;column-gap:8px;
   margin:0 -22px 16px;padding:10px 14px;min-height:42px;border-radius:10px 10px 0 0}
+/* 卡片标题与「查看详细 →」用自托管 Noto Sans SC 子集（SIL OFL 1.1，见 /fonts/OFL.txt）：仅含这 24 个字 + 空格，
+   可变字重 400–600 一个文件；unicode-range 只覆盖这些字，其余文字仍走原字体栈。 */
+@font-face{font-family:"NotoSansSC-Dash";src:url(/fonts/noto-sans-sc-dash.woff2) format("woff2");font-weight:400 600;font-style:normal;font-display:swap;
+  unicode-range:U+20,U+2192,U+516C,U+5361,U+53CD,U+578B,U+5DEE,U+5EA6,U+5F62,U+67E5,U+69FD,U+6C14,U+72B6,U+770B,U+7C27,U+7C97,U+7CD9,U+7EC6,U+7F38,U+8868,U+8BE2,U+8BE6,U+9009,U+952E,U+9762}
+.dash-head h2,.dash-more{font-family:"NotoSansSC-Dash",-apple-system,"Microsoft YaHei","Segoe UI",sans-serif}
 .dash-head h2{grid-column:2;font-size:15px;font-weight:600;margin:0;line-height:1.4;text-align:center;min-width:0}
 .dash-head h2 a{color:#1a1a1a;text-decoration:none}
 .dash-head h2 a:hover,.dash-head h2 a:focus-visible{color:#1d4ed8}
