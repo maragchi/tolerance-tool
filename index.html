@@ -71,6 +71,11 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 /* 标题字距 .1em；letter-spacing 会在末字后多留 .1em，左侧补同量 padding-left，让字形仍居中 */
 .dash-head h2{grid-column:2;font-size:18px;font-weight:600;margin:0;line-height:1.4;text-align:center;min-width:0;letter-spacing:.1em;padding-left:.1em}
 .dash-head h2 a{color:#1a1a1a;text-decoration:none}
+/* 标题左侧主题小图标（自绘线性 SVG，内联，aria-hidden）：图标 + 文字作为一组在整条栏居中；颜色同「查看详细」#1d4ed8 */
+.dash-head h2 a{display:inline-flex;align-items:center;gap:6px;vertical-align:top}
+.dash-ic{flex:none;display:block;width:20px;height:20px;color:#1d4ed8;margin-left:-1.5px}
+/* 负左边距 = 图标左侧留白（描边到 viewBox 边的距离），让「图标墨迹 + 文字墨迹」整体居中 */
+#dashKeyway .dash-ic,#dashRough .dash-ic{margin-left:-2px}#dashCirclip .dash-ic,#dashReverse .dash-ic{margin-left:-2.5px}#dashForm .dash-ic,#dashCylinder .dash-ic{margin-left:-.5px}
 .dash-head h2 a:hover,.dash-head h2 a:focus-visible{color:#1d4ed8}
 .dash-more{grid-column:3;justify-self:end;font-size:12.5px;color:#1d4ed8;text-decoration:none;white-space:nowrap}
 .dash-more:hover,.dash-more:focus-visible{color:#1e40af;text-decoration:underline}
@@ -393,7 +398,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
 
 <section class="dash-grid" aria-label="常用工具速查">
 <article class="dash-card" id="dashKeyway">
-  <div class="dash-head"><h2><a href="/keyway/">键槽查询</a></h2><a class="dash-more" href="/keyway/">查看详细 →</a></div>
+  <div class="dash-head"><h2><a href="/keyway/"><svg class="dash-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 5.25V8.6h4V5.25A8 8 0 1 1 10 5.25Z"/><path d="M12 11.2v3.6M10.2 13h3.6" stroke-width="1.25"/></svg>键槽查询</a></h2><a class="dash-more" href="/keyway/">查看详细 →</a></div>
   <div class="dash-form">
     <div class="dash-f"><label for="dkD">轴径 d (mm)</label><div class="dash-pick"><input type="number" id="dkD" value="50" min="6" max="500" step="1" inputmode="decimal" autocomplete="off"><button type="button" class="dash-pick-tg" id="dkDTg" aria-label="常用轴径列表" aria-haspopup="listbox" aria-expanded="false" aria-controls="dkDList">▼</button><div class="csel-list dash-pick-list" id="dkDList" role="listbox"></div></div></div>
     <div class="dash-f"><label for="dkFit">联结</label><select id="dkFit" class="code-select"><option value="loose">较松联结</option><option value="normal" selected>一般联结</option><option value="tight">较紧联结</option></select></div>
@@ -402,7 +407,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <div class="dash-figs" id="dkFigs" hidden></div>
 </article>
 <article class="dash-card" id="dashCirclip">
-  <div class="dash-head"><h2><a href="/circlip/">卡簧槽查询</a></h2><a class="dash-more" href="/circlip/">查看详细 →</a></div>
+  <div class="dash-head"><h2><a href="/circlip/"><svg class="dash-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M16.02 7.27A7 7 0 1 1 7.98 7.27"/><circle cx="17.1" cy="5.5" r="1.5"/><circle cx="6.9" cy="5.5" r="1.5"/></svg>卡簧槽查询</a></h2><a class="dash-more" href="/circlip/">查看详细 →</a></div>
   <div class="dash-form">
     <div class="dash-f seg"><span class="dash-lab">挡圈类型</span><div class="dash-seg" id="dcType" role="group" aria-label="挡圈类型"><button type="button" data-v="holeA" class="on" aria-pressed="true">孔用 A</button><button type="button" data-v="holeB" aria-pressed="false">孔用 B</button><button type="button" data-v="shaft" aria-pressed="false">轴用</button></div></div>
     <div class="dash-f"><label for="dcSize" id="dcSizeLab">孔径 d1</label><select id="dcSize" class="code-select"></select></div>
@@ -411,7 +416,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <div class="dash-figs single" id="dcFigs" hidden></div>
 </article>
 <article class="dash-card" id="dashForm">
-  <div class="dash-head"><h2><a href="/form/">形状公差</a></h2><a class="dash-more" href="/form/">查看详细 →</a></div>
+  <div class="dash-head"><h2><a href="/form/"><svg class="dash-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="7" width="19" height="10" rx="1.5"/><path d="M10 7v10"/><circle cx="6.25" cy="12" r="2.1"/><path d="M13 12h5.5"/></svg>形状公差</a></h2><a class="dash-more" href="/form/">查看详细 →</a></div>
   <div class="dash-form">
     <div class="dash-f wide"><label for="dfItem">项目</label><select id="dfItem" class="code-select"></select></div>
     <div class="dash-f"><label for="dfVal" id="dfValLab">长度 L (mm)</label><input type="number" id="dfVal" value="100" min="0" max="10000" step="1" inputmode="decimal"></div>
@@ -420,7 +425,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <div class="dash-res" id="dfRes" aria-live="polite"></div>
 </article>
 <article class="dash-card" id="dashRough">
-  <div class="dash-head"><h2><a href="/roughness/">表面粗糙度</a></h2><a class="dash-more" href="/roughness/">查看详细 →</a></div>
+  <div class="dash-head"><h2><a href="/roughness/"><svg class="dash-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 12.5l3.5 6.5 5.5-14H21"/><path d="M3 21h7" stroke-width="1.25"/></svg>表面粗糙度</a></h2><a class="dash-more" href="/roughness/">查看详细 →</a></div>
   <div class="dash-form">
     <div class="dash-f seg"><span class="dash-lab">查法</span><div class="dash-seg" id="drMode" role="group" aria-label="查法"><button type="button" data-v="scen" class="on" aria-pressed="true">按场景</button><button type="button" data-v="ra" aria-pressed="false">按图纸 Ra</button></div></div>
     <div class="dash-f wide" id="drScenW"><label for="drScen">应用场景</label><select id="drScen" class="code-select"></select></div>
@@ -429,7 +434,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <div class="dash-res" id="drRes" aria-live="polite"></div>
 </article>
 <article class="dash-card" id="dashReverse">
-  <div class="dash-head"><h2><a href="/reverse/">公差反查</a></h2><a class="dash-more" href="/reverse/">查看详细 →</a></div>
+  <div class="dash-head"><h2><a href="/reverse/"><svg class="dash-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.75"/><path d="M15.5 15.5l5 5"/><path d="M10.5 7.4v3.6M8.7 9.2h3.6M8.7 13.4h3.6" stroke-width="1.5"/></svg>公差反查</a></h2><a class="dash-more" href="/reverse/">查看详细 →</a></div>
   <div class="dash-form">
     <div class="dash-f"><label for="dvDim">基本尺寸 (mm)</label><div class="dash-pick"><input type="number" id="dvDim" value="25" min="1" max="500" step="1" inputmode="decimal" autocomplete="off"><button type="button" class="dash-pick-tg" id="dvDimTg" aria-label="常用尺寸列表" aria-haspopup="listbox" aria-expanded="false" aria-controls="dvDimList">▼</button><div class="csel-list dash-pick-list" id="dvDimList" role="listbox"></div></div></div>
     <div class="dash-f seg"><span class="dash-lab">孔 / 轴</span><div class="dash-seg" id="dvKind" role="group" aria-label="孔 / 轴"><button type="button" data-v="hole" class="on" aria-pressed="true">孔</button><button type="button" data-v="shaft" aria-pressed="false">轴</button></div></div>
@@ -440,7 +445,7 @@ var _hmt=_hmt||[];(function(){if(window.__NO_ANALYTICS__)return;var hm=document.
   <p class="dash-foot"><a href="/reverse/">按间隙 / 过盈反查配合 →</a></p>
 </article>
 <article class="dash-card" id="dashCylinder">
-  <div class="dash-head"><h2><a href="/cylinder/">气缸选型</a></h2><a class="dash-more" href="/cylinder/">查看详细 →</a></div>
+  <div class="dash-head"><h2><a href="/cylinder/"><svg class="dash-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="8" width="12" height="8" rx="1.2"/><path d="M14.5 12h7M21.5 10v4M5.5 8V6M11.5 8V6M8 8v8"/></svg>气缸选型</a></h2><a class="dash-more" href="/cylinder/">查看详细 →</a></div>
   <div class="dash-form">
     <div class="dash-f"><label for="dyM">负载质量 m (kg)</label><input type="number" id="dyM" value="50" min="0" step="1" inputmode="decimal"></div>
     <div class="dash-f"><label for="dyS">行程 (mm)</label><input type="number" id="dyS" value="300" min="0" step="1" inputmode="decimal"></div>
